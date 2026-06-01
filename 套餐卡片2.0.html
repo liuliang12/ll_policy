@@ -1,0 +1,1953 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>企业管理后台 - 首页改版Demo (最终重构版)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f4f6f8;
+            color: #333;
+        }
+        body.modal-open {
+            overflow: hidden;
+        }
+        .card {
+            background: #fff;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background-color: #9ca3af;
+        }
+        /* 主套餐特权背景 */
+        .plan-card-bg-blue {
+            background: radial-gradient(circle at top right, rgba(255,255,255,0.8) 0%, transparent 40%), linear-gradient(135deg, #f0f7ff 0%, #e0f2fe 100%);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+        }
+        .plan-card-bg-red {
+            background: radial-gradient(circle at top right, rgba(255,255,255,0.8) 0%, transparent 40%), linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+        }
+    </style>
+</head>
+<body class="p-8 min-h-screen flex flex-col items-center">
+    <!-- 全局 SVG 定义 (用于皇冠渐变等) -->
+    <svg width="0" height="0" style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
+        <defs>
+            <linearGradient id="gold-gradient-seamless" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FDE68A" />
+                <stop offset="50%" stop-color="#F59E0B" />
+                <stop offset="100%" stop-color="#D97706" />
+            </linearGradient>
+        </defs>
+    </svg>
+
+
+    <!-- 顶部状态切换下拉框 -->
+    <div class="max-w-[1200px] w-full flex justify-start mb-6 shrink-0">
+        <div class="flex items-center gap-3 bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-200">
+            <label for="state-selector" class="text-[14px] font-bold text-gray-700">当前演示状态：</label>
+            <select id="state-selector" onchange="switchTab(this.value)" class="text-[14px] text-gray-700 bg-gray-50 border border-gray-300 rounded-md px-3 py-1 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer">
+                <option value="trial">体验版-无权益包</option>
+                <option value="trial-with-vas">体验版-有权益包</option>
+                <option value="vas-merged">付费版-有权益包</option>
+                <option value="vas-merged-empty">付费版-无权益包</option>
+                <option value="healthy-no-vas">付费版-无权益包-推荐策略</option>
+                <option value="healthy">付费版-正常</option>
+                <option value="paid-trial-normal">付费版-试用-正常</option>
+                <option value="trial-expire">付费版-即将到期</option>
+                <option value="expired">付费版-已过期</option>
+                <option value="expired-buffer">付费版-已过期-缓冲策略</option>
+                <option value="expired-no-warning">付费版-已过期-回收策略</option>
+                <option value="trial-multi">多套餐-正常</option>
+                <option value="multi-expire">多套餐-即将到期</option>
+                <option value="multi-expired">多套餐-全部过期</option>
+                <option value="trial-warning">人数将满-90%使用率</option>
+                <option value="feature-blocked">功能受阻卡片</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- ================= 视图容器 ================= -->
+    <div class="max-w-[1200px] w-full flex gap-4 items-start">
+        
+        <!-- 左侧列 (通过 JS 动态更新席位数据) -->
+        <div class="w-[480px] shrink-0 flex flex-col gap-4">
+            <!-- 1. 人数卡片 -->
+            <div class="card relative border border-gray-100 flex flex-col justify-between rounded-xl" style="padding: 24px;">
+                <!-- Header -->
+                <div class="flex items-start gap-3 mb-4 shrink-0">
+                    <!-- 模拟Logo -->
+                    <div class="w-10 h-10 mt-0.5 relative flex items-center justify-center shrink-0">
+                        <div class="absolute inset-0 bg-[#E23D46] transform -skew-x-[15deg] rounded-sm w-[28px] left-1"></div>
+                        <div class="absolute inset-0 bg-[#A82A31] transform -skew-x-[15deg] rounded-sm w-[12px] left-0"></div>
+                        <div class="absolute bottom-0 right-0 w-[12px] h-[8px] bg-[#6F42C1] transform skew-x-[15deg] rounded-sm"></div>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 mb-1.5">
+                            <h3 class="font-bold text-gray-900 text-base tracking-wide">金山办公软件有限公司</h3>
+                            <span class="text-xs font-normal text-gray-500 border border-gray-200 px-1.5 py-0.5 rounded flex items-center gap-1 bg-gray-50/50">
+                                未认证
+                            </span>
+                        </div>
+                        <div class="text-[12px] text-[#4caf50] flex items-center gap-1 font-medium">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            企业指数 322 <span class="font-bold">↑</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 数据区块 -->
+                <div class="space-y-3">
+                    <!-- Block 1: 席位数 -->
+                    <div>
+                        <div id="seat-box" class="flex border border-[#ebeef5] rounded-xl overflow-hidden transition-all">
+                            <div class="w-[140px] bg-[#fcfcfd] py-4 flex flex-col items-center justify-center border-r border-[#ebeef5] shrink-0">
+                                <div class="text-[12px] text-gray-500 mb-1 flex items-center gap-1">席位数</div>
+                                <div id="seat-number" class="text-[28px] font-bold text-gray-800 leading-none">10/50</div>
+                            </div>
+                            <div class="flex-1 bg-white py-3 px-4 flex flex-col justify-center">
+                                <div class="text-[13px] text-gray-600 mb-2.5">扩展组织席位</div>
+                                <button class="btn-outline px-4 py-1 rounded-lg text-[12px] text-gray-700 flex items-center justify-center gap-1 w-max border border-[#dcdfe6] hover:bg-gray-50 transition-colors">
+                                    <svg class="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                    购买席位
+                                </button>
+                            </div>
+                        </div>
+                        <!-- 容量预警提示 (动态显示) -->
+                        <div id="seat-warning" class="text-orange-500 text-[12px] mt-2 flex items-center gap-1 ml-1 font-medium" style="display: none;">
+                            ⚠️ 席位使用率已达95%，请及时购买席位以免影响新员工加入
+                        </div>
+                    </div>
+
+                    <!-- Block 2: 已激活人数 -->
+                    <div class="flex border border-[#ebeef5] rounded-xl overflow-hidden">
+                        <div class="w-[140px] bg-[#fcfcfd] py-4 flex flex-col items-center justify-center border-r border-[#ebeef5] shrink-0">
+                            <div class="text-[12px] text-gray-500 mb-1 flex items-center gap-1">已激活人数</div>
+                            <div id="active-number" class="text-[28px] font-bold text-gray-800 leading-none">8</div>
+                        </div>
+                        <div class="flex-1 bg-white px-4 flex items-center justify-between">
+                            <div class="text-[13px] text-[#303133] flex items-center gap-1">
+                                自动通知未使用成员
+                                <svg class="w-3.5 h-3.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                            </div>
+                            <div class="w-[32px] h-[18px] bg-[#dcdfe6] rounded-full relative cursor-pointer">
+                                <div class="w-3.5 h-3.5 bg-white rounded-full absolute top-[2px] left-[2px] shadow-sm"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Block 3: 未激活人数 -->
+                    <div class="flex border border-[#ebeef5] rounded-xl overflow-hidden">
+                        <div class="w-[140px] bg-[#fcfcfd] py-4 flex flex-col items-center justify-center border-r border-[#ebeef5] shrink-0">
+                            <div class="text-[12px] text-gray-500 mb-1 flex items-center gap-1">未激活人数</div>
+                            <div id="inactive-number" class="text-[28px] font-bold text-gray-800 leading-none">2</div>
+                        </div>
+                        <div class="flex-1 bg-white px-4 flex items-center justify-between">
+                            <div class="text-[13px] text-[#303133] flex items-center gap-1">
+                                自动通知未激活成员
+                                <svg class="w-3.5 h-3.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                            </div>
+                            <div class="w-[32px] h-[18px] bg-[#dcdfe6] rounded-full relative cursor-pointer">
+                                <div class="w-3.5 h-3.5 bg-white rounded-full absolute top-[2px] left-[2px] shadow-sm"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 底部邀请工具栏 -->
+                <div class="mt-6 shrink-0">
+                    <div class="text-[12px] text-gray-500 mb-2">邀请更多成员加入</div>
+                    <div class="flex gap-2">
+                        <button class="btn-outline px-3 py-1 rounded-lg text-[12px] flex items-center justify-center gap-1.5 border border-[#dcdfe6] text-[#606266] hover:bg-gray-50 transition-colors">
+                            <svg class="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+                            链接邀请
+                        </button>
+                        <button class="btn-outline px-3 py-1 rounded-lg text-[12px] flex items-center justify-center gap-1.5 border border-[#dcdfe6] text-[#606266] hover:bg-gray-50 transition-colors">
+                            <svg class="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path></svg>
+                            二维码邀请
+                        </button>
+                        <button class="btn-outline px-3 py-1 rounded-lg text-[12px] flex items-center justify-center gap-1.5 border border-[#dcdfe6] text-[#606266] hover:bg-gray-50 transition-colors">
+                            <svg class="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                            添加成员
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= 右侧动态列 ================= -->
+        <div class="flex-1 relative">
+            
+            <!-- 【状态 A】：纯免费/体验态 -->
+            <div id="view-trial" class="card border border-gray-100 p-6 flex flex-col h-full bg-white rounded-xl shadow-sm relative">
+                <!-- 头部区域 -->
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-gray-900 text-[16px]">企业权益</h3>
+                    <div class="flex items-center gap-4">
+                        <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-1">权益兑换 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></a>
+                        <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-0.5">权益明细 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></a>
+                    </div>
+                </div>
+
+                <!-- 主套餐与增值服务合并卡片 (无缝拼接卡片) -->
+                <div id="trial-free-plan-container" class="rounded-xl border border-[#E5E6EB] bg-gray-50 overflow-hidden mb-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] transition-shadow duration-300 flex flex-col">
+                    <!-- 上部：主套餐区域 (极浅灰，克制无光泽) -->
+                    <div id="trial-free-plan-top" class="p-6 relative z-20">
+                        <div class="flex justify-between items-center relative z-10">
+                            <div>
+                                <div class="flex items-center gap-2 mb-1.5">
+                                    <div id="trial-free-plan-name" class="text-[#1D2129] font-extrabold text-[22px] tracking-tight">WPS 365 体验版</div>
+                                    <!-- 绝对无皇冠 / 无免费标签 -->
+                                </div>
+                                <div class="text-[#4E5969] text-[13px] leading-5 flex items-center gap-2 whitespace-nowrap">
+                                    <span id="trial-free-seat-text">10/50 席</span>
+                                    <span class="w-px h-3 bg-gray-300"></span>
+                                    <span>有效期至：2026-06-23</span>
+                                    <div class="relative group">
+                                        <svg class="w-3.5 h-3.5 text-slate-400 cursor-pointer hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        <div class="absolute bottom-full left-1/2 -translate-x-1/2 pb-2 w-[320px] z-10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none group-hover:pointer-events-auto">
+                                            <div class="bg-[#303133] text-white text-[12px] px-3 py-2.5 rounded shadow-lg relative leading-relaxed whitespace-normal font-normal">
+                                                到期后将免费续期一年WPS 365 体验版
+                                                <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#303133] rotate-45"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 flex items-center gap-1.5 transition-colors font-medium">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Zm0 0a9 9 0 1 1 18 0m0 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3Z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 16v2a4 4 0 0 1-4 4h-5"></path></svg>
+                                    购买咨询
+                                </a>
+                                <button class="bg-blue-600 text-white px-5 py-2 rounded-lg text-[13px] font-medium shadow-sm hover:bg-blue-700 transition-colors border border-transparent">
+                                    升级套餐
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <!-- 企业空间 + 权益包 并排 -->
+                <div class="flex gap-4 mt-auto">
+                    <!-- 左：企业空间 -->
+                    <div class="flex-1 border border-gray-200 rounded-lg p-3 bg-white flex flex-col justify-between">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="text-[13px] text-gray-700 flex items-center gap-2 font-medium">
+                                <span>企业空间</span>
+                            </div>
+                            <button class="text-[12px] text-blue-600 border border-blue-200 px-3 py-1 rounded hover:bg-blue-50 transition-colors font-medium">管理</button>
+                        </div>
+                        <div class="text-[12px] text-gray-500 mb-1.5"><span id="trial-space-text-no-vas" class="text-[14px]">336.7 M/4 G</span></div>
+                            <div class="w-full bg-[#f0f2f5] rounded-full h-1.5 mb-2">
+                            <div id="trial-space-bar-no-vas" class="bg-blue-600 h-1.5 rounded-full" style="width: 12%"></div>
+                        </div>
+                        <a href="#" class="text-[12px] text-blue-600 hover:underline mt-1 inline-block">空间明细></a>
+                    </div>
+                    <!-- 右：权益包（暂无） -->
+                    <div class="flex-1 border border-gray-200 rounded-lg p-3 bg-white flex flex-col justify-between">
+                        <div class="flex justify-between items-center mb-2.5">
+                            <div class="text-[13px] text-gray-700 font-medium">权益包</div>
+                        </div>
+                        <div class="text-[13px] text-gray-400 flex-1 flex items-center">暂无</div>
+                        <a href="#" onclick="openVasModal(event)" class="text-[12px] text-blue-600 hover:text-blue-700 transition-colors flex items-center mt-1">
+                            探索更多高级能力 <svg class="w-3.5 h-3.5 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 授权认证 -->
+                <div class="flex items-center gap-1.5 text-[13px] text-[#4E5969] px-1 mt-2 mb-4">
+                    授权认证：<span id="trial-auth-text" class="text-gray-600 font-medium">不支持</span>
+                    <div class="relative group">
+                        <svg class="w-3.5 h-3.5 cursor-pointer hover:text-gray-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 功能受阻卡片：独立容器（不放在企业权益容器内） -->
+            <div id="feature-blocked-diagnosis" class="card border border-gray-100 bg-white rounded-xl shadow-sm overflow-hidden mt-4" style="display: none;">
+                <div class="px-5 pt-3 pb-2">
+                    <div class="flex items-start justify-between">
+                        <h3 class="text-[15px] font-semibold text-gray-900">功能受阻诊断数据</h3>
+                        <a href="#" onclick="openAllModal(event)" class="text-[13px] text-blue-600 hover:text-blue-700 transition-colors flex items-center gap-1 whitespace-nowrap">
+                            查看受阻详情
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="px-5 pt-1 pb-5">
+                    <div class="mb-3 rounded-lg border border-amber-100 bg-amber-50/70 px-4 py-2 flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <svg class="w-4 h-4 text-amber-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-7.938 4h15.876c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L2.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            <div class="text-[12px] text-amber-700">近期员工使用高级权益受阻次数较多，推荐升级商业高级版</div>
+                        </div>
+                        <button class="shrink-0 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium px-4 py-1.5 rounded-md transition-colors shadow-sm">
+                            升级套餐
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 rounded-xl bg-gray-50/50 border border-gray-100 overflow-hidden md:divide-x md:divide-gray-100">
+                        <div class="p-4 h-full">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="text-center">
+                                    <div class="text-3xl font-bold text-gray-900 leading-none">8<span class="text-base font-medium ml-1">名</span></div>
+                                    <div class="text-xs text-gray-500 mt-1.5">成员受阻</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-3xl font-bold text-red-600 leading-none">32<span class="text-base font-medium ml-1">次</span></div>
+                                    <div class="text-xs text-gray-500 mt-1.5">功能拦截</div>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3 mt-4 pt-3 border-t border-gray-200/80">
+                                <div class="text-center">
+                                    <div class="text-[18px] font-semibold text-gray-900 leading-tight whitespace-nowrap">PDF转Word/Excel/PPT</div>
+                                    <div class="text-xs text-gray-500 mt-1.5">受阻最多功能</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-[18px] font-semibold text-gray-900 leading-tight whitespace-nowrap">5种</div>
+                                    <div class="text-xs text-gray-500 mt-1.5">受阻功能种类</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-3 h-full bg-white/70">
+                            <div class="h-full flex flex-col gap-2">
+                                <a href="#" class="group flex items-center justify-between gap-2 rounded-xl border border-gray-100 bg-white px-2.5 py-2 hover:border-gray-200 transition-all">
+                                    <div class="flex items-start gap-3 min-w-0 flex-1">
+                                        <div class="w-7 h-7 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 font-semibold text-[11px]">PDF</div>
+                                        <div class="min-w-0 flex-1">
+                                            <div class="flex items-center gap-2 min-w-0">
+                                                <div class="text-[13px] font-semibold text-gray-900">PDF/图片等提效权益</div>
+                                                <span class="bg-red-50 text-red-600 px-2 py-0.5 rounded-md text-[11px] border border-red-100 whitespace-nowrap shrink-0">累计3人想要</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <svg class="w-3.5 h-3.5 text-gray-400 group-hover:text-gray-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                </a>
+                                <a href="#" class="group flex items-center justify-between gap-2 rounded-xl border border-gray-100 bg-white px-2.5 py-2 hover:border-gray-200 transition-all">
+                                    <div class="flex items-start gap-3 min-w-0 flex-1">
+                                        <div class="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 font-semibold text-[11px]">AI</div>
+                                        <div class="min-w-0 flex-1">
+                                            <div class="flex items-center gap-2 min-w-0">
+                                                <div class="text-[13px] font-semibold text-gray-900">企业文档智能助手</div>
+                                                <span class="bg-red-50 text-red-600 px-2 py-0.5 rounded-md text-[11px] border border-red-100 whitespace-nowrap shrink-0">累计8人想要</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <svg class="w-3.5 h-3.5 text-gray-400 group-hover:text-gray-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                </a>
+                                <a href="#" class="group flex items-center justify-between gap-2 rounded-xl border border-gray-100 bg-white px-2.5 py-2 hover:border-gray-200 transition-all">
+                                    <div class="flex items-start gap-3 min-w-0 flex-1">
+                                        <div class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 font-semibold text-[11px]">安</div>
+                                        <div class="min-w-0 flex-1">
+                                            <div class="flex items-center gap-2 min-w-0">
+                                                <div class="text-[13px] font-semibold text-gray-900">资产安全管控防泄漏</div>
+                                                <span class="bg-red-50 text-red-600 px-2 py-0.5 rounded-md text-[11px] border border-red-100 whitespace-nowrap shrink-0">累计29人想要</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <svg class="w-3.5 h-3.5 text-gray-400 group-hover:text-gray-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-trial-with-vas" class="card border border-gray-100 p-6 flex flex-col h-full bg-white rounded-xl shadow-sm relative">
+                <!-- 头部区域 -->
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-gray-900 text-[16px]">企业权益</h3>
+                    <div class="flex items-center gap-4">
+                        <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-1">权益兑换 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></a>
+                        <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-0.5">权益明细 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></a>
+                    </div>
+                </div>
+
+                <!-- 主套餐与增值服务合并卡片 (无缝拼接卡片) -->
+                <div class="rounded-xl border border-[#E5E6EB] bg-white overflow-hidden mb-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] transition-shadow duration-300 flex flex-col">
+                    <!-- 上部：主套餐区域 (极浅灰，克制无光泽) -->
+                    <div class="bg-gray-50 p-6 relative z-20 border-b border-gray-200/60">
+                        <div class="flex justify-between items-center relative z-10">
+                            <div>
+                                <div class="flex items-center gap-2 mb-1.5">
+                                    <div class="text-[#1D2129] font-extrabold text-[22px] tracking-tight">WPS 365 体验版</div>
+                                    <!-- 绝对无皇冠 / 无免费标签 -->
+                                </div>
+                                <div class="text-[#4E5969] text-[13px] leading-5 flex items-center gap-2 whitespace-nowrap">
+                                    <span>10/50 席</span>
+                                    <span class="w-px h-3 bg-gray-300"></span>
+                                    <span>有效期至：2026-06-23</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 flex items-center gap-1.5 transition-colors font-medium">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Zm0 0a9 9 0 1 1 18 0m0 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3Z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 16v2a4 4 0 0 1-4 4h-5"></path></svg>
+                                    购买咨询
+                                </a>
+                                <button class="bg-blue-600 text-white px-5 py-2 rounded-lg text-[13px] font-medium shadow-sm hover:bg-blue-700 transition-colors border border-transparent">
+                                    升级套餐
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <!-- 企业空间 + 权益包 并排 -->
+                <div class="flex gap-4 mt-auto">
+                    <!-- 左：企业空间 -->
+                    <div class="flex-1 border border-gray-200 rounded-lg p-3 bg-white flex flex-col justify-between">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="text-[13px] text-gray-700 flex items-center gap-2 font-medium">
+                                <span>企业空间</span>
+                            </div>
+                            <button class="text-[12px] text-blue-600 border border-blue-200 px-3 py-1 rounded hover:bg-blue-50 transition-colors font-medium">管理</button>
+                        </div>
+                        <div class="text-[12px] text-gray-500 mb-1.5"><span id="trial-space-text" class="text-[14px]">336.7 M/4 G</span></div>
+                            <div class="w-full bg-[#f0f2f5] rounded-full h-1.5 mb-2">
+                            <div id="trial-space-bar" class="bg-blue-600 h-1.5 rounded-full" style="width: 12%"></div>
+                        </div>
+                        <a href="#" class="text-[12px] text-blue-600 hover:underline mt-1 inline-block">空间明细></a>
+                    </div>
+                    <!-- 右：权益包 -->
+                    <div class="flex-1 border border-gray-200 rounded-lg p-3 bg-white flex flex-col">
+                        <div class="flex justify-between items-center mb-2.5">
+                            <div class="text-[13px] text-gray-700 font-medium">权益包</div>
+                            <button class="text-[12px] text-blue-600 border border-blue-200 px-3 py-1 rounded hover:bg-blue-50 transition-colors font-medium">购买</button>
+                        </div>
+                        <div class="flex flex-col flex-1">
+                            <div class="flex justify-between items-center py-1">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-[12px] text-gray-600">企业超级会员</span>
+                                    <span class="text-[#FF7D00] text-[10px] bg-orange-50 px-1.5 py-0.5 rounded leading-none font-medium">即将过期</span>
+                                </div>
+                                <span class="text-[12px] text-gray-400">2026-06-12到期</span>
+                            </div>
+                            <div class="flex justify-between items-center py-1">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-[12px] text-gray-600">AI合同审查</span>
+                                    <span class="text-[#FF7D00] text-[10px] bg-orange-50 px-1.5 py-0.5 rounded leading-none font-medium">额度不足</span>
+                                </div>
+                                <span class="text-[12px] text-gray-400">剩 5 次</span>
+                            </div>
+                        </div>
+                        <a href="#" onclick="openVasModal(event)" class="text-[12px] text-blue-600 hover:underline mt-1 inline-block">查看全部 &gt;</a>
+                    </div>
+                </div>
+
+                <!-- 授权认证 -->
+                <div class="flex items-center gap-1.5 text-[13px] text-[#4E5969] px-1 mt-2 mb-4">
+                    授权认证：<span id="trial-auth-text" class="text-gray-600 font-medium">不支持</span>
+                    <div class="relative group">
+                        <svg class="w-3.5 h-3.5 cursor-pointer hover:text-gray-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 【状态 B】：单套餐健康态 -->
+            <div id="view-healthy" class="card border border-gray-100 p-6 flex flex-col h-full bg-white rounded-xl" style="display: none;">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-gray-900 text-[16px]">企业权益</h3>
+                    <div class="flex items-center gap-4">
+                        <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-1">权益兑换 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></a>
+                        <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-0.5">权益明细 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></a>
+                    </div>
+                </div>
+                
+                <!-- 主套餐与增值服务合并卡片 (无缝拼接卡片) -->
+                <div class="rounded-xl border border-[#E5E6EB] bg-white overflow-hidden mb-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] transition-shadow duration-300 flex flex-col">
+                    <!-- 上部：主套餐区域 (高级琉璃蓝，无缝贴边) -->
+                    <div class="bg-gradient-to-br from-[#F0F4FF] to-[#D6E4FF] p-6 relative z-20 shadow-[0_4px_16px_-4px_rgba(37,99,235,0.08)]">
+                        <!-- 专属肌理/底纹：丝绸光泽与微弱几何光晕 -->
+                        <div class="absolute inset-0 pointer-events-none overflow-hidden">
+                            <!-- 顶部柔和径向高光 -->
+                            <div class="absolute -top-[50%] -left-[10%] w-[80%] h-[150%] bg-[radial-gradient(circle,rgba(255,255,255,0.7)_0%,transparent_70%)]"></div>
+                            <!-- 右侧斜向折光 -->
+                            <div class="absolute -right-[10%] -top-[20%] w-[50%] h-[150%] bg-gradient-to-l from-white/40 to-transparent transform rotate-[20deg]"></div>
+                            <!-- 底部高光线模拟实体边缘 -->
+                            <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center relative z-10">
+                            <div>
+                                <div class="flex items-center gap-2 mb-1.5">
+                                    <div class="text-[#1D2129] font-extrabold text-[22px] tracking-tight">WPS 365 商业标准版</div>
+                                    <span id="healthy-trial-tag" class="hidden bg-orange-50 text-orange-600 border border-orange-200 text-[11px] px-2 py-0.5 rounded font-medium">试用中</span>
+                                </div>
+                                <div class="text-[#4E5969] text-[13px] leading-5 flex items-center gap-2 whitespace-nowrap">
+                                    <span>40/50 席</span>
+                                    <span class="w-px h-3 bg-blue-300/50"></span>
+                                    <span>有效期至：2028-12-31</span>
+                                    <span id="healthy-expire-tag" class="hidden bg-red-50 text-red-600 text-[11px] px-2 py-0.5 rounded font-medium">30天后到期</span>
+                                </div>
+                                <div class="flex items-center gap-1.5 text-[13px] leading-5 text-[#4E5969] mt-1.5">
+                                    授权认证：<span class="text-blue-600 font-medium">支持</span>
+                                    <div class="relative group">
+                                        <svg class="w-3.5 h-3.5 cursor-pointer hover:text-gray-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 flex items-center gap-1.5 transition-colors font-medium">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Zm0 0a9 9 0 1 1 18 0m0 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3Z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 16v2a4 4 0 0 1-4 4h-5"></path></svg>
+                                    购买咨询
+                                </a>
+                                <button class="bg-blue-600 text-white px-5 py-2 rounded-lg text-[13px] font-medium shadow-sm hover:bg-blue-700 transition-colors border border-transparent">
+                                    立即续费
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 企业空间 + 权益包 并排 -->
+                <div class="flex gap-4 mt-auto">
+                    <!-- 左：企业空间 -->
+                    <div class="flex-1 border border-gray-200 rounded-lg p-3 bg-white flex flex-col justify-between">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="text-[13px] text-gray-700 flex items-center gap-2 font-medium">
+                                <span>企业空间</span>
+                            </div>
+                            <button class="text-[12px] text-blue-600 border border-blue-200 px-3 py-1 rounded hover:bg-blue-50 transition-colors font-medium">管理</button>
+                        </div>
+                        <div class="text-[12px] text-gray-500 mb-1.5"><span class="text-[14px]">400 GB/1 TB</span></div>
+                            <div class="w-full bg-[#f0f2f5] rounded-full h-1.5 mb-2">
+                            <div class="bg-blue-600 h-1.5 rounded-full" style="width: 40%"></div>
+                        </div>
+                        <a href="#" class="text-[12px] text-blue-600 hover:underline mt-1 inline-block">空间明细></a>
+                    </div>
+                    <!-- 右：权益包（暂无） -->
+                    <div class="flex-1 border border-gray-200 rounded-lg p-3 bg-white flex flex-col justify-between">
+                        <div class="flex justify-between items-center mb-2.5">
+                            <div class="text-[13px] text-gray-700 font-medium">权益包</div>
+                        </div>
+                        <div class="text-[13px] text-gray-400 flex-1 flex items-center">暂无</div>
+                        <a href="#" onclick="openVasModal(event)" class="text-[12px] text-blue-600 hover:text-blue-700 transition-colors flex items-center mt-1">
+                            探索更多高级能力 <svg class="w-3.5 h-3.5 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 【状态 B2】：增值服务-无数据 -->
+            <div id="view-healthy-no-vas" class="card border border-gray-100 p-6 flex flex-col h-full bg-white rounded-xl" style="display: none;">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-gray-900 text-[16px]">企业权益</h3>
+                    <div class="flex items-center gap-4">
+                        <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-1">权益兑换 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></a>
+                        <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-0.5">权益明细 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></a>
+                    </div>
+                </div>
+                
+                <!-- 主套餐与增值服务合并卡片 (无缝拼接卡片) -->
+                <div class="rounded-xl border border-[#E5E6EB] bg-white overflow-hidden mb-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] transition-shadow duration-300 flex flex-col">
+                    <!-- 上部：主套餐区域 (高级琉璃蓝，无缝贴边) -->
+                    <div class="bg-gradient-to-br from-[#F0F4FF] to-[#D6E4FF] p-6 relative z-20 border-b border-blue-200/50 shadow-[0_4px_16px_-4px_rgba(37,99,235,0.08)]">
+                        <!-- 专属肌理/底纹：丝绸光泽与微弱几何光晕 -->
+                        <div class="absolute inset-0 pointer-events-none overflow-hidden">
+                            <!-- 顶部柔和径向高光 -->
+                            <div class="absolute -top-[50%] -left-[10%] w-[80%] h-[150%] bg-[radial-gradient(circle,rgba(255,255,255,0.7)_0%,transparent_70%)]"></div>
+                            <!-- 右侧斜向折光 -->
+                            <div class="absolute -right-[10%] -top-[20%] w-[50%] h-[150%] bg-gradient-to-l from-white/40 to-transparent transform rotate-[20deg]"></div>
+                            <!-- 底部高光线模拟实体边缘 -->
+                            <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center relative z-10">
+                            <div>
+                                <div class="flex items-center gap-2 mb-1.5">
+                                    <div class="text-[#1D2129] font-extrabold text-[22px] tracking-tight">WPS 365 商业标准版</div>
+                                </div>
+                                <div class="text-[#4E5969] text-[13px] leading-5 flex items-center gap-2 whitespace-nowrap">
+                                    <span>40/50 席</span>
+                                    <span class="w-px h-3 bg-blue-300/50"></span>
+                                    <span>有效期至：2028-12-31</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 flex items-center gap-1.5 transition-colors font-medium">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Zm0 0a9 9 0 1 1 18 0m0 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3Z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 16v2a4 4 0 0 1-4 4h-5"></path></svg>
+                                    购买咨询
+                                </a>
+                                <button class="bg-blue-600 text-white px-5 py-2 rounded-lg text-[13px] font-medium shadow-sm hover:bg-blue-700 transition-colors border border-transparent">
+                                    立即续费
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <!-- 企业空间 + 权益包 并排 -->
+                <div class="flex gap-4 mt-auto">
+                    <!-- 左：企业空间 -->
+                    <div class="flex-1 border border-gray-200 rounded-lg p-3 bg-white flex flex-col justify-between">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="text-[13px] text-gray-700 flex items-center gap-2 font-medium">
+                                <span>企业空间</span>
+                            </div>
+                            <button class="text-[12px] text-blue-600 border border-blue-200 px-3 py-1 rounded hover:bg-blue-50 transition-colors font-medium">管理</button>
+                        </div>
+                        <div class="text-[12px] text-gray-500 mb-1.5"><span class="text-[14px]">400 GB/1 TB</span></div>
+                            <div class="w-full bg-[#f0f2f5] rounded-full h-1.5 mb-2">
+                            <div class="bg-blue-600 h-1.5 rounded-full" style="width: 40%"></div>
+                        </div>
+                        <a href="#" class="text-[12px] text-blue-600 hover:underline mt-1 inline-block">空间明细></a>
+                    </div>
+                    <!-- 右：增值权益包（暂无，推荐开通） -->
+                    <div class="flex-1 border border-gray-200 rounded-lg p-3 bg-white flex flex-col">
+                        <div class="flex justify-between items-center mb-2.5">
+                            <div class="text-[13px] text-gray-700 font-medium">权益包</div>
+                        </div>
+                        <div class="flex flex-col gap-2 mt-1">
+                            <div class="flex justify-between items-center">
+                                <span class="text-[12px] text-gray-600">企业超级会员</span>
+                                <a href="#" class="text-[12px] text-blue-600 hover:text-blue-700 transition-colors">立即开通</a>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-[12px] text-gray-600">AI合同审查</span>
+                                <a href="#" class="text-[12px] text-blue-600 hover:text-blue-700 transition-colors">免费试用</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 授权认证 -->
+                <div class="flex items-center gap-1.5 text-[13px] text-[#4E5969] px-1 mt-2 mb-4">
+                    授权认证：<span class="text-blue-600 font-medium">支持</span>
+                    <div class="relative group">
+                        <svg class="w-3.5 h-3.5 cursor-pointer hover:text-gray-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                </div>
+            </div>
+
+            
+
+            
+
+            <!-- 【状态 D】：多套餐账单态 -->
+            <div id="view-multi" class="card border border-gray-100 p-6 flex flex-col h-full bg-white rounded-xl" style="display: none;">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-gray-900 text-[16px]">企业权益</h3>
+                    <div class="flex items-center gap-4">
+                        <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-1">权益兑换 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></a>
+                        <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-0.5">权益明细 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></a>
+                    </div>
+                </div>
+                
+                <!-- 合并：主套餐与增值权益包 -->
+                <div class="rounded-xl border border-[#E5E6EB] bg-white overflow-hidden mb-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] transition-shadow duration-300 flex flex-col">
+                    <!-- 蓝色套餐区 -->
+                    <div class="w-full bg-gradient-to-br from-[#F0F4FF] to-[#D6E4FF] p-4">
+                        <!-- 表头 -->
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="text-[14px] font-bold text-[#1D2129] flex items-center">
+                                已购套餐 <span class="text-[12px] font-normal text-blue-600 bg-blue-100/50 px-2 py-0.5 rounded-full ml-2">3 个生效中</span>
+                            </div>
+                                    <div class="flex items-center gap-3">
+                                        <a href="#" class="text-[13px] text-blue-600 hover:text-blue-700 transition-colors">查看全部</a>
+                                        <button class="text-[12px] bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition-colors font-medium">购买咨询</button>
+                                    </div>
+                                </div>
+
+                                <!-- 极简无框列表 -->
+                                <div class="flex flex-col">
+                                    <!-- 套餐 A -->
+                                    <div class="py-2.5 border-b border-blue-900/5 flex justify-between items-center">
+                                        <div class="flex items-center gap-2">
+                                            <div class="text-[#1D2129] font-extrabold text-[16px] tracking-tight">WPS 365 商业高级版</div>
+                                        </div>
+                                        <div class="text-[13px] flex items-center justify-end gap-6 min-w-[270px]">
+                                            <span class="text-[#1D2129] font-medium">10/20 席</span>
+                                            <span class="text-[#4E5969]">有效期至: 2027-10-01</span>
+                                        </div>
+                                    </div>
+                                    <!-- 套餐 B -->
+                                    <div class="py-2.5 flex justify-between items-center">
+                                        <div class="flex items-center gap-2">
+                                            <div class="text-[#1D2129] font-extrabold text-[16px] tracking-tight">WPS 365 商业协作版</div>
+                                        </div>
+                                        <div class="text-[13px] flex items-center justify-end gap-6 min-w-[270px]">
+                                            <span class="text-[#1D2129] font-medium">20/30 席</span>
+                                            <span class="text-[#4E5969]">有效期至: 2028-12-31</span>
+                                        </div>
+                                    </div>
+                                </div>
+                    </div>
+                    
+                    
+                </div>
+
+                <!-- 企业空间 + 权益包 并排 -->
+                <div class="flex gap-4 mt-auto">
+                    <!-- 左：企业空间 -->
+                    <div class="flex-1 border border-gray-200 rounded-lg p-3 bg-white flex flex-col justify-between">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="text-[13px] text-gray-700 flex items-center gap-2 font-medium">
+                                <span>企业空间</span>
+                            </div>
+                            <button class="text-[12px] text-blue-600 border border-blue-200 px-3 py-1 rounded hover:bg-blue-50 transition-colors font-medium">管理</button>
+                        </div>
+                        <div class="text-[12px] text-gray-500 mb-1.5"><span class="text-[14px]">400 GB/1 TB</span></div>
+                            <div class="w-full bg-[#f0f2f5] rounded-full h-1.5 mb-2">
+                            <div class="bg-blue-600 h-1.5 rounded-full" style="width: 40%"></div>
+                        </div>
+                        <a href="#" class="text-[12px] text-blue-600 hover:underline mt-1 inline-block">空间明细></a>
+                    </div>
+                    <!-- 右：权益包 -->
+                    <div class="flex-1 border border-gray-200 rounded-lg p-3 bg-white flex flex-col justify-between">
+                        <div class="flex justify-between items-center mb-2.5">
+                            <div class="text-[13px] text-gray-700 font-medium">权益包</div>
+                        </div>
+                        <div class="text-[13px] text-gray-400 flex-1 flex items-center">暂无</div>
+                        <a href="#" onclick="openVasModal(event)" class="text-[12px] text-blue-600 hover:text-blue-700 transition-colors flex items-center mt-1">
+                            探索更多高级能力 <svg class="w-3.5 h-3.5 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 【状态 E】：多套餐即将到期 -->
+            <div id="view-multi-expire" class="card border border-gray-100 p-6 flex flex-col h-full bg-white rounded-xl" style="display: none;">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-gray-900 text-[16px]">企业权益</h3>
+                    <div class="flex items-center gap-4">
+                        <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-1">权益兑换 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></a>
+                        <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-0.5">权益明细 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></a>
+                    </div>
+                </div>
+                
+                        <!-- 合并：主套餐与增值权益包 -->
+                        <div class="rounded-xl border border-[#E5E6EB] bg-white overflow-hidden mb-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] transition-shadow duration-300 flex flex-col">
+                            <!-- 蓝色套餐区 -->
+                            <div class="w-full bg-gradient-to-br from-[#F0F4FF] to-[#D6E4FF] p-4">
+                                <!-- 表头 -->
+                                <div class="flex justify-between items-center mb-4">
+                                    <div class="text-[14px] font-bold text-[#1D2129] flex items-center">
+                                        已购套餐 <span class="text-[12px] font-normal text-blue-600 bg-blue-100/50 px-2 py-0.5 rounded-full ml-2">3 个生效中</span>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <a href="#" class="text-[13px] text-blue-600 hover:text-blue-700 transition-colors">查看全部</a>
+                                        <button class="text-[12px] bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition-colors font-medium">购买咨询</button>
+                                    </div>
+                                </div>
+
+                                <!-- 极简无框列表 -->
+                                <div class="flex flex-col">
+                                    <!-- 即将到期套餐 -->
+                                    <div class="py-2.5 border-b border-blue-900/5 flex justify-between items-center">
+                                        <div class="flex items-center gap-2">
+                                            <div class="text-[#1D2129] font-extrabold text-[16px] tracking-tight">WPS 365 商业高级版</div>
+                                            <span class="bg-red-50 text-red-600 text-[11px] px-2 py-0.5 rounded font-bold ml-1">5天后到期</span>
+                                        </div>
+                                        <div class="text-[13px] flex items-center justify-end gap-6 min-w-[270px]">
+                                            <span class="text-[#1D2129] font-medium">10/20 席</span>
+                                            <span class="text-[#4E5969]">有效期至: 2026-05-22</span>
+                                        </div>
+                                    </div>
+                                    <!-- 正常套餐 -->
+                                    <div class="py-2.5 flex justify-between items-center">
+                                        <div class="flex items-center gap-2">
+                                            <div class="text-[#1D2129] font-extrabold text-[16px] tracking-tight">WPS 365 商业协作版</div>
+                                        </div>
+                                        <div class="text-[13px] flex items-center justify-end gap-6 min-w-[270px]">
+                                            <span class="text-[#1D2129] font-medium">20/30 席</span>
+                                            <span class="text-[#4E5969]">有效期至: 2028-12-31</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                        </div>
+
+                <!-- 企业空间 + 权益包 并排 -->
+                <div class="flex gap-4 mt-auto">
+                    <!-- 左：企业空间 -->
+                    <div class="flex-1 border border-gray-200 rounded-lg p-3 bg-white flex flex-col justify-between">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="text-[13px] text-gray-700 flex items-center gap-2 font-medium">
+                                <span>企业空间</span>
+                            </div>
+                            <button class="text-[12px] text-blue-600 border border-blue-200 px-3 py-1 rounded hover:bg-blue-50 transition-colors font-medium">管理</button>
+                        </div>
+                        <div class="text-[12px] text-gray-500 mb-1.5"><span class="text-[14px]">400 GB/1 TB</span></div>
+                            <div class="w-full bg-[#f0f2f5] rounded-full h-1.5 mb-2">
+                            <div class="bg-blue-600 h-1.5 rounded-full" style="width: 40%"></div>
+                        </div>
+                        <a href="#" class="text-[12px] text-blue-600 hover:underline mt-1 inline-block">空间明细></a>
+                    </div>
+                    <!-- 右：权益包 -->
+                    <div class="flex-1 border border-gray-200 rounded-lg p-3 bg-white flex flex-col justify-between">
+                        <div class="flex justify-between items-center mb-2.5">
+                            <div class="text-[13px] text-gray-700 font-medium">权益包</div>
+                        </div>
+                        <div class="text-[13px] text-gray-400 flex-1 flex items-center">暂无</div>
+                        <a href="#" onclick="openVasModal(event)" class="text-[12px] text-blue-600 hover:text-blue-700 transition-colors flex items-center mt-1">
+                            探索更多高级能力 <svg class="w-3.5 h-3.5 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 【状态 F】：单套餐(已过期) -->
+            <div id="view-expired" class="card border border-gray-100 p-6 flex flex-col h-full bg-white rounded-xl" style="display: none;">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-gray-900 text-[16px]">企业权益</h3>
+                    <div class="flex items-center gap-4">
+                        <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-1">权益兑换 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></a>
+                        <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-0.5">权益明细 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></a>
+                    </div>
+                </div>
+                
+                <!-- 主套餐与增值服务合并卡片 (无缝拼接卡片) -->
+                <div class="rounded-xl border border-[#E5E6EB] bg-white overflow-hidden mb-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] transition-shadow duration-300 flex flex-col">
+                    <!-- 上部：主套餐区域 (冷灰色失效质感) -->
+                    <div class="bg-[#F7F8FA] p-6 relative z-20 border-b border-gray-200/60">
+                        <div class="flex justify-between items-center relative z-10">
+                            <!-- 左侧信息区 (严谨纵向布局) -->
+                            <div class="min-w-0 flex-1 pr-6">
+                                <!-- 第一行：主标题 + 皇冠 + 过期标签 -->
+                                <div class="flex items-center gap-2 mb-1.5">
+                                    <div class="text-[#1D2129] font-extrabold text-[22px] tracking-tight truncate">WPS 365 商业标准版</div>
+                                    <!-- 轻量化软标签 -->
+                                    <span class="bg-orange-50 text-orange-600 text-[11px] px-2 py-0.5 rounded font-bold ml-1 shrink-0">已过期 60 天</span>
+                                </div>
+                                
+                                <!-- 第二行：极简提示文本 -->
+                                <div class="text-[#4E5969] text-[13px] leading-5 flex items-center gap-2 whitespace-nowrap">
+                                    <span>当前生效：WPS 365体验版</span>
+                                </div>
+                            </div>
+                            
+                            <!-- 右侧操作区 (绝对不折行) -->
+                            <div class="flex items-center gap-5 shrink-0 whitespace-nowrap">
+                                <a href="#" class="text-[13px] text-[#86909C] hover:text-blue-600 flex items-center gap-1.5 transition-colors font-medium">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Zm0 0a9 9 0 1 1 18 0m0 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3Z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 16v2a4 4 0 0 1-4 4h-5"></path></svg>
+                                    购买咨询
+                                </a>
+                                <!-- 品牌蓝主按钮 -->
+                                <button class="bg-blue-600 text-white px-6 py-2 rounded-lg text-[14px] font-bold hover:bg-blue-700 transition-colors border border-transparent shrink-0">
+                                    重新购买
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <!-- 企业空间 + 权益包 并排 -->
+                <div class="flex gap-4 mt-auto">
+                    <!-- 左：企业空间 -->
+                    <div class="flex-1 border border-gray-200 rounded-lg p-3 bg-white flex flex-col justify-between">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="text-[13px] text-gray-700 flex items-center gap-2 font-medium">
+                                <span>企业空间</span>
+                            </div>
+                            <button class="text-[12px] text-blue-600 border border-blue-200 px-3 py-1 rounded hover:bg-blue-50 transition-colors font-medium">管理</button>
+                        </div>
+                        <div class="text-[12px] text-gray-500 mb-1.5"><span class="text-[14px]">336.7 M/4 G</span></div>
+                            <div class="w-full bg-[#f0f2f5] rounded-full h-1.5 mb-2">
+                            <div class="bg-blue-600 h-1.5 rounded-full" style="width: 12%"></div>
+                        </div>
+                        <a href="#" class="text-[12px] text-blue-600 hover:underline mt-1 inline-block">空间明细></a>
+                    </div>
+                    <!-- 右：权益包 -->
+                    <div class="flex-1 border border-gray-200 rounded-lg p-3 bg-white flex flex-col">
+                        <div class="flex justify-between items-center mb-2.5">
+                            <div class="text-[13px] text-gray-700 font-medium">权益包</div>
+                            <button class="text-[12px] text-blue-600 border border-blue-200 px-3 py-1 rounded hover:bg-blue-50 transition-colors font-medium">购买</button>
+                        </div>
+                        <div class="flex flex-col flex-1">
+                            <div class="flex justify-between items-center py-1">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-[12px] text-gray-600">企业超级会员</span>
+                                    <span class="text-[#FF7D00] text-[10px] bg-orange-50 px-1.5 py-0.5 rounded leading-none font-medium">即将过期</span>
+                                </div>
+                                <span class="text-[12px] text-gray-400">2026-06-12到期</span>
+                            </div>
+                            <div class="flex justify-between items-center py-1">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-[12px] text-gray-600">AI合同审查</span>
+                                    <span class="text-[#FF7D00] text-[10px] bg-orange-50 px-1.5 py-0.5 rounded leading-none font-medium">额度不足</span>
+                                </div>
+                                <span class="text-[12px] text-gray-400">剩 5 次</span>
+                            </div>
+                        </div>
+                        <a href="#" onclick="openVasModal(event)" class="text-[12px] text-blue-600 hover:underline mt-1 inline-block">查看全部 &gt;</a>
+                    </div>
+                </div>
+
+                <!-- 授权认证 -->
+                <div class="flex items-center gap-1.5 text-[13px] text-[#4E5969] px-1 mt-2 mb-4">
+                    授权认证：<span class="text-gray-600 font-medium">不支持</span>
+                    <div class="relative group">
+                        <svg class="w-3.5 h-3.5 cursor-pointer hover:text-gray-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                </div>
+
+            </div>
+
+            
+            <!-- 【状态 B5】：单套餐+有权益包 -->
+            <div id="view-vas-merged" class="card border border-gray-100 p-6 flex flex-col h-full bg-white rounded-xl" style="display: none;">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-gray-900 text-[16px]">企业权益</h3>
+                    <div class="flex items-center gap-4">
+                        <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-1">权益兑换 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></a>
+                        <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-0.5">权益明细 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></a>
+                    </div>
+                </div>
+                
+                <!-- 主套餐与增值服务合并卡片 (无缝拼接卡片) -->
+                <div class="rounded-xl border border-[#E5E6EB] bg-white overflow-hidden mb-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] transition-shadow duration-300 flex flex-col">
+                    <!-- 上部：主套餐区域 (高级琉璃蓝，无缝贴边) -->
+                    <div class="bg-gradient-to-br from-[#F0F4FF] to-[#D6E4FF] p-6 relative z-20 border-b border-blue-200/50 shadow-[0_4px_16px_-4px_rgba(37,99,235,0.08)]">
+                        <!-- 专属肌理/底纹：丝绸光泽与微弱几何光晕 -->
+                        <div class="absolute inset-0 pointer-events-none overflow-hidden">
+                            <!-- 顶部柔和径向高光 -->
+                            <div class="absolute -top-[50%] -left-[10%] w-[80%] h-[150%] bg-[radial-gradient(circle,rgba(255,255,255,0.7)_0%,transparent_70%)]"></div>
+                            <!-- 右侧斜向折光 -->
+                            <div class="absolute -right-[10%] -top-[20%] w-[50%] h-[150%] bg-gradient-to-l from-white/40 to-transparent transform rotate-[20deg]"></div>
+                            <!-- 底部高光线模拟实体边缘 -->
+                            <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center relative z-10">
+                            <div>
+                                <div class="flex items-center gap-2 mb-1.5">
+                                    <div class="text-[#1D2129] font-extrabold text-[22px] tracking-tight">WPS 365 商业标准版</div>
+                                </div>
+                                <div class="text-[#4E5969] text-[13px] leading-5 flex items-center gap-2 whitespace-nowrap">
+                                    <span>40/50 席</span>
+                                    <span class="w-px h-3 bg-blue-300/50"></span>
+                                    <span>有效期至：2028-12-31</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 flex items-center gap-1.5 transition-colors font-medium">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Zm0 0a9 9 0 1 1 18 0m0 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3Z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 16v2a4 4 0 0 1-4 4h-5"></path></svg>
+                                    购买咨询
+                                </a>
+                                <button class="bg-blue-600 text-white px-5 py-2 rounded-lg text-[13px] font-medium shadow-sm hover:bg-blue-700 transition-colors border border-transparent">
+                                    立即续费
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <!-- 企业空间 + 权益包 并排 -->
+                <div class="flex gap-4 mt-auto">
+                    <!-- 左：企业空间 -->
+                    <div class="flex-1 border border-gray-200 rounded-lg p-3 bg-white flex flex-col justify-between">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="text-[13px] text-gray-700 flex items-center gap-2 font-medium">
+                                <span>企业空间</span>
+                            </div>
+                            <button class="text-[12px] text-blue-600 border border-blue-200 px-3 py-1 rounded hover:bg-blue-50 transition-colors font-medium">管理</button>
+                        </div>
+                        <div class="text-[12px] text-gray-500 mb-1.5"><span class="text-[14px]">400 GB/1 TB</span></div>
+                            <div class="w-full bg-[#f0f2f5] rounded-full h-1.5 mb-2">
+                            <div class="bg-blue-600 h-1.5 rounded-full" style="width: 40%"></div>
+                        </div>
+                        <a href="#" class="text-[12px] text-blue-600 hover:underline mt-1 inline-block">空间明细></a>
+                    </div>
+                    <!-- 右：增值权益包 -->
+                    <div class="flex-1 border border-gray-200 rounded-lg p-3 bg-white flex flex-col">
+                        <div class="flex justify-between items-center mb-2.5">
+                            <div class="text-[13px] text-gray-700 font-medium">权益包</div>
+                            <button class="text-[12px] text-blue-600 border border-blue-200 px-3 py-1 rounded hover:bg-blue-50 transition-colors font-medium">购买</button>
+                        </div>
+                        <div class="flex flex-col flex-1">
+                            <div class="flex justify-between items-center py-1">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-[12px] text-gray-600">企业超级会员</span>
+                                    <span class="text-[#FF7D00] text-[10px] bg-orange-50 px-1.5 py-0.5 rounded leading-none font-medium">即将过期</span>
+                                </div>
+                                <span class="text-[12px] text-gray-400">2026-06-12到期</span>
+                            </div>
+                            <div class="flex justify-between items-center py-1">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-[12px] text-gray-600">AI合同审查</span>
+                                    <span class="text-[#FF7D00] text-[10px] bg-orange-50 px-1.5 py-0.5 rounded leading-none font-medium">额度不足</span>
+                                </div>
+                                <span class="text-[12px] text-gray-400">剩 5 次</span>
+                            </div>
+                        </div>
+                        <a href="#" onclick="openVasModal(event)" class="text-[12px] text-blue-600 hover:underline mt-1 inline-block">查看全部 &gt;</a>
+                    </div>
+                </div>
+
+                <!-- 授权认证 -->
+                <div class="flex items-center gap-1.5 text-[13px] text-[#4E5969] px-1 mt-2 mb-4">
+                    授权认证：<span class="text-blue-600 font-medium">支持</span>
+                    <div class="relative group">
+                        <svg class="w-3.5 h-3.5 cursor-pointer hover:text-gray-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【状态 B6】：单套餐+无权益包+默认状态 -->
+            <div id="view-vas-merged-empty" class="card border border-gray-100 p-6 flex flex-col h-full bg-white rounded-xl" style="display: none;">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-gray-900 text-[16px]">企业权益</h3>
+                    <div class="flex items-center gap-4">
+                        <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-1">权益兑换 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></a>
+                        <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-0.5">权益明细 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></a>
+                    </div>
+                </div>
+                
+                <!-- 主套餐与增值服务合并卡片 (统一蓝色背景) -->
+                <div class="rounded-xl border border-[#E5E6EB] bg-gradient-to-br from-[#F0F4FF] to-[#D6E4FF] relative overflow-hidden mb-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] transition-shadow duration-300 flex flex-col">
+                    <!-- 专属肌理/底纹：丝绸光泽与微弱几何光晕 (覆盖全局) -->
+                    <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+                        <!-- 顶部柔和径向高光 -->
+                        <div class="absolute -top-[50%] -left-[10%] w-[80%] h-[150%] bg-[radial-gradient(circle,rgba(255,255,255,0.7)_0%,transparent_70%)]"></div>
+                        <!-- 右侧斜向折光 -->
+                        <div class="absolute -right-[10%] -top-[20%] w-[50%] h-[150%] bg-gradient-to-l from-white/40 to-transparent transform rotate-[20deg]"></div>
+                        <!-- 底部高光线模拟实体边缘 -->
+                        <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
+                    </div>
+                    
+                    <!-- 上部：主套餐区域 -->
+                    <div class="p-6 relative z-10">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <div class="flex items-center gap-2 mb-1.5">
+                                    <div class="text-[#1D2129] font-extrabold text-[22px] tracking-tight">WPS 365 商业标准版</div>
+                                </div>
+                                <div class="text-[#4E5969] text-[13px] leading-5 flex items-center gap-2 whitespace-nowrap">
+                                    <span>40/50 席</span>
+                                    <span class="w-px h-3 bg-blue-300/50"></span>
+                                    <span>有效期至：2028-12-31</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 flex items-center gap-1.5 transition-colors font-medium">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Zm0 0a9 9 0 1 1 18 0m0 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3Z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 16v2a4 4 0 0 1-4 4h-5"></path></svg>
+                                    购买咨询
+                                </a>
+                                <button class="bg-blue-600 text-white px-5 py-2 rounded-lg text-[13px] font-medium shadow-sm hover:bg-blue-700 transition-colors border border-transparent">
+                                    立即续费
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <!-- 企业空间 + 权益包 并排 -->
+                <div class="flex gap-4 mt-auto">
+                    <!-- 左：企业空间 -->
+                    <div class="flex-1 border border-gray-200 rounded-lg p-3 bg-white flex flex-col justify-between">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="text-[13px] text-gray-700 flex items-center gap-2 font-medium">
+                                <span>企业空间</span>
+                            </div>
+                            <button class="text-[12px] text-blue-600 border border-blue-200 px-3 py-1 rounded hover:bg-blue-50 transition-colors font-medium">管理</button>
+                        </div>
+                        <div class="text-[12px] text-gray-500 mb-1.5"><span class="text-[14px]">400 GB/1 TB</span></div>
+                            <div class="w-full bg-[#f0f2f5] rounded-full h-1.5 mb-2">
+                            <div class="bg-blue-600 h-1.5 rounded-full" style="width: 40%"></div>
+                        </div>
+                        <a href="#" class="text-[12px] text-blue-600 hover:underline mt-1 inline-block">空间明细></a>
+                    </div>
+                    <!-- 右：增值权益包（暂无） -->
+                    <div class="flex-1 border border-gray-200 rounded-lg p-3 bg-white flex flex-col justify-between">
+                        <div class="flex justify-between items-center mb-2.5">
+                            <div class="text-[13px] text-gray-700 font-medium">权益包</div>
+                        </div>
+                        <div class="text-[13px] text-gray-400 flex-1 flex items-center">暂无</div>
+                        <a href="#" onclick="openVasModal(event)" class="text-[12px] text-blue-600 hover:text-blue-700 transition-colors flex items-center mt-1">
+                            探索更多高级能力 <svg class="w-3.5 h-3.5 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 授权认证 -->
+                <div class="flex items-center gap-1.5 text-[13px] text-[#4E5969] px-1 mt-2 mb-4">
+                    授权认证：<span class="text-blue-600 font-medium">支持</span>
+                    <div class="relative group">
+                        <svg class="w-3.5 h-3.5 cursor-pointer hover:text-gray-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 【状态 F2】：单套餐(已过期-无提示) -->
+            <div id="view-expired-no-warning" class="card border border-gray-100 p-6 flex flex-col h-full bg-white rounded-xl" style="display: none;">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-gray-900 text-[16px]">企业权益</h3>
+                    <div class="flex items-center gap-4">
+                        <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-1">权益兑换 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></a>
+                        <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-0.5">权益明细 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></a>
+                    </div>
+                </div>
+                
+                <!-- 主套餐 (已过期) (无缝拼接卡片) -->
+                <div class="rounded-xl border border-[#E5E6EB] bg-white overflow-hidden mb-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] transition-shadow duration-300 flex flex-col">
+                    <div class="bg-gradient-to-br from-[#F8FAFC] to-[#F1F5F9] p-6 relative z-20 shadow-[0_4px_16px_-4px_rgba(0,0,0,0.05)]">
+                        <!-- 专属肌理/底纹：丝绸光泽与微弱几何光晕 -->
+                        <div class="absolute inset-0 pointer-events-none overflow-hidden">
+                            <!-- 顶部柔和径向高光 -->
+                            <div class="absolute -top-[50%] -left-[10%] w-[80%] h-[150%] bg-[radial-gradient(circle,rgba(255,255,255,0.7)_0%,transparent_70%)]"></div>
+                            <!-- 右侧斜向折光 -->
+                            <div class="absolute -right-[10%] -top-[20%] w-[50%] h-[150%] bg-gradient-to-l from-white/40 to-transparent transform rotate-[20deg]"></div>
+                            <!-- 底部高光线模拟实体边缘 -->
+                            <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center relative z-10">
+                            <div>
+                                <div class="flex items-center gap-2 mb-1.5">
+                                    <div class="text-[#1D2129] font-extrabold text-[22px] tracking-tight">WPS 365 商业标准版</div>
+                                    <span class="bg-orange-50 text-orange-600 text-[10px] px-1.5 py-0.5 rounded font-bold">已过期 60 天</span>
+                                </div>
+                                <div class="text-[#4E5969] text-[13px] leading-5 flex items-center gap-2 whitespace-nowrap">
+                                    <div class="flex items-center gap-1 text-amber-600">
+                                        <span>⚠️ 付费功能已回收，购买套餐可恢复</span>
+                                        <div class="relative group">
+                                            <svg class="w-3.5 h-3.5 cursor-pointer hover:text-amber-700 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            <!-- Tooltip -->
+                                            <div class="absolute bottom-full left-1/2 -translate-x-1/2 pb-2 w-[340px] z-10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none group-hover:pointer-events-auto">
+                                                <div class="bg-[#303133] text-white text-[12px] px-3 py-2.5 rounded shadow-lg relative leading-relaxed whitespace-normal font-normal">
+                                                    <div class="font-bold mb-1">什么是功能回收？</div>
+                                                    <div class="text-gray-300 mb-1">企业权益过期，退回体验版后，对已经使用的付费高级功能进行停用（如关闭已开启的企业文档水印）。<a href="#" class="text-blue-400 hover:text-blue-300 inline-block underline underline-offset-2">了解功能回收规则 ></a></div>
+                                                    <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#303133] rotate-45"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 flex items-center gap-1.5 transition-colors font-medium">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Zm0 0a9 9 0 1 1 18 0m0 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3Z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 16v2a4 4 0 0 1-4 4h-5"></path></svg>
+                                    购买咨询
+                                </a>
+                                <button class="bg-amber-500 text-white px-5 py-2 rounded-lg text-[13px] font-medium shadow-sm hover:bg-amber-600 transition-colors border border-transparent">
+                                    重新购买
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 底座资源 -->
+                <div class="flex flex-col gap-2 mt-auto">
+                    <div class="flex gap-4">
+                        <!-- 左：企业空间 -->
+                        <div class="flex-1 border border-gray-200 rounded-lg p-3 bg-white flex flex-col justify-between">
+                            <div class="flex justify-between items-center mb-2">
+                                <div class="text-[13px] text-gray-700 flex items-center gap-2 font-medium">
+                                    <span>企业空间</span>
+                                </div>
+                                <button class="text-[12px] text-blue-600 border border-blue-200 px-3 py-1 rounded hover:bg-blue-50 transition-colors font-medium">管理</button>
+                            </div>
+                            <div class="text-[12px] text-gray-500 mb-1.5"><span class="text-[14px]">336.7 M/4 G</span></div>
+                                <div class="w-full bg-[#f0f2f5] rounded-full h-1.5 mb-2">
+                                <div class="bg-blue-600 h-1.5 rounded-full" style="width: 12%"></div>
+                            </div>
+                            <a href="#" class="text-[12px] text-blue-600 hover:underline mt-1 inline-block">空间明细></a>
+                        </div>
+                        <!-- 右：权益包 -->
+                        <div class="flex-1 border border-gray-200 rounded-lg p-3 bg-white flex flex-col justify-between">
+                            <div class="flex justify-between items-center mb-2.5">
+                                <div class="text-[13px] text-gray-700 font-medium">权益包</div>
+                            </div>
+                            <div class="text-[13px] text-gray-400 flex-1 flex items-center">暂无</div>
+                            <a href="#" onclick="openVasModal(event)" class="text-[12px] text-blue-600 hover:text-blue-700 transition-colors flex items-center mt-1">
+                                探索更多高级能力 <svg class="w-3.5 h-3.5 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- 授权认证 -->
+                    <div class="flex items-center gap-1.5 text-[13px] text-[#4E5969] px-1 mb-4">
+                        授权认证：<span class="text-gray-600 font-medium">不支持</span>
+                        <div class="relative group">
+                            <svg class="w-3.5 h-3.5 cursor-pointer hover:text-gray-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 【状态 G】：单套餐(已过期-缓冲期) -->
+            <div id="view-expired-buffer" class="card border border-gray-100 p-6 flex flex-col h-full bg-white rounded-xl shadow-sm" style="display: none;">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-gray-900 text-[16px]">企业权益</h3>
+                    <div class="flex items-center gap-4">
+                        <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-1">权益兑换 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></a>
+                        <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-0.5">权益明细 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></a>
+                    </div>
+                </div>
+                
+                <!-- 主套餐 (已过期-缓冲期) (无缝拼接卡片) -->
+                <div class="rounded-xl border border-[#E5E6EB] bg-white overflow-hidden mb-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] transition-shadow duration-300 flex flex-col">
+                    <div class="bg-gradient-to-br from-[#F8FAFC] to-[#F1F5F9] p-6 relative z-20 shadow-[0_4px_16px_-4px_rgba(0,0,0,0.05)]">
+                        <!-- 专属肌理/底纹：丝绸光泽与微弱几何光晕 -->
+                        <div class="absolute inset-0 pointer-events-none overflow-hidden">
+                            <!-- 顶部柔和径向高光 -->
+                            <div class="absolute -top-[50%] -left-[10%] w-[80%] h-[150%] bg-[radial-gradient(circle,rgba(255,255,255,0.7)_0%,transparent_70%)]"></div>
+                            <!-- 右侧斜向折光 -->
+                            <div class="absolute -right-[10%] -top-[20%] w-[50%] h-[150%] bg-gradient-to-l from-white/40 to-transparent transform rotate-[20deg]"></div>
+                            <!-- 底部高光线模拟实体边缘 -->
+                            <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center relative z-10">
+                            <div>
+                                <div class="flex items-center gap-2 mb-1.5">
+                                    <div class="text-[#1D2129] font-extrabold text-[22px] tracking-tight">WPS 365 商业标准版</div>
+                                    <span class="bg-orange-50 text-orange-600 text-[10px] px-1.5 py-0.5 rounded font-bold">已过期 13 天</span>
+                                </div>
+                                <div class="text-[#4E5969] text-[13px] leading-5 flex items-center gap-2 whitespace-nowrap">
+                                    <div class="flex items-center gap-1 text-amber-600">
+                                        <span>⚠️ 距离功能回收仅剩 2 天</span>
+                                        <div class="relative group">
+                                            <svg class="w-3.5 h-3.5 cursor-pointer hover:text-amber-700 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            <div class="absolute bottom-full left-1/2 -translate-x-1/2 pb-2 w-[340px] z-10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none group-hover:pointer-events-auto">
+                                                <div class="bg-[#303133] text-white text-[12px] px-3 py-2.5 rounded shadow-lg relative leading-relaxed whitespace-normal font-normal">
+                                                    <div class="font-bold mb-1">什么是功能回收？</div>
+                                                    <div class="text-gray-300 mb-1">企业权益过期，退回体验版后，对已经使用的付费高级功能进行停用（如关闭已开启的企业文档水印）。<a href="#" class="text-blue-400 hover:text-blue-300 inline-block underline underline-offset-2">了解功能回收规则 ></a></div>
+                                                    <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#303133] rotate-45"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-1.5 text-[13px] leading-5 text-[#4E5969] mt-1.5">
+                                    授权认证：<span class="text-gray-600 font-medium">不支持</span>
+                                    <div class="relative group">
+                                        <svg class="w-3.5 h-3.5 cursor-pointer hover:text-gray-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 flex items-center gap-1.5 transition-colors font-medium">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Zm0 0a9 9 0 1 1 18 0m0 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3Z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 16v2a4 4 0 0 1-4 4h-5"></path></svg>
+                                    购买咨询
+                                </a>
+                                <button class="bg-amber-500 text-white px-5 py-2 rounded-lg text-[13px] font-medium shadow-sm hover:bg-amber-600 transition-colors border border-transparent">
+                                    重新购买
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 企业空间 + 权益包 并排 -->
+                <div class="flex gap-4 mt-auto">
+                    <!-- 左：企业空间 -->
+                    <div class="flex-1 border border-gray-200 rounded-lg p-3 bg-white flex flex-col justify-between">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="text-[13px] text-gray-700 flex items-center gap-2 font-medium">
+                                <span>企业空间</span>
+                            </div>
+                            <button class="text-[12px] text-blue-600 border border-blue-200 px-3 py-1 rounded hover:bg-blue-50 transition-colors font-medium">管理</button>
+                        </div>
+                        <div class="text-[12px] text-gray-500 mb-1.5"><span class="text-[14px]">336.7 M/4 G</span></div>
+                            <div class="w-full bg-[#f0f2f5] rounded-full h-1.5 mb-2">
+                            <div class="bg-blue-600 h-1.5 rounded-full" style="width: 12%"></div>
+                        </div>
+                        <a href="#" class="text-[12px] text-blue-600 hover:underline mt-1 inline-block">空间明细></a>
+                    </div>
+                    <!-- 右：权益包 -->
+                    <div class="flex-1 border border-gray-200 rounded-lg p-3 bg-white flex flex-col justify-between">
+                        <div class="flex justify-between items-center mb-2.5">
+                            <div class="text-[13px] text-gray-700 font-medium">权益包</div>
+                        </div>
+                        <div class="text-[13px] text-gray-400 flex-1 flex items-center">暂无</div>
+                        <a href="#" onclick="openVasModal(event)" class="text-[12px] text-blue-600 hover:text-blue-700 transition-colors flex items-center mt-1">
+                            探索更多高级能力 <svg class="w-3.5 h-3.5 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 【状态 H】：多套餐-已过期 (基于纯免费/体验态复制) -->
+            <div id="view-multi-expired" class="card border border-gray-100 p-6 flex flex-col h-full bg-white rounded-xl shadow-sm relative" style="display: none;">
+                <!-- 头部区域 -->
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-gray-900 text-[16px]">企业权益</h3>
+                    <div class="flex items-center gap-4">
+                        <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-1">权益兑换 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></a>
+                        <a href="#" class="text-[13px] text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-0.5">权益明细 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></a>
+                    </div>
+                </div>
+
+                        <!-- 合并：主套餐与增值权益包 -->
+                        <div class="rounded-xl border border-[#E5E6EB] bg-white overflow-hidden mb-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] transition-shadow duration-300 flex flex-col">
+                            <!-- 蓝色套餐区 -->
+                            <div class="w-full bg-gradient-to-br from-[#F8FAFC] to-[#F1F5F9] p-4">
+                                <!-- 表头 -->
+                                <div class="flex justify-between items-center mb-4">
+                                    <div class="text-[14px] font-bold text-[#1D2129] flex items-center">
+                                        已购套餐 <span class="text-[12px] font-normal text-gray-500 bg-gray-100/80 px-2 py-0.5 rounded-full ml-2">当前生效：WPS 365 体验版</span>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <a href="#" class="text-[13px] text-blue-600 hover:text-blue-700 transition-colors">查看全部</a>
+                                        <button class="text-[12px] bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition-colors font-medium">购买咨询</button>
+                                    </div>
+                                </div>
+
+                                <!-- 极简无框列表 -->
+                                <div class="flex flex-col">
+                                    <!-- 即将到期套餐 -->
+                                    <div class="py-2.5 border-b border-blue-900/5 flex justify-between items-center">
+                                        <div class="flex items-center gap-2">
+                                            <div class="text-[#1D2129] font-extrabold text-[16px] tracking-tight">WPS 365 商业高级版</div>
+                                            <span class="bg-orange-50 text-orange-600 text-[10px] px-1.5 py-0.5 rounded font-bold ml-1">已过期 60 天</span>
+                                        </div>
+                                        <div class="text-[13px] flex items-center justify-end gap-6 min-w-[270px]">
+                                            <span class="text-[#1D2129] font-medium">10/20 席</span>
+                                            <span class="text-[#4E5969] font-medium">有效期至: 2026-03-21</span>
+                                        </div>
+                                    </div>
+                                    <!-- 正常套餐 -->
+                                    <div class="py-2.5 flex justify-between items-center">
+                                        <div class="flex items-center gap-2">
+                                            <div class="text-[#1D2129] font-extrabold text-[16px] tracking-tight">WPS 365 商业协作版</div>
+                                            <span class="bg-orange-50 text-orange-600 text-[10px] px-1.5 py-0.5 rounded font-bold ml-1">已过期 90 天</span>
+                                        </div>
+                                        <div class="text-[13px] flex items-center justify-end gap-6 min-w-[270px]">
+                                            <span class="text-[#1D2129] font-medium">20/30 席</span>
+                                            <span class="text-[#4E5969]">有效期至: 2026-02-21</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                        </div>
+
+                <!-- 底座资源 -->
+                <div class="flex flex-col gap-2 mt-auto">
+                    <div class="flex gap-4">
+                        <!-- 左：企业空间 -->
+                        <div class="flex-1 border border-gray-200 rounded-lg p-3 bg-white flex flex-col justify-between">
+                            <div class="flex justify-between items-center mb-2">
+                                <div class="text-[14px] text-gray-800 flex items-center gap-3">
+                                    <span>企业空间</span>
+                                </div>
+                                <button class="text-[12px] text-blue-600 border border-blue-200 px-3 py-1 rounded hover:bg-blue-50 transition-colors font-medium">管理</button>
+                            </div>
+                            <div class="text-[12px] text-gray-500 mb-1.5"><span id="multi-expired-space-text" class="text-[15px]">336.7 M/4 G</span></div>
+                            <div class="w-full bg-[#f0f2f5] rounded-full h-1.5 mb-2">
+                                <div id="multi-expired-space-bar" class="bg-blue-600 h-1.5 rounded-full" style="width: 12%"></div>
+                            </div>
+                            <a href="#" class="text-[12px] text-blue-600 hover:underline mt-1 inline-block">空间明细></a>
+                        </div>
+                        <!-- 右：权益包 -->
+                        <div class="flex-1 border border-gray-200 rounded-lg p-3 bg-white flex flex-col justify-between">
+                            <div class="flex justify-between items-center mb-2.5">
+                                <div class="text-[13px] text-gray-700 font-medium">权益包</div>
+                            </div>
+                            <div class="text-[13px] text-gray-400 flex-1 flex items-center">暂无</div>
+                            <a href="#" onclick="openVasModal(event)" class="text-[12px] text-blue-600 hover:text-blue-700 transition-colors flex items-center mt-1">
+                                探索更多高级能力 <svg class="w-3.5 h-3.5 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 受阻详情弹窗 -->
+    <div id="alertModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+                <div class="relative transform overflow-hidden rounded-xl bg-white text-left shadow-2xl transition-all sm:my-8 w-full sm:max-w-[760px] border border-gray-100">
+                    <div class="bg-white px-6 pt-5 pb-3 flex justify-between items-center">
+                        <div class="relative">
+                            <button class="flex items-center gap-2 px-3 py-1.5 border border-gray-300 rounded-md text-[14px] font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-sm">
+                                近一周功能受阻
+                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                        </div>
+                        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition-colors rounded-full p-1 hover:bg-gray-100">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="px-6 pb-2">
+                        <div class="bg-[#f0f5ff] rounded-lg px-4 py-3 flex items-center gap-2 text-[13px] text-gray-700">
+                            <svg class="w-4 h-4 text-blue-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+                            因企业套餐权益不足，无法使用高级功能，影响企业协作效果，建议升级套餐。
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 max-h-[55vh] overflow-y-auto custom-scrollbar relative mt-2">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="sticky top-0 bg-white z-10">
+                                <tr>
+                                    <th class="py-3 pr-4 text-[13px] font-bold text-gray-900 border-b border-gray-100 whitespace-nowrap w-[30%] bg-white">功能模块</th>
+                                    <th class="py-3 px-4 text-[13px] font-bold text-gray-900 border-b border-gray-100 w-[30%] bg-white">受阻功能</th>
+                                    <th class="py-3 px-4 text-[13px] font-bold text-gray-900 border-b border-gray-100 whitespace-nowrap w-[14%] bg-white">受阻时间</th>
+                                    <th class="py-3 pl-4 text-[13px] font-bold text-gray-900 border-b border-gray-100 whitespace-nowrap w-[14%] bg-white">受阻成员</th>
+                                    <th class="py-3 pl-4 text-[13px] font-bold text-gray-900 border-b border-gray-100 whitespace-nowrap w-[12%] bg-white text-center">
+                                        <span class="inline-flex items-center gap-1">
+                                            当前权益状态
+                                            <span class="relative inline-flex items-center" onmouseenter="showRightsStatusTip(event)" onmouseleave="hideRightsStatusTip()">
+                                                <svg class="w-3.5 h-3.5 text-gray-400 cursor-pointer hover:text-gray-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            </span>
+                                        </span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="alert-modal-table-body" class="text-[13px] text-gray-700 align-top"></tbody>
+                        </table>
+                    </div>
+                    <div class="bg-white border-t border-gray-100 flex justify-center py-5 relative shadow-[0_-4px_10px_rgba(0,0,0,0.02)]">
+                        <div class="relative">
+                            <button type="button" class="w-[200px] h-[36px] flex items-center justify-center rounded bg-[#3d6de5] text-[14px] font-medium text-white shadow-sm hover:bg-[#325bbf] transition-colors">
+                                升级套餐
+                            </button>
+                            <span class="absolute -top-2.5 -right-5 bg-[#e87030] text-white text-[11px] font-medium px-1.5 py-0.5 rounded shadow-sm border border-white whitespace-nowrap">
+                                9.0折优惠
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 权益包弹窗 -->
+    <div id="vas-modal" class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center" style="display: none;">
+        <div class="bg-white rounded-xl shadow-xl w-[520px] p-6 relative">
+            <!-- Close button -->
+            <button onclick="closeVasModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <!-- Title -->
+            <h3 class="text-[18px] font-bold text-[#1D2129] mb-5">全部权益包</h3>
+            
+            <!-- List -->
+            <div class="flex flex-col">
+                <!-- Item 1 -->
+                <div class="flex justify-between items-center py-3.5 border-b border-gray-100 first:border-t-0 border-t">
+                    <div class="flex items-center gap-2 flex-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0"></span>
+                        <span class="text-[14px] text-[#1D2129] font-medium">企业超级会员</span>
+                        <span class="text-[10px] text-red-500 bg-red-50 px-1.5 py-[3px] rounded border border-red-100/50 leading-none font-medium scale-95 origin-left">即将过期</span>
+                    </div>
+                    <div class="flex items-center gap-6 shrink-0">
+                        <div class="text-[13px] text-[#86909C] w-[110px] text-right">2026-05-22 到期</div>
+                        <div class="text-[13px] font-medium text-[#1D2129] w-[80px] text-right">已分配 10/10</div>
+                    </div>
+                </div>
+                
+                <!-- Item 2 -->
+                <div class="flex justify-between items-center py-3.5 border-b border-gray-100">
+                    <div class="flex items-center gap-2 flex-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0"></span>
+                        <span class="text-[14px] text-[#1D2129] font-medium">AI合同审查</span>
+                        <span class="text-[10px] text-red-500 bg-red-50 px-1.5 py-[3px] rounded border border-red-100/50 leading-none font-medium scale-95 origin-left">额度不足</span>
+                    </div>
+                    <div class="flex items-center gap-6 shrink-0">
+                        <div class="text-[13px] text-[#86909C] w-[110px] text-right">2028-12-31 到期</div>
+                        <div class="text-[13px] font-medium text-[#1D2129] w-[80px] text-right">剩余 5 次</div>
+                    </div>
+                </div>
+                
+                <!-- Item 3 -->
+                <div class="flex justify-between items-center py-3.5 border-b border-gray-100">
+                    <div class="flex items-center gap-2 flex-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0"></span>
+                        <span class="text-[14px] text-[#1D2129] font-medium">项目管理高级版</span>
+                    </div>
+                    <div class="flex items-center gap-6 shrink-0">
+                        <div class="text-[13px] text-[#86909C] w-[110px] text-right">2028-12-31 到期</div>
+                        <div class="text-[13px] font-medium text-[#1D2129] w-[80px] text-right">生效中</div>
+                    </div>
+                </div>
+                
+                <!-- Item 4 -->
+                <div class="flex justify-between items-center py-3.5 border-b border-gray-100">
+                    <div class="flex items-center gap-2 flex-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-gray-300 shrink-0"></span>
+                        <span class="text-[14px] text-[#86909C] font-medium">进销存基础版1人</span>
+                    </div>
+                    <div class="flex items-center gap-6 shrink-0">
+                        <div class="text-[13px] text-[#86909C] w-[110px] text-right">2024-01-01 到期</div>
+                        <div class="text-[13px] font-medium text-[#86909C] w-[80px] text-right">已失效</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Action -->
+            <div class="mt-8 flex justify-center gap-3">
+                <button class="bg-white text-gray-700 border border-gray-300 px-6 py-2 rounded-lg text-[14px] font-medium hover:bg-gray-50 transition-colors">去分配</button>
+                <button class="bg-blue-600 text-white px-6 py-2 rounded-lg text-[14px] font-medium hover:bg-blue-700 transition-colors">去选购</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="rights-status-floating-tip" class="hidden fixed z-[10000] w-[360px] bg-[#303133] text-white text-[12px] px-3 py-2.5 rounded shadow-lg leading-relaxed whitespace-normal font-normal text-left">
+        以下展示企业过往的受阻详情，如您已购买解决，相关权益的状态会更新至✅
+        <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#303133] rotate-45"></div>
+    </div>
+
+    <!-- JS Logic -->
+    <script>
+        const mockAlertTableData = [
+            { module: 'WPS会议：随时随地高效开会', feature: '文档流转安全管控(禁止移动到企业外)', time: '2024-07-19', member: '田心怡', avatarColor: 'bg-orange-100 text-orange-600', hasRights: false },
+            { module: 'WPS会议：随时随地高效开会', feature: '文档流转安全管控(禁止移动到企业外)', time: '2024-07-04', member: '徐飞宇', avatarColor: 'bg-blue-100 text-blue-600', hasRights: true },
+            { module: 'WPS会议：随时随地高效开会', feature: '文档流转安全管控(禁止移动到企业外)', time: '2024-07-12', member: '毛晓晓', avatarColor: 'bg-pink-100 text-pink-600', hasRights: false },
+            { module: 'WPS会议：随时随地高效开会', feature: '文档流转安全管控(禁止移动到企业外)', time: '2024-07-19', member: '毛晓晓', avatarColor: 'bg-pink-100 text-pink-600', hasRights: false },
+            { module: 'WPS会议：随时随地高效开会', feature: '文档流转安全管控(禁止移动到企业外)', time: '2024-07-20', member: '王建国', avatarColor: 'bg-emerald-100 text-emerald-600', hasRights: true },
+            { module: 'WPS会议：随时随地高效开会', feature: '文档流转安全管控(禁止移动到企业外)', time: '2024-07-21', member: '张阿姨', avatarColor: 'bg-purple-100 text-purple-600', hasRights: false }
+        ];
+
+        function openAllModal(e) {
+            if (e) e.preventDefault();
+            const tableBody = document.getElementById('alert-modal-table-body');
+            if (tableBody) {
+                tableBody.innerHTML = '';
+                mockAlertTableData.forEach((item) => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'border-b border-gray-100 hover:bg-gray-50/50 transition-colors';
+                    const firstChar = item.member.charAt(0);
+                    tr.innerHTML = `
+                        <td class="py-4 pr-4 leading-relaxed">${item.module}</td>
+                        <td class="py-4 px-4 leading-relaxed">${item.feature}</td>
+                        <td class="py-4 px-4 whitespace-nowrap text-gray-500">${item.time}</td>
+                        <td class="py-4 pl-4 whitespace-nowrap">
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 rounded-full ${item.avatarColor} flex items-center justify-center text-[11px] font-medium shrink-0">${firstChar}</div>
+                                <span class="font-medium text-gray-800">${item.member}</span>
+                            </div>
+                        </td>
+                        <td class="py-4 pl-4 whitespace-nowrap text-center text-[16px]">${item.hasRights ? '✅' : '❌'}</td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+            }
+            const modal = document.getElementById('alertModal');
+            if (modal) modal.classList.remove('hidden');
+            document.body.classList.add('modal-open');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('alertModal');
+            if (modal) modal.classList.add('hidden');
+            document.body.classList.remove('modal-open');
+        }
+
+        let seatWarningDismissed = false;
+        function closeSeatWarning() {
+            seatWarningDismissed = true;
+            const warningEl = document.getElementById('seat-warning');
+            if (warningEl) warningEl.style.display = 'none';
+            const inlineWarningEl = document.getElementById('seat-warning-inline');
+            if (inlineWarningEl) {
+                inlineWarningEl.classList.add('hidden');
+            }
+            const seatBoxEl = document.getElementById('seat-box');
+            if (seatBoxEl) {
+                seatBoxEl.classList.add('flex', 'flex-col', 'justify-center');
+            }
+        }
+
+        function showRightsStatusTip(e) {
+            const tooltip = document.getElementById('rights-status-floating-tip');
+            if (!tooltip) return;
+            tooltip.classList.remove('hidden');
+            const trigger = e.currentTarget;
+            const rect = trigger.getBoundingClientRect();
+            const tw = tooltip.offsetWidth || 360;
+            tooltip.style.left = (rect.left + rect.width / 2 - tw / 2) + 'px';
+            tooltip.style.top = (rect.top - tooltip.offsetHeight - 4) + 'px';
+        }
+
+        function hideRightsStatusTip() {
+            const tooltip = document.getElementById('rights-status-floating-tip');
+            if (!tooltip) return;
+            tooltip.classList.add('hidden');
+        }
+
+        function openVasModal(e) {
+            if (e) e.preventDefault();
+            document.getElementById('vas-modal').style.display = 'flex';
+        }
+
+        function closeVasModal() {
+            document.getElementById('vas-modal').style.display = 'none';
+        }
+
+        function relocateAuthIntoPlanCard(viewId) {
+            const view = document.getElementById(viewId);
+            if (!view) return;
+
+            // 只搬运底部授权认证（通常带 mb-4），避免重复处理已经在卡片内的节点
+            const authBlock = Array.from(view.querySelectorAll('div')).find((el) => {
+                const text = (el.textContent || '').trim();
+                return text.startsWith('授权认证：') && el.className.includes('mb-4');
+            });
+            if (!authBlock) return;
+
+            const topInfoArea = view.querySelector('.rounded-xl > div .flex.justify-between.items-center > div:first-child');
+            if (!topInfoArea) return;
+
+            authBlock.className = 'flex items-center gap-1.5 text-[13px] leading-5 text-[#4E5969] mt-1.5';
+            topInfoArea.appendChild(authBlock);
+        }
+
+        function relocateAllAuthBlocks() {
+            const viewIds = [
+                'view-trial',
+                'view-trial-with-vas',
+                'view-healthy',
+                'view-healthy-no-vas',
+                'view-vas-merged',
+                'view-vas-merged-empty',
+                'view-expired',
+                'view-expired-no-warning',
+                'view-expired-buffer'
+            ];
+            viewIds.forEach(relocateAuthIntoPlanCard);
+        }
+
+        function setAuthSupportByView(viewId, isSupported) {
+            const view = document.getElementById(viewId);
+            if (!view) return;
+
+            const authBlocks = Array.from(view.querySelectorAll('div')).filter((el) => {
+                const text = (el.textContent || '').trim();
+                return text.startsWith('授权认证：');
+            });
+
+            authBlocks.forEach((block) => {
+                const valueSpan = block.querySelector('span');
+                if (!valueSpan) return;
+                valueSpan.innerText = isSupported ? '支持' : '不支持';
+                valueSpan.className = isSupported ? 'text-blue-600 font-medium' : 'text-gray-600 font-medium';
+
+                const infoGroup = block.querySelector('.group');
+                if (!infoGroup) return;
+
+                let tooltip = infoGroup.querySelector('[data-auth-tooltip="1"]');
+                if (!tooltip) {
+                    tooltip = document.createElement('div');
+                    tooltip.setAttribute('data-auth-tooltip', '1');
+                    tooltip.className = 'absolute bottom-full left-1/2 -translate-x-1/2 pb-2 w-[320px] z-10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none group-hover:pointer-events-auto';
+                    infoGroup.appendChild(tooltip);
+                }
+
+                tooltip.innerHTML = isSupported
+                    ? `<div class="bg-[#303133] text-white text-[12px] px-3 py-2.5 rounded shadow-lg relative leading-relaxed whitespace-normal font-normal">
+                            支持授权认证，可以通过正版化工具审查
+                            <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#303133] rotate-45"></div>
+                       </div>`
+                    : `<div class="bg-[#303133] text-white text-[12px] px-3 py-2.5 rounded shadow-lg relative leading-relaxed whitespace-normal font-normal">
+                            <div>不支持授权认证，无法通过正版化工具审查。</div>
+                            <a href="#" class="text-blue-400 hover:text-blue-300 inline-block underline underline-offset-2 mt-1">前往购买支持的套餐</a>
+                            <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#303133] rotate-45"></div>
+                       </div>`;
+            });
+
+            initFixedTooltips();
+        }
+
+        function switchTab(state) {
+            // View IDs
+            const views = ['view-trial', 'view-trial-with-vas', 'view-healthy', 'view-healthy-no-vas', 'view-vas-merged', 'view-vas-merged-empty', 'view-multi', 'view-multi-expire', 'view-expired', 'view-expired-no-warning', 'view-expired-buffer', 'view-multi-expired'];
+            
+            // Switch views
+            const targetView = state === 'trial-warning'
+                ? 'view-trial'
+                : (state === 'trial-expire'
+                    ? 'view-healthy'
+                    : (state === 'paid-trial-normal'
+                        ? 'view-healthy'
+                    : (state === 'trial-multi'
+                        ? 'view-multi'
+                        : (state === 'feature-blocked' ? 'view-trial' : `view-${state}`))));
+            views.forEach((v) => {
+                document.getElementById(v).style.display = (v === targetView) ? 'flex' : 'none';
+            });
+            const featureBlockedDiagnosis = document.getElementById('feature-blocked-diagnosis');
+            if (featureBlockedDiagnosis) {
+                featureBlockedDiagnosis.style.display = state === 'feature-blocked' ? 'block' : 'none';
+            }
+            const healthyTrialTag = document.getElementById('healthy-trial-tag');
+            if (healthyTrialTag) {
+                healthyTrialTag.style.display = state === 'paid-trial-normal' ? 'inline-flex' : 'none';
+            }
+
+            // 灰色套餐主卡片统一展示“授权认证：不支持”
+            const grayPlanViews = new Set([
+                'view-trial',
+                'view-trial-with-vas',
+                'view-expired',
+                'view-expired-no-warning',
+                'view-expired-buffer'
+            ]);
+            const authSupported = state === 'trial-warning' ? true : !grayPlanViews.has(targetView);
+            setAuthSupportByView(targetView, authSupported);
+
+            // Update Left Seat Box data to match the narrative logic
+            const seatBox = document.getElementById('seat-box');
+            const seatNumber = document.getElementById('seat-number');
+            const seatWarning = document.getElementById('seat-warning');
+            const activeNumber = document.getElementById('active-number');
+            const inactiveNumber = document.getElementById('inactive-number');
+            
+            // Trial View Elements
+            const trialPlanContainer = document.getElementById('trial-plan-container');
+            const trialPlanName = document.getElementById('trial-plan-name');
+            const trialPlanBadge = document.getElementById('trial-plan-badge');
+            const trialPlanExpireText = document.getElementById('trial-plan-expire-text');
+            const trialPlanIcon = document.getElementById('trial-plan-icon');
+            const trialPlanTooltip = document.getElementById('trial-plan-tooltip');
+            const trialSpaceText = document.getElementById('trial-space-text');
+            const trialSpaceBar = document.getElementById('trial-space-bar');
+            const trialFreePlanName = document.getElementById('trial-free-plan-name');
+            const trialFreePlanContainer = document.getElementById('trial-free-plan-container');
+            const trialFreePlanTop = document.getElementById('trial-free-plan-top');
+            const trialFreeSeatText = document.getElementById('trial-free-seat-text');
+            const trialPlanExpireWarning = document.getElementById('trial-plan-expire-warning');
+            const trialPlanBtn = document.getElementById('trial-plan-btn');
+            const trialPlanCompareLink = document.getElementById('trial-plan-compare-link');
+            const trialAuthText = document.getElementById('trial-auth-text');
+            const healthyExpireTag = document.getElementById('healthy-expire-tag');
+
+            if (state === 'warning') {
+                seatBox.classList.add('border-red-300');
+                seatBox.classList.remove('border-[#ebeef5]');
+                seatBox.children[0].classList.add('bg-red-50', 'border-red-200');
+                seatBox.children[0].classList.remove('bg-[#fcfcfd]', 'border-[#ebeef5]');
+                seatNumber.className = "text-[28px] font-bold text-red-600 leading-none";
+                
+                seatNumber.innerText = "48/50";
+                activeNumber.innerText = "40";
+                inactiveNumber.innerText = "8";
+                seatWarning.innerText = "⚠️ 席位使用率已达95%，请及时购买席位以免影响新员工加入";
+                seatWarning.style.display = "flex";
+            } else {
+                if (state !== 'trial-warning' && !document.getElementById('seat-number')) {
+                    seatBox.className = "flex border border-[#ebeef5] rounded-xl overflow-hidden transition-all";
+                    seatBox.innerHTML = `
+                        <div class="w-[140px] bg-[#fcfcfd] py-4 flex flex-col items-center justify-center border-r border-[#ebeef5] shrink-0">
+                            <div class="text-[12px] text-gray-500 mb-1 flex items-center gap-1">席位数</div>
+                            <div id="seat-number" class="text-[28px] font-bold text-gray-800 leading-none">10/50</div>
+                        </div>
+                        <div class="flex-1 bg-white py-3 px-4 flex flex-col justify-center">
+                            <div class="text-[13px] text-gray-600 mb-2.5">扩展组织席位</div>
+                            <button class="btn-outline px-4 py-1 rounded-lg text-[12px] text-gray-700 flex items-center justify-center gap-1 w-max border border-[#dcdfe6] hover:bg-gray-50 transition-colors">
+                                <svg class="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                购买席位
+                            </button>
+                        </div>
+                    `;
+                    seatWarning.className = "text-orange-500 text-[12px] mt-2 flex items-center gap-1 ml-1 font-medium";
+                }
+                if (state !== 'trial-warning') {
+                    seatBox.classList.remove('border-red-300');
+                    seatBox.classList.add('border-[#ebeef5]');
+                    if (seatBox.children[0]) {
+                        seatBox.children[0].classList.remove('bg-red-50', 'border-red-200');
+                        seatBox.children[0].classList.add('bg-[#fcfcfd]', 'border-[#ebeef5]');
+                    }
+                } else {
+                    seatBox.className = seatWarningDismissed
+                        ? "border border-[#E5EAF4] rounded-xl bg-white p-3 min-h-[96px] transition-all flex flex-col justify-center"
+                        : "border border-[#E5EAF4] rounded-xl bg-white p-3 min-h-[96px] transition-all";
+                    seatBox.innerHTML = `
+                        <div class="w-full flex items-center gap-3">
+                            <div class="w-[140px] shrink-0 flex items-center justify-center gap-2">
+                                <span class="text-xs text-gray-400">席位数</span>
+                                <span class="text-xl font-bold text-[#1D2129] leading-none">4/5</span>
+                            </div>
+                            <div class="flex-1 flex justify-end">
+                                <button class="px-4 py-2 rounded-lg text-[13px] bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors flex items-center gap-1.5 font-medium">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                    购买席位
+                                </button>
+                            </div>
+                        </div>
+                        <div id="seat-warning-inline" class="w-full mt-2 bg-amber-50 rounded-md px-3 py-1.5 text-amber-600 text-xs flex items-center justify-between gap-2 ${seatWarningDismissed ? 'hidden' : ''}">
+                            <span>⚠️ 剩余席位不足，建议及时扩充</span>
+                            <button type="button" onclick="closeSeatWarning()" class="shrink-0 text-amber-500 hover:text-amber-700 transition-colors" aria-label="关闭提示">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </div>
+                    `;
+                    seatWarning.style.display = "none";
+                }
+                if (trialFreePlanName) {
+                    trialFreePlanName.innerText = state === 'trial-warning' ? "WPS 365 商业标准版" : "WPS 365 体验版";
+                }
+                if (trialFreeSeatText) {
+                    trialFreeSeatText.innerText = state === 'trial-warning' ? "4/5席" : "10/50 席";
+                }
+                if (trialFreePlanContainer) {
+                    trialFreePlanContainer.className = state === 'trial-warning'
+                        ? "rounded-xl border border-[#E5E6EB] bg-white overflow-hidden mb-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] transition-shadow duration-300 flex flex-col"
+                        : "rounded-xl border border-[#E5E6EB] bg-gray-50 overflow-hidden mb-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] transition-shadow duration-300 flex flex-col";
+                }
+                if (trialFreePlanTop) {
+                    trialFreePlanTop.className = state === 'trial-warning'
+                        ? "bg-gradient-to-br from-[#F0F4FF] to-[#D6E4FF] p-6 relative z-20 shadow-[0_4px_16px_-4px_rgba(37,99,235,0.08)]"
+                        : "p-6 relative z-20";
+                }
+                
+                if (state === 'trial-warning' || state === 'trial-expire') {
+                    const isTrialExpire = state === 'trial-expire';
+                    activeNumber.innerText = isTrialExpire ? "30" : "4";
+                    inactiveNumber.innerText = isTrialExpire ? "10" : "0";
+                    if (isTrialExpire && seatNumber) {
+                        seatNumber.className = "text-[28px] font-bold text-gray-800 leading-none";
+                        seatNumber.innerText = "40/50";
+                    }
+                    if (isTrialExpire) {
+                        seatWarning.style.display = "none";
+                    }
+                    
+                    // Switch to Premium Look
+                    if (trialPlanContainer) trialPlanContainer.className = "bg-gradient-to-br from-[#F0F4FF] to-[#D6E4FF] p-6 relative z-20 shadow-[0_4px_16px_-4px_rgba(37,99,235,0.08)] transition-all duration-300";
+                    if (trialPlanName) {
+                        trialPlanName.className = "text-[#1D2129] font-extrabold text-[22px] tracking-tight";
+                        trialPlanName.innerText = isTrialExpire ? "WPS 365 商业标准版" : "WPS 365 商业高级版";
+                    }
+                    if (trialPlanBadge) {
+                        trialPlanBadge.className = "hidden";
+                        trialPlanBadge.innerText = "";
+                    }
+                    if (trialPlanExpireText) trialPlanExpireText.className = "text-[#4E5969] text-[13px] leading-5 flex items-center gap-2 whitespace-nowrap";
+                    if (document.getElementById('trial-plan-seat-text')) document.getElementById('trial-plan-seat-text').innerText = isTrialExpire ? "40/50 席" : "4/5 席";
+                    if (document.getElementById('trial-plan-divider')) document.getElementById('trial-plan-divider').className = "w-px h-3 bg-blue-300/50";
+                    if (trialPlanIcon) trialPlanIcon.className = isTrialExpire ? "hidden" : "w-3.5 h-3.5 text-blue-400 cursor-pointer hover:text-blue-600 transition-colors";
+                    
+                    if (trialPlanTooltip) trialPlanTooltip.innerText = "到期后将自动降级为体验版，届时将失去大容量空间及部分高级功能";
+                    if (trialSpaceText) trialSpaceText.innerText = "400 GB/1 TB";
+                    if (trialSpaceBar) trialSpaceBar.style.width = "40%";
+                    
+                    if (trialAuthText) {
+                        trialAuthText.innerText = "支持";
+                        trialAuthText.className = "text-blue-600 font-medium";
+                    }
+                    
+                    if (state === 'trial-expire') {
+                        if (trialPlanExpireWarning) trialPlanExpireWarning.style.display = "none";
+                        if (document.getElementById('trial-plan-warning-divider')) document.getElementById('trial-plan-warning-divider').style.display = "none";
+                        if (trialPlanBtn) trialPlanBtn.innerText = "立即续费";
+                        if (trialPlanCompareLink) trialPlanCompareLink.style.display = "none";
+                    } else {
+                        if (trialPlanExpireWarning) trialPlanExpireWarning.style.display = "none";
+                        if (document.getElementById('trial-plan-warning-divider')) document.getElementById('trial-plan-warning-divider').style.display = "none";
+                        if (trialPlanExpireWarning) trialPlanExpireWarning.style.display = "none";
+                        if (trialPlanBtn) trialPlanBtn.innerText = "升级套餐";
+                        if (trialPlanCompareLink) trialPlanCompareLink.style.display = "none";
+                    }
+                    if (healthyExpireTag) healthyExpireTag.style.display = isTrialExpire ? "inline-flex" : "none";
+                } else if (state === 'trial' || state === 'feature-blocked' || state === 'trial-multi' || state === 'multi-expire' || state === 'expired' || state === 'multi-expired') {
+                    seatNumber.className = "text-[28px] font-bold text-gray-800 leading-none";
+                    seatNumber.innerText = "10/50";
+                    activeNumber.innerText = "8";
+                    inactiveNumber.innerText = "2";
+                    seatWarning.style.display = "none";
+                    
+                    // Switch to Free Look
+                    if (trialPlanContainer) trialPlanContainer.className = "bg-gradient-to-br from-[#F8FAFC] to-[#F1F5F9] p-6 relative z-20 shadow-[0_4px_16px_-4px_rgba(0,0,0,0.05)] transition-all duration-300";
+                    if (trialPlanName) {
+                        trialPlanName.className = "text-[#1D2129] font-extrabold text-[22px] tracking-tight";
+                        trialPlanName.innerText = "WPS 365 体验版";
+                    }
+                    if (trialPlanBadge) {
+                        trialPlanBadge.className = "hidden";
+                        trialPlanBadge.innerText = "";
+                    }
+                    if (trialPlanExpireText) trialPlanExpireText.className = "text-[#4E5969] text-[13px] leading-5 flex items-center gap-2 whitespace-nowrap";
+                    if (document.getElementById('trial-plan-seat-text')) document.getElementById('trial-plan-seat-text').innerText = "10/50 席";
+                    if (document.getElementById('trial-plan-divider')) document.getElementById('trial-plan-divider').className = "w-px h-3 bg-gray-300";
+                    if (trialPlanIcon) trialPlanIcon.className = "w-3.5 h-3.5 text-slate-400 cursor-pointer hover:text-slate-600 transition-colors";
+
+                    if (trialPlanTooltip) trialPlanTooltip.innerText = "到期后将免费续期一年WPS 365 体验版";
+                    if (trialSpaceText) trialSpaceText.innerText = "336.7 M/4 G";
+                    if (trialSpaceBar) trialSpaceBar.style.width = "12%";
+                    if (trialAuthText) {
+                        trialAuthText.innerText = "不支持";
+                        trialAuthText.className = "text-gray-600 font-medium";
+                    }
+                    if (trialPlanExpireWarning) trialPlanExpireWarning.style.display = "none";
+                    if (document.getElementById('trial-plan-warning-divider')) document.getElementById('trial-plan-warning-divider').style.display = "none";
+                    if (trialPlanBtn) trialPlanBtn.innerText = "升级套餐";
+                    if (trialPlanCompareLink) trialPlanCompareLink.style.display = "none";
+                    if (healthyExpireTag) healthyExpireTag.style.display = "none";
+                } else {
+                    seatNumber.className = "text-[28px] font-bold text-gray-800 leading-none";
+                    seatNumber.innerText = "40/50";
+                    activeNumber.innerText = "30";
+                    inactiveNumber.innerText = "10";
+                    seatWarning.style.display = "none";
+                    if (healthyExpireTag) healthyExpireTag.style.display = "none";
+                }
+            }
+        }
+
+        // 让 tooltip 使用 fixed 定位，避免被 overflow-hidden 裁切
+        function initFixedTooltips() {
+            document.querySelectorAll('.group').forEach(trigger => {
+                if (trigger.dataset.fixedTooltipInitialized === '1') return;
+                const tooltip = trigger.querySelector('[data-fixed-tooltip="1"]') || trigger.querySelector('[class*="group-hover\\:opacity-100"]');
+                if (!tooltip) return;
+
+                tooltip.classList.remove('absolute', 'bottom-full', 'left-1/2', '-translate-x-1/2');
+                tooltip.style.position = 'fixed';
+                tooltip.style.zIndex = '9999';
+                tooltip.style.display = 'none';
+                tooltip.classList.remove('opacity-0', 'group-hover:opacity-100');
+                tooltip.style.opacity = '1';
+                tooltip.classList.remove('pointer-events-none', 'group-hover:pointer-events-auto');
+
+                trigger.addEventListener('mouseenter', () => {
+                    const rect = trigger.getBoundingClientRect();
+                    const tw = tooltip.offsetWidth || 340;
+                    tooltip.style.display = 'block';
+                    tooltip.style.left = (rect.left + rect.width / 2 - tw / 2) + 'px';
+                    tooltip.style.top = (rect.top - tooltip.offsetHeight - 4) + 'px';
+                });
+                trigger.addEventListener('mouseleave', () => {
+                    tooltip.style.display = 'none';
+                });
+                trigger.dataset.fixedTooltipInitialized = '1';
+            });
+        }
+
+        // 初始化：统一把授权认证放入套餐卡片，并按下拉状态展示对应 tab
+        relocateAllAuthBlocks();
+        const stateSelector = document.getElementById('state-selector');
+        if (stateSelector) {
+            switchTab(stateSelector.value);
+        }
+        initFixedTooltips();
+    </script>
+</body>
+</html>
