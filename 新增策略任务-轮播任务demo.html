@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+新增策略任务-轮播任务demo<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
@@ -880,6 +880,7 @@
         audienceGroup: `人群包_${index}（活跃用户）`,
         conditionExpanded: false,
         deliveryMode: "carousel",
+        carouselLoop: "yes",
         splitMethod: "tail",
         pointer: 0,
         contents: [defaultContent(index), defaultContent(index + 1)]
@@ -1123,6 +1124,12 @@
               <option value="user_id" ${strategy.splitMethod === "user_id" ? "selected" : ""}>流量分流（用户ID）</option>
               <option value="company_id" ${strategy.splitMethod === "company_id" ? "selected" : ""}>流量分流（企业ID）</option>
               <option value="device_id" ${strategy.splitMethod === "device_id" ? "selected" : ""}>流量分流（设备ID）</option>
+            </select>
+
+            <div class="label carousel-loop-field required" style="display:${strategy.deliveryMode === "carousel" ? "" : "none"};">是否循环</div>
+            <select class="carousel-loop-field" data-field="carouselLoop" data-si="${si}" style="max-width:220px;display:${strategy.deliveryMode === "carousel" ? "" : "none"};">
+              <option value="yes" ${strategy.carouselLoop === "yes" ? "selected" : ""}>是</option>
+              <option value="no" ${strategy.carouselLoop === "no" ? "selected" : ""}>否</option>
             </select>
           </div>
           <div class="group-detail" style="display:${strategy.conditionExpanded ? "block" : "none"};">
