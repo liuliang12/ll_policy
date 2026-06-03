@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>赠送套餐后企业付费转化 - 安卓端Demo</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{brand:{50:'#EFF6FF',100:'#DBEAFE',500:'#2B5FFF',600:'#1F4FE0',700:'#1740B8'},ink:{900:'#1F2329',700:'#4E5969',500:'#86909C',300:'#C9CDD4',100:'#F2F3F5'},success:'#00B42A',warning:'#FF7D00',danger:'#F53F3F',gold:{500:'#F5A623',100:'#FFF8E6'}}}}}</script>
+<style>
+body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#f5f5f5;margin:0;padding:0;}
+.phone-frame{width:375px;height:812px;margin:20px auto;background:#fff;border-radius:40px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.15);position:relative;border:8px solid #1a1a1a;}
+.phone-notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:150px;height:30px;background:#1a1a1a;border-radius:0 0 20px 20px;z-index:100;}
+.phone-status{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;font-size:12px;font-weight:600;color:#1F2329;background:#fff;position:relative;z-index:50;}
+.phone-content{height:calc(100% - 44px);overflow-y:auto;position:relative;}
+.phone-content::-webkit-scrollbar{display:none;}
+.modal-overlay{position:absolute;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:200;padding:24px;}
+.modal-card{background:#fff;border-radius:16px;width:100%;max-width:327px;overflow:hidden;}
+.banner-strip{background:linear-gradient(90deg,#2B5FFF 0%,#6B8FFF 100%);color:#fff;padding:10px 16px;font-size:13px;display:flex;align-items:center;justify-content:space-between;}
+.privilege-card{background:linear-gradient(135deg,#fff 0%,#F8FAFF 100%);border-radius:12px;padding:16px;border:1px solid #EAEDF3;}
+.progress-bar{height:6px;border-radius:3px;background:#F2F3F5;overflow:hidden;}
+.progress-fill{height:100%;border-radius:3px;transition:width .3s;}
+.tab-item{flex:0 0 auto;text-align:left;padding:10px 14px;font-size:13px;color:#86909C;position:relative;cursor:pointer;white-space:nowrap;}
+.tab-item.active{color:#2B5FFF;font-weight:600;}
+.tab-item.active::after{content:'';position:absolute;bottom:0;left:14px;transform:none;width:24px;height:2px;background:#2B5FFF;border-radius:1px;}
+.feature-tag{display:inline-flex;align-items:center;padding:2px 8px;border-radius:4px;font-size:11px;}
+.bottom-nav{position:absolute;bottom:0;left:0;right:0;height:56px;background:#fff;border-top:1px solid #F2F3F5;display:flex;align-items:center;z-index:50;}
+.bottom-nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:#86909C;}
+.bottom-nav-item.active{color:#2B5FFF;}
+.gift-badge{position:absolute;top:-4px;right:-4px;background:#F53F3F;color:#fff;font-size:9px;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 4px;}
+.rights-card{background:#fff;border:1px solid #F2F3F5;border-radius:14px;overflow:hidden;}
+.rights-group-head{background:#F1F7FF;padding:12px 14px;font-size:13px;font-weight:600;color:#1F2329;display:flex;align-items:center;justify-content:space-between;}
+.rights-group-head.plain{background:#fff;}
+.rights-row{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid #F7F8FA;font-size:13px;color:#1F2329;}
+.rights-row .left{display:flex;align-items:center;gap:4px;}
+.rights-check{color:#2B5FFF;font-size:15px;font-weight:700;line-height:1;}
+</style>
+</head>
+<body class="bg-gray-200 min-h-screen py-4">
+
+<h1 class="text-center text-lg font-semibold text-ink-900 mb-2">赠送套餐后企业付费转化 - 安卓端Demo</h1>
+<p class="text-center text-xs text-ink-500 mb-6">点击右侧控制面板切换不同页面状态</p>
+
+<!-- ==================== 主布局容器 ==================== -->
+<div id="mainLayout" class="flex justify-center items-start gap-5 px-4" style="max-width:700px;margin:0 auto;">
+
+<!-- ==================== 手机模拟框 ==================== -->
+<div class="phone-frame" id="phoneFrame" style="margin:0;flex-shrink:0;">
+  <div class="phone-notch"></div>
+  <div class="phone-status">
+    <span>14:30</span>
+    <span style="font-size:10px;">⬤ ▮▮ 📶</span>
+  </div>
+  <div class="phone-content" id="phoneContent">
+
+    <!-- ========== 状态A: 套餐临期弹窗 ========== -->
+    <div data-state="A">
+      <div class="bg-ink-100 p-4" style="min-height:724px;">
+        <div class="bg-white rounded-xl p-4 mb-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-brand-500 flex items-center justify-center text-white text-sm font-bold">金</div>
+            <div>
+              <div class="text-sm font-medium text-ink-900">金山科技有限公司</div>
+              <div class="text-xs text-ink-500">WPS 365 商业协作版</div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl p-4 opacity-40">
+          <div class="h-4 bg-ink-100 rounded w-2/3 mb-3"></div>
+          <div class="h-3 bg-ink-100 rounded w-full mb-2"></div>
+          <div class="h-3 bg-ink-100 rounded w-4/5"></div>
+        </div>
+      </div>
+      <div class="modal-overlay" style="padding:16px;">
+        <div class="modal-card">
+          <!-- 标题 -->
+          <div class="px-4 pt-5 flex items-start justify-between gap-2">
+            <p class="text-sm font-bold text-ink-900 leading-relaxed">订阅的 WPS 365 商业协作版 <span class="text-danger">10天后到期</span></p>
+            <button class="w-6 h-6 flex items-center justify-center text-ink-300 flex-shrink-0" onclick="hideModal('A')">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+          <!-- 副标题 -->
+          <div class="px-4 pt-3 pb-3">
+            <p class="text-xs text-ink-700"><span class="font-bold text-danger">35项</span> 企业专属权益即将失去，可能造成以下影响：</p>
+          </div>
+          <!-- 影响列表：竖排更紧凑 -->
+          <div class="px-4 space-y-2">
+            <div class="flex items-center gap-2.5 bg-ink-100/50 rounded-lg px-3 py-2.5">
+              <svg class="flex-shrink-0" width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="#F53F3F" opacity=".12"/><circle cx="8" cy="8" r="7" stroke="#F53F3F" stroke-width=".8"/><path d="M8 4.5v4M8 10.5h.005" stroke="#F53F3F" stroke-width="1.2" stroke-linecap="round"/></svg>
+              <div class="flex-1 min-w-0">
+                <span class="text-xs font-semibold text-ink-900">无法更新协作文档</span>
+                <span class="text-xs text-ink-400 ml-1.5">150GB空间到期</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2.5 bg-ink-100/50 rounded-lg px-3 py-2.5">
+              <svg class="flex-shrink-0" width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="#F53F3F" opacity=".12"/><circle cx="8" cy="8" r="7" stroke="#F53F3F" stroke-width=".8"/><path d="M8 4.5v4M8 10.5h.005" stroke="#F53F3F" stroke-width="1.2" stroke-linecap="round"/></svg>
+              <div class="flex-1 min-w-0">
+                <span class="text-xs font-semibold text-ink-900">文档失去加密保护</span>
+                <span class="text-xs text-ink-400 ml-1.5">5个加密团队</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2.5 bg-ink-100/50 rounded-lg px-3 py-2.5">
+              <svg class="flex-shrink-0" width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="#F53F3F" opacity=".12"/><circle cx="8" cy="8" r="7" stroke="#F53F3F" stroke-width=".8"/><path d="M8 4.5v4M8 10.5h.005" stroke="#F53F3F" stroke-width="1.2" stroke-linecap="round"/></svg>
+              <div class="flex-1 min-w-0">
+                <span class="text-xs font-semibold text-ink-900">文档失去水印保护</span>
+                <span class="text-xs text-ink-400 ml-1.5">5个水印团队</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2.5 bg-ink-100/50 rounded-lg px-3 py-2.5">
+              <svg class="flex-shrink-0" width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="#F53F3F" opacity=".12"/><circle cx="8" cy="8" r="7" stroke="#F53F3F" stroke-width=".8"/><path d="M8 4.5v4M8 10.5h.005" stroke="#F53F3F" stroke-width="1.2" stroke-linecap="round"/></svg>
+              <div class="flex-1 min-w-0">
+                <span class="text-xs font-semibold text-ink-900">无法上传大文件</span>
+                <span class="text-xs text-ink-400 ml-1.5">已传10份大文件</span>
+              </div>
+            </div>
+          </div>
+          <!-- 续费按钮 -->
+          <div class="px-4 pt-4 pb-5">
+            <div class="relative">
+              <span class="absolute -top-2.5 right-1 bg-gradient-to-r from-red-500 to-orange-400 text-white px-2 py-0.5 rounded-full whitespace-nowrap z-10" style="font-size:10px;line-height:14px;">续费最高赠送90天</span>
+              <button class="w-full h-11 rounded-full text-white text-sm font-bold bg-brand-500">立即续费</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 状态B: 套餐过期弹窗 + 内嵌二次确认 ========== -->
+    <div data-state="B" style="display:none">
+      <div class="bg-ink-100 p-4" style="min-height:724px;">
+        <div class="bg-white rounded-xl p-4 mb-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-ink-300 flex items-center justify-center text-white text-sm font-bold">金</div>
+            <div>
+              <div class="text-sm font-medium text-ink-900">金山科技有限公司</div>
+              <div class="text-xs text-danger">WPS 365 商业高级版 · 已到期</div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl p-4 opacity-40">
+          <div class="h-4 bg-ink-100 rounded w-2/3 mb-3"></div>
+          <div class="h-3 bg-ink-100 rounded w-full mb-2"></div>
+          <div class="h-3 bg-ink-100 rounded w-4/5"></div>
+        </div>
+      </div>
+      <!-- 过期弹窗 -->
+      <div class="modal-overlay" id="expireModal" style="padding:16px;">
+        <div class="modal-card">
+          <div class="px-4 pt-5">
+            <p class="text-sm font-bold text-ink-900 leading-relaxed">订阅的 WPS 365 商业高级版 <span class="text-danger">已到期</span></p>
+          </div>
+          <div class="px-4 pt-3 pb-3">
+            <p class="text-xs text-ink-700">已失去 <span class="font-bold text-danger">48项</span> 企业专属权益，可能造成以下影响：</p>
+          </div>
+          <div class="px-4 space-y-2">
+            <div class="flex items-center gap-2.5 bg-ink-100/50 rounded-lg px-3 py-2.5">
+              <svg class="flex-shrink-0" width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="#F53F3F" opacity=".12"/><circle cx="8" cy="8" r="7" stroke="#F53F3F" stroke-width=".8"/><path d="M8 4.5v4M8 10.5h.005" stroke="#F53F3F" stroke-width="1.2" stroke-linecap="round"/></svg>
+              <div class="flex-1 min-w-0">
+                <span class="text-xs font-semibold text-ink-900">无法更新协作文档</span>
+                <span class="text-xs text-ink-400 ml-1.5">1.78T空间到期</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2.5 bg-ink-100/50 rounded-lg px-3 py-2.5">
+              <svg class="flex-shrink-0" width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="#F53F3F" opacity=".12"/><circle cx="8" cy="8" r="7" stroke="#F53F3F" stroke-width=".8"/><path d="M8 4.5v4M8 10.5h.005" stroke="#F53F3F" stroke-width="1.2" stroke-linecap="round"/></svg>
+              <div class="flex-1 min-w-0">
+                <span class="text-xs font-semibold text-ink-900">文档失去加密保护</span>
+                <span class="text-xs text-ink-400 ml-1.5">无法防止下载传播</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2.5 bg-ink-100/50 rounded-lg px-3 py-2.5">
+              <svg class="flex-shrink-0" width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="#F53F3F" opacity=".12"/><circle cx="8" cy="8" r="7" stroke="#F53F3F" stroke-width=".8"/><path d="M8 4.5v4M8 10.5h.005" stroke="#F53F3F" stroke-width="1.2" stroke-linecap="round"/></svg>
+              <div class="flex-1 min-w-0">
+                <span class="text-xs font-semibold text-ink-900">文档失去水印保护</span>
+                <span class="text-xs text-ink-400 ml-1.5">无法追溯泄密人</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2.5 bg-ink-100/50 rounded-lg px-3 py-2.5">
+              <svg class="flex-shrink-0" width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="#F53F3F" opacity=".12"/><circle cx="8" cy="8" r="7" stroke="#F53F3F" stroke-width=".8"/><path d="M8 4.5v4M8 10.5h.005" stroke="#F53F3F" stroke-width="1.2" stroke-linecap="round"/></svg>
+              <div class="flex-1 min-w-0">
+                <span class="text-xs font-semibold text-ink-900">无法管控分享范围</span>
+                <span class="text-xs text-ink-400 ml-1.5">文档可分享至企业外</span>
+              </div>
+            </div>
+          </div>
+          <div class="px-4 pt-4">
+            <div class="relative">
+              <span class="absolute -top-2.5 right-1 bg-gradient-to-r from-red-500 to-orange-400 text-white px-2 py-0.5 rounded-full whitespace-nowrap z-10" style="font-size:10px;line-height:14px;">续费最高赠送90天</span>
+              <button class="w-full h-11 rounded-full text-white text-sm font-bold bg-brand-500">立即续费</button>
+            </div>
+          </div>
+          <div class="py-3 text-center">
+            <button class="text-xs text-ink-500" onclick="showConfirmSheet()">暂不购买</button>
+          </div>
+        </div>
+      </div>
+      <!-- 二次确认（底部抽屉） -->
+      <div class="modal-overlay" id="confirmSheet" style="display:none;align-items:flex-end;padding:0;">
+        <div class="bg-white rounded-t-2xl w-full" style="max-height:calc(100% - 60px);overflow-y:auto;">
+          <!-- 顶部拖拽条 -->
+          <div class="flex justify-center pt-3 pb-1"><div class="w-8 h-1 rounded-full bg-ink-200"></div></div>
+          <!-- 标题区 -->
+          <div class="px-5 pt-2 pb-4">
+            <h3 class="text-base font-bold text-ink-900 mb-1.5">确定暂不购买？</h3>
+            <p class="text-xs text-ink-500 leading-relaxed">缓冲期剩余 <span class="font-bold text-danger">7天</span>，逾期后将回收以下企业权益数据。</p>
+          </div>
+          <!-- 权益回收卡片列表 -->
+          <div class="px-5 pb-4 space-y-2">
+            <div class="flex items-center justify-between bg-danger/5 rounded-lg px-3 py-2.5">
+              <div class="flex items-center gap-2 min-w-0">
+                <svg class="flex-shrink-0" width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="#F53F3F" opacity=".15"/><path d="M8 4.5v4M8 10.5h.005" stroke="#F53F3F" stroke-width="1.2" stroke-linecap="round"/></svg>
+                <span class="text-xs font-medium text-ink-900">文档水印</span>
+                <span class="text-xs text-ink-400">已开启</span>
+              </div>
+              <span class="text-xs text-danger flex-shrink-0">截屏泄漏风险</span>
+            </div>
+            <div class="flex items-center justify-between bg-danger/5 rounded-lg px-3 py-2.5">
+              <div class="flex items-center gap-2 min-w-0">
+                <svg class="flex-shrink-0" width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="#F53F3F" opacity=".15"/><path d="M8 4.5v4M8 10.5h.005" stroke="#F53F3F" stroke-width="1.2" stroke-linecap="round"/></svg>
+                <span class="text-xs font-medium text-ink-900">禁止外部分享</span>
+                <span class="text-xs text-ink-400">已开启</span>
+              </div>
+              <span class="text-xs text-danger flex-shrink-0">数据泄漏风险</span>
+            </div>
+            <div class="flex items-center justify-between bg-danger/5 rounded-lg px-3 py-2.5">
+              <div class="flex items-center gap-2 min-w-0">
+                <svg class="flex-shrink-0" width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="#F53F3F" opacity=".15"/><path d="M8 4.5v4M8 10.5h.005" stroke="#F53F3F" stroke-width="1.2" stroke-linecap="round"/></svg>
+                <span class="text-xs font-medium text-ink-900">自定义管理员</span>
+                <span class="text-xs text-ink-400">已生效</span>
+              </div>
+              <span class="text-xs text-danger flex-shrink-0">无法分级管理</span>
+            </div>
+          </div>
+          <!-- 勾选确认 -->
+          <div class="mx-5 mb-4 bg-ink-100/60 rounded-lg px-3 py-2.5">
+            <label class="flex items-center gap-2 cursor-pointer" onclick="toggleConfirmCheck()">
+              <div class="w-[18px] h-[18px] rounded-full border-2 border-ink-300 flex items-center justify-center flex-shrink-0 transition-colors" id="confirmCircle"></div>
+              <span class="text-xs text-danger font-medium">我已知悉风险，确定暂不购买</span>
+            </label>
+          </div>
+          <!-- 操作按钮 -->
+          <div class="px-5 pb-6 flex gap-3">
+            <button class="flex-1 h-10 rounded-lg border border-ink-200 text-sm text-ink-700 font-medium" onclick="hideConfirmSheet()">返回</button>
+            <button class="flex-1 h-10 rounded-lg bg-brand-500 text-white text-sm font-medium transition-opacity disabled:opacity-30" id="confirmBtn" disabled onclick="hideModal('B')">确定放弃</button>
+          </div>
+          <div class="px-5 pb-4 text-center">
+            <a class="text-xs text-ink-400" href="#">遇到问题？联系企业购买咨询 ›</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 状态C: 二次确认弹窗独立预览 ========== -->
+    <div data-state="C" style="display:none">
+      <div class="bg-ink-100 p-4" style="min-height:724px;">
+        <div class="bg-white rounded-xl p-4 mb-3 opacity-40">
+          <div class="h-4 bg-ink-100 rounded w-2/3 mb-3"></div>
+          <div class="h-3 bg-ink-100 rounded w-full mb-2"></div>
+        </div>
+      </div>
+      <div class="modal-overlay" style="align-items:flex-end;padding:0;">
+        <div class="bg-white rounded-t-2xl w-full" style="max-height:calc(100% - 60px);overflow-y:auto;">
+          <div class="flex justify-center pt-3 pb-1"><div class="w-8 h-1 rounded-full bg-ink-200"></div></div>
+          <div class="px-5 pt-2 pb-4">
+            <h3 class="text-base font-bold text-ink-900 mb-1.5">确定暂不购买？</h3>
+            <p class="text-xs text-ink-500 leading-relaxed">缓冲期剩余 <span class="font-bold text-danger">7天</span>，逾期后将回收以下企业权益数据。</p>
+          </div>
+          <div class="px-5 pb-4 space-y-2">
+            <div class="flex items-center justify-between bg-danger/5 rounded-lg px-3 py-2.5">
+              <div class="flex items-center gap-2 min-w-0">
+                <svg class="flex-shrink-0" width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="#F53F3F" opacity=".15"/><path d="M8 4.5v4M8 10.5h.005" stroke="#F53F3F" stroke-width="1.2" stroke-linecap="round"/></svg>
+                <span class="text-xs font-medium text-ink-900">文档水印</span>
+                <span class="text-xs text-ink-400">已开启</span>
+              </div>
+              <span class="text-xs text-danger flex-shrink-0">截屏泄漏风险</span>
+            </div>
+            <div class="flex items-center justify-between bg-danger/5 rounded-lg px-3 py-2.5">
+              <div class="flex items-center gap-2 min-w-0">
+                <svg class="flex-shrink-0" width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="#F53F3F" opacity=".15"/><path d="M8 4.5v4M8 10.5h.005" stroke="#F53F3F" stroke-width="1.2" stroke-linecap="round"/></svg>
+                <span class="text-xs font-medium text-ink-900">禁止外部分享</span>
+                <span class="text-xs text-ink-400">已开启</span>
+              </div>
+              <span class="text-xs text-danger flex-shrink-0">数据泄漏风险</span>
+            </div>
+            <div class="flex items-center justify-between bg-danger/5 rounded-lg px-3 py-2.5">
+              <div class="flex items-center gap-2 min-w-0">
+                <svg class="flex-shrink-0" width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" fill="#F53F3F" opacity=".15"/><path d="M8 4.5v4M8 10.5h.005" stroke="#F53F3F" stroke-width="1.2" stroke-linecap="round"/></svg>
+                <span class="text-xs font-medium text-ink-900">自定义管理员</span>
+                <span class="text-xs text-ink-400">已生效</span>
+              </div>
+              <span class="text-xs text-danger flex-shrink-0">无法分级管理</span>
+            </div>
+          </div>
+          <div class="mx-5 mb-4 bg-ink-100/60 rounded-lg px-3 py-2.5">
+            <label class="flex items-center gap-2 cursor-pointer" onclick="toggleConfirmCheck2()">
+              <div class="w-[18px] h-[18px] rounded-full border-2 border-ink-300 flex items-center justify-center flex-shrink-0" id="confirmCircle2"></div>
+              <span class="text-xs text-danger font-medium">我已知悉风险，确定暂不购买</span>
+            </label>
+          </div>
+          <div class="px-5 pb-6 flex gap-3">
+            <button class="flex-1 h-10 rounded-lg border border-ink-200 text-sm text-ink-700 font-medium" onclick="show('B')">返回</button>
+            <button class="flex-1 h-10 rounded-lg bg-brand-500 text-white text-sm font-medium transition-opacity disabled:opacity-30" id="confirmBtn2" disabled onclick="hideModal('C')">确定放弃</button>
+          </div>
+          <div class="px-5 pb-4 text-center">
+            <a class="text-xs text-ink-400" href="#">遇到问题？联系企业购买咨询 ›</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 状态F: 企业权益中心页面 ========== -->
+    <div data-state="F" style="display:none;background:#F5F5F5;">
+
+      <!-- 顶部导航栏 -->
+      <div class="px-4 py-3 flex items-center">
+        <span class="text-ink-700 flex items-center gap-0.5" onclick="show('A')">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M12 5l-5 5 5 5" stroke="#5B5F66" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="text-sm font-semibold text-ink-900 flex-1 text-center pr-5">企业权益中心</span>
+      </div>
+
+      <!-- 头像 + 企业信息 -->
+      <div class="px-4 pb-3 flex items-center gap-3">
+        <div class="w-11 h-11 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0" style="background:linear-gradient(135deg,#5B3DAA 0%,#3D2066 100%);">张</div>
+        <div class="min-w-0">
+          <div class="text-sm font-semibold text-ink-900">张伟</div>
+          <div class="text-xs text-ink-500 mt-0.5">金山科技有限公司</div>
+        </div>
+      </div>
+
+      <!-- ① 套餐卡片区域 -->
+      <div class="px-4 pb-1 mb-5">
+        <div id="pkgCard" class="rounded-2xl overflow-hidden relative" style="background:linear-gradient(160deg,#FBEDC9 0%,#F6DEAB 52%,#F3D79D 100%);box-shadow:0 2px 12px rgba(0,0,0,.08);">
+          <!-- 右侧装饰 -->
+          <div id="pkgBadgeDecor" class="absolute right-0 top-0 z-0" style="width:90px;height:90px;opacity:.2;">
+            <svg viewBox="0 0 100 100" fill="none"><path d="M50 10 L65 75 L80 10" stroke="#C8A35C" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M55 10 L70 80 L85 10" stroke="#C8A35C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".5"/></svg>
+          </div>
+          <!-- 套餐名 + 试用中tag -->
+          <div class="px-4 pt-4 pb-1 relative z-10">
+            <div class="flex items-center gap-2">
+              <span id="pkgName" class="text-base font-bold" style="color:#1F2329;">WPS 365 商业旗舰版</span>
+              <span id="trialBadge" class="text-xs px-1.5 py-0.5 rounded" style="background:linear-gradient(135deg,#FF6B35,#FF8C42);color:#fff;font-weight:600;display:none;">试用中</span>
+            </div>
+          </div>
+          <!-- 4列数据指标 -->
+          <div class="px-4 pt-2 pb-3 relative z-10 grid grid-cols-4 gap-1">
+            <div id="seatInfo" class="flex flex-col items-center">
+              <span id="pkgStat1" class="text-base font-bold" style="color:#1F2329;">17</span>
+              <span id="pkgStatLabel1" class="text-xs mt-0.5" style="color:#646A73;">成员席位</span>
+            </div>
+            <div class="flex flex-col items-center">
+              <span id="pkgStat2" class="text-base font-bold" style="color:#1F2329;">420+</span>
+              <span id="pkgStatLabel2" class="text-xs mt-0.5" style="color:#646A73;">功能特权</span>
+            </div>
+            <div class="flex flex-col items-center">
+              <span id="pkgStat3" class="text-base font-bold" style="color:#1F2329;">6</span>
+              <span id="pkgStatLabel3" class="text-xs mt-0.5" style="color:#646A73;">WPS AI</span>
+            </div>
+            <div class="flex flex-col items-center">
+              <span id="pkgStat4" class="text-base font-bold" style="color:#1F2329;">14.28TB</span>
+              <span id="pkgStatLabel4" class="text-xs mt-0.5" style="color:#646A73;">企业空间</span>
+            </div>
+          </div>
+          <!-- 底部操作行 -->
+          <div class="mx-4 relative z-10" id="pkgDivider" style="border-top:1px solid rgba(180,150,90,.15);"></div>
+          <div id="pkgFooter" class="px-4 py-2.5 flex items-center justify-between relative z-10" style="background:rgba(230,184,104,.2);">
+            <span id="pkgSubtitle" class="text-xs" style="color:#A08050;">有效期至 2027-05-12</span>
+            <button id="purchaseBtn" class="text-xs font-semibold px-5 py-2 rounded-full" style="background:#242A31;color:#D9BC7A;border:1px solid #242A31;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 1px 2px rgba(0,0,0,.15);letter-spacing:.5px;">增购人数</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ② 我的企业权益 -->
+      <div class="px-4 mb-2">
+        <span class="text-sm font-semibold text-ink-900">热门权益</span>
+      </div>
+      <div class="mx-3 mb-5 bg-white rounded-2xl px-3 pt-3 pb-2" style="box-shadow:0 1px 4px rgba(0,0,0,.06);">
+          <div class="flex border-b border-ink-100 mb-3 overflow-x-auto" style="gap:0;">
+            <div class="tab-item active" onclick="switchPrivTab(this, 'priv-ai')">AI特权</div>
+            <div id="tabCloud" class="tab-item" onclick="switchPrivTab(this, 'priv-cloud')">云空间</div>
+            <div id="tabSecurity" class="tab-item" onclick="switchPrivTab(this, 'priv-security')">安全特权</div>
+            <div id="tabDoc" class="tab-item" onclick="switchPrivTab(this, 'priv-pdf')">文档特权</div>
+          </div>
+
+          <!-- AI特权 -->
+          <div id="priv-ai" class="priv-content">
+            <div class="space-y-2.5">
+              <div class="flex items-center gap-3 p-3 bg-brand-50/50 rounded-xl">
+                <div class="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center text-xl">🤖</div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-ink-900">AI智能问答</div>
+                  <div class="text-xs text-ink-500 mt-0.5">智能理解文档内容并快速回答问题</div>
+                </div>
+                <span class="feature-tag bg-success/10 text-success">可用</span>
+              </div>
+              <div class="flex items-center gap-3 p-3 bg-brand-50/50 rounded-xl">
+                <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center text-xl">✨</div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-ink-900">AI 生成 PPT</div>
+                  <div class="text-xs text-ink-500 mt-0.5">输入主题自动生成精美演示文稿</div>
+                </div>
+                <span class="feature-tag bg-success/10 text-success">可用</span>
+              </div>
+              <div class="flex items-center gap-3 p-3 bg-brand-50/50 rounded-xl">
+                <div class="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center text-xl">💬</div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-ink-900">AI表格助手</div>
+                  <div class="text-xs text-ink-500 mt-0.5">自然语言驱动数据处理与分析</div>
+                </div>
+                <span class="feature-tag bg-success/10 text-success">可用</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 云空间 -->
+          <div id="priv-cloud" class="priv-content" style="display:none">
+            <div class="space-y-2.5">
+              <div class="flex items-center gap-3 p-3 bg-brand-50/50 rounded-xl">
+                <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center text-xl">☁️</div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-ink-900">文件历史版本</div>
+                  <div class="text-xs text-ink-500 mt-0.5">查看文件的历史版本并恢复</div>
+                </div>
+                <span class="feature-tag bg-success/10 text-success">正常</span>
+              </div>
+              <div class="flex items-center gap-3 p-3 bg-brand-50/50 rounded-xl">
+                <div class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center text-xl">🔄</div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-ink-900">单文件上传大小</div>
+                  <div class="text-xs text-ink-500 mt-0.5">支持更大文件上传与管理</div>
+                </div>
+                <span class="feature-tag bg-success/10 text-success">已开启</span>
+              </div>
+              <div class="flex items-center gap-3 p-3 bg-brand-50/50 rounded-xl">
+                <div class="w-10 h-10 rounded-xl bg-cyan-100 flex items-center justify-center text-xl">📥</div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-ink-900">批量下载</div>
+                  <div class="text-xs text-ink-500 mt-0.5">支持批量导出团队文档</div>
+                </div>
+                <span class="feature-tag bg-success/10 text-success">可用</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 文档特权 -->
+          <div id="priv-pdf" class="priv-content" style="display:none">
+            <div class="space-y-2.5">
+              <div class="flex items-center gap-3 p-3 bg-brand-50/50 rounded-xl">
+                <div class="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center text-xl">📑</div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-ink-900">全文翻译</div>
+                  <div class="text-xs text-ink-500 mt-0.5">整篇文档一键翻译，保留排版结构</div>
+                </div>
+                <span class="feature-tag bg-success/10 text-success">可用</span>
+              </div>
+              <div class="flex items-center gap-3 p-3 bg-brand-50/50 rounded-xl">
+                <div class="w-10 h-10 rounded-xl bg-pink-100 flex items-center justify-center text-xl">🖼️</div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-ink-900">文档合并</div>
+                  <div class="text-xs text-ink-500 mt-0.5">多份文档快速合并成一个文件</div>
+                </div>
+                <span class="feature-tag bg-success/10 text-success">可用</span>
+              </div>
+              <div class="flex items-center gap-3 p-3 bg-brand-50/50 rounded-xl">
+                <div class="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center text-xl">✂️</div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-ink-900">PDF编辑</div>
+                  <div class="text-xs text-ink-500 mt-0.5">支持批注、修改、格式调整</div>
+                </div>
+                <span class="feature-tag bg-success/10 text-success">可用</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 安全特权 -->
+          <div id="priv-security" class="priv-content" style="display:none">
+            <div class="space-y-2.5">
+              <div class="flex items-center gap-3 p-3 bg-brand-50/50 rounded-xl">
+                <div class="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center text-xl">🔒</div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-ink-900">员工离职交接</div>
+                  <div class="text-xs text-ink-500 mt-0.5">离职成员文档资产自动交接</div>
+                </div>
+                <span class="feature-tag bg-success/10 text-success">已启用</span>
+              </div>
+              <div class="flex items-center gap-3 p-3 bg-brand-50/50 rounded-xl">
+                <div class="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center text-xl">💧</div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-ink-900">安全水印</div>
+                  <div class="text-xs text-ink-500 mt-0.5">文档添加水印，支持溯源审计</div>
+                </div>
+                <span class="feature-tag bg-ink-100 text-ink-500">未开启</span>
+              </div>
+              <div class="flex items-center gap-3 p-3 bg-brand-50/50 rounded-xl">
+                <div class="w-10 h-10 rounded-xl bg-yellow-100 flex items-center justify-center text-xl">👤</div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-ink-900">文档流转管控</div>
+                  <div class="text-xs text-ink-500 mt-0.5">限制外发、下载与二次传播范围</div>
+                </div>
+                <span class="feature-tag bg-success/10 text-success">可用</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      <!-- ③ 企业福利（仅超管可见） -->
+      <div id="adminWelfare" class="mb-5">
+        <div class="px-4 mb-2">
+          <span class="text-sm font-semibold text-ink-900">企业福利</span>
+        </div>
+        <div class="mx-3 rounded-2xl px-3 pt-3 pb-2" style="background:linear-gradient(135deg,#FFFBF5 0%,#FFF5EB 100%);box-shadow:0 1px 4px rgba(0,0,0,.06);">
+          <div class="grid grid-cols-2 gap-2">
+            <div class="bg-green-50 rounded-xl p-3 cursor-pointer">
+              <div class="text-lg mb-1">🎯</div>
+              <div class="text-xs font-medium text-ink-900">签到领福利</div>
+              <div class="text-xs text-ink-500 mt-0.5">组队签到领 AI 体验</div>
+            </div>
+            <div class="bg-purple-50 rounded-xl p-3 cursor-pointer">
+              <div class="text-lg mb-1">🏢</div>
+              <div class="text-xs font-medium text-ink-900">企业成长计划</div>
+              <div class="text-xs text-ink-500 mt-0.5">完成任务得积分福利</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- adminPcGuide 占位，保留 JS 引用 -->
+      <div id="adminPcGuide" style="display:none;"></div>
+
+      <!-- ⑤ 权益明细（移动端组件） -->
+      <div id="planCompareSection">
+        <div class="mx-3 mb-4">
+          <div class="text-sm font-semibold text-ink-900 mb-2">权益明细</div>
+          <div class="sticky top-0 z-20">
+            <div id="rightsMineCard" class="rights-card mb-3 mt-3">
+              <button onclick="enterRightsPlanMode()" class="w-full px-4 py-5 flex items-center justify-center gap-3">
+              <span class="text-[15px] font-semibold text-ink-900">我的权益</span>
+                <span class="w-7 h-7 rounded-full border border-ink-300 flex items-center justify-center text-ink-400 text-xl leading-none">›</span>
+              </button>
+            </div>
+
+            <div id="rightsPlanCard" class="rights-card mb-3" style="display:none;">
+              <div class="px-3 py-4 flex items-center">
+                <button onclick="prevRightsPlan()" class="w-7 h-7 rounded-full border border-ink-300 flex items-center justify-center text-ink-400 mr-3">‹</button>
+                <div class="flex-1 text-center">
+                  <div id="rightsPlanName" class="text-[15px] font-semibold text-ink-900">商业协作版</div>
+                  <div id="rightsPlanDesc" class="text-xs text-ink-500 mt-0.5">尊享30+项权益</div>
+                  <div class="mt-2 text-ink-900"><span id="rightsPlanPrice" class="text-3xl font-bold">199</span><span class="text-[15px] font-medium ml-1">元/人/年</span></div>
+                </div>
+                <button onclick="nextRightsPlan()" class="w-7 h-7 rounded-full border border-ink-300 flex items-center justify-center text-ink-400 ml-3">›</button>
+              </div>
+              <div class="px-4 pb-4">
+                <button class="w-full h-11 rounded-xl bg-brand-500 text-white text-lg font-semibold">立即升级</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="rights-card mb-3">
+            <div class="rights-group-head plain">
+              <span>WPS Office授权</span>
+              <span id="rightsOfficeCount" class="font-medium text-ink-700">权益项: 0/2</span>
+            </div>
+            <div class="rights-row">
+              <div class="left">Windows等平台授权认证 <span class="text-ink-300">ⓘ</span></div>
+              <span id="rightsWinMark" class="text-ink-300">×</span>
+            </div>
+            <div class="rights-row">
+              <div class="left">Linux授权认证 <span class="text-ink-300">ⓘ</span></div>
+              <span id="rightsLinuxMark" class="text-ink-300">×</span>
+            </div>
+          </div>
+
+          <div class="rights-card mb-3">
+            <div class="rights-group-head">
+              <span>数字资产管控</span>
+              <span id="rightsAssetCount" class="font-medium text-ink-700">权益项: 9/31</span>
+            </div>
+            <div class="rights-row">
+              <div class="left">企业储存空间</div>
+              <span id="rightsStorage">4GB</span>
+            </div>
+            <div class="rights-row">
+              <div class="left">空间自定义分配 <span class="text-ink-300">ⓘ</span></div>
+              <span id="rightsSpaceAlloc" class="text-ink-300">×</span>
+            </div>
+            <div class="rights-row">
+              <div class="left">单文件上传大小 <span class="text-ink-300">ⓘ</span></div>
+              <span id="rightsUpload">10MB</span>
+            </div>
+            <div class="rights-row">
+              <div class="left">音视频在线播放 <span class="text-ink-300">ⓘ</span></div>
+              <span id="rightsVideo" class="text-ink-300">×</span>
+            </div>
+            <div class="rights-row">
+              <div class="left">团队文档水印 <span class="text-ink-300">ⓘ</span></div>
+              <span id="rightsWatermark">3个团队/企业</span>
+            </div>
+            <div class="rights-row">
+              <div class="left">团队文档加密保护 <span class="text-ink-300">ⓘ</span></div>
+              <span id="rightsEncrypt">3个团队/企业</span>
+            </div>
+            <div class="rights-row">
+              <div class="left">团队文档分享范围管控 <span class="text-ink-300">ⓘ</span></div>
+              <span id="rightsShareScope">3个团队/企业</span>
+            </div>
+            <div class="rights-row">
+              <div class="left">离职员工文档交接 <span class="text-ink-300">ⓘ</span></div>
+              <span id="rightsHandover" class="text-ink-300">×</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- ==================== 右侧控制面板 ==================== -->
+<div id="sidePanel" class="flex flex-col gap-3" style="width:200px;flex-shrink:0;position:sticky;top:20px;">
+  <!-- 页面切换 -->
+  <div class="bg-white shadow-lg rounded-xl p-3">
+    <div class="text-xs font-semibold text-ink-700 mb-2">页面状态</div>
+    <div class="flex flex-col gap-1.5">
+      <button data-btn="A" onclick="show('A')" class="px-3 h-8 rounded-lg bg-brand-500 text-white text-xs text-left whitespace-nowrap">A 套餐临期</button>
+      <button data-btn="B" onclick="show('B')" class="px-3 h-8 rounded-lg hover:bg-ink-100 text-xs text-left whitespace-nowrap">B 套餐过期</button>
+      <button data-btn="C" onclick="show('C')" class="px-3 h-8 rounded-lg hover:bg-ink-100 text-xs text-left whitespace-nowrap">C 二次确认</button>
+      <button data-btn="F" onclick="show('F')" class="px-3 h-8 rounded-lg hover:bg-ink-100 text-xs text-left whitespace-nowrap">F 权益中心</button>
+    </div>
+  </div>
+  <!-- 权益中心专属控制条（仅状态F时可见） -->
+  <div id="fControls" class="bg-white shadow-lg rounded-xl p-3" style="display:none;">
+    <div class="text-xs font-semibold text-ink-700 mb-2">权益中心控制</div>
+    <div class="flex flex-col gap-2.5">
+      <div>
+        <div class="text-xs text-ink-400 mb-1">版本</div>
+        <div class="flex bg-ink-100 rounded-full p-0.5">
+          <button id="tierPro" onclick="switchTier('pro')" class="flex-1 px-2 py-1 rounded-full bg-brand-500 text-white text-xs text-center">高级版</button>
+          <button id="tierTrial" onclick="switchTier('trial')" class="flex-1 px-2 py-1 rounded-full text-ink-500 text-xs text-center">体验版</button>
+        </div>
+      </div>
+      <div>
+        <div class="text-xs text-ink-400 mb-1">来源</div>
+        <div class="flex bg-ink-100 rounded-full p-0.5">
+          <button id="srcPaid" onclick="switchPkgSource('paid')" class="flex-1 px-2 py-1 rounded-full bg-brand-500 text-white text-xs text-center">付费购买</button>
+          <button id="srcGift" onclick="switchPkgSource('gift')" class="flex-1 px-2 py-1 rounded-full text-ink-500 text-xs text-center">赠送获得</button>
+        </div>
+      </div>
+      <div>
+        <div class="text-xs text-ink-400 mb-1">视角</div>
+        <div class="flex bg-ink-100 rounded-full p-0.5">
+          <button id="roleAdmin" onclick="switchRole('admin')" class="flex-1 px-2 py-1 rounded-full bg-brand-500 text-white text-xs text-center">超管</button>
+          <button id="roleMember" onclick="switchRole('member')" class="flex-1 px-2 py-1 rounded-full text-ink-500 text-xs text-center">成员</button>
+        </div>
+      </div>
+      <div>
+        <div class="text-xs text-ink-400 mb-1">常用功能</div>
+        <div class="flex bg-ink-100 rounded-full p-0.5">
+          <button id="commonShow" onclick="switchCommonSection(true)" class="flex-1 px-2 py-1 rounded-full bg-brand-500 text-white text-xs text-center">显示</button>
+          <button id="commonHide" onclick="switchCommonSection(false)" class="flex-1 px-2 py-1 rounded-full text-ink-500 text-xs text-center">隐藏</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 关闭主布局容器 -->
+</div>
+
+<script>
+function show(s){
+  document.querySelectorAll('[data-state]').forEach(e=>e.style.display=e.dataset.state===s?'':'none');
+  document.querySelectorAll('[data-btn]').forEach(b=>{
+    b.className = b.dataset.btn===s
+      ? 'px-3 h-8 rounded-lg bg-brand-500 text-white text-xs text-left whitespace-nowrap'
+      : 'px-3 h-8 rounded-lg hover:bg-ink-100 text-xs text-left whitespace-nowrap';
+  });
+  // 切到B时重置：显示过期弹窗，隐藏二次确认
+  if(s==='B'){
+    document.getElementById('expireModal').style.display='';
+    document.getElementById('confirmSheet').style.display='none';
+    resetConfirm('confirmCircle','confirmBtn');
+  }
+  document.getElementById('phoneContent').scrollTop = 0;
+  var fc = document.getElementById('fControls');
+  if(fc) fc.style.display = s==='F' ? '' : 'none';
+}
+
+function hideModal(state){
+  const el = document.querySelector(`[data-state="${state}"]`);
+  el.querySelectorAll('.modal-overlay').forEach(o=>o.style.display='none');
+}
+
+// 过期弹窗中点击「暂不购买」→ 弹出二次确认底部抽屉
+function showConfirmSheet(){
+  document.getElementById('expireModal').style.display='none';
+  document.getElementById('confirmSheet').style.display='';
+}
+function hideConfirmSheet(){
+  document.getElementById('confirmSheet').style.display='none';
+  document.getElementById('expireModal').style.display='';
+  resetConfirm('confirmCircle','confirmBtn');
+}
+
+function resetConfirm(circleId, btnId){
+  const c=document.getElementById(circleId), b=document.getElementById(btnId);
+  if(c){c.innerHTML='';c.className='w-[18px] h-[18px] mt-px rounded-full border-2 border-ink-300 flex items-center justify-center flex-shrink-0 transition-colors';}
+  if(b) b.disabled=true;
+}
+
+function doToggle(circleId, btnId){
+  const c=document.getElementById(circleId), b=document.getElementById(btnId);
+  const on=!c.querySelector('div');
+  if(on){
+    c.innerHTML='<div class="w-2 h-2 rounded-full bg-brand-500"></div>';
+    c.className='w-[18px] h-[18px] mt-px rounded-full border-2 border-brand-500 flex items-center justify-center flex-shrink-0 transition-colors';
+    b.disabled=false;
+  } else {
+    resetConfirm(circleId, btnId);
+  }
+}
+function toggleConfirmCheck(){ doToggle('confirmCircle','confirmBtn'); }
+function toggleConfirmCheck2(){ doToggle('confirmCircle2','confirmBtn2'); }
+
+var _tier = 'pro', _pkgSource = 'paid', _platform = 'android', _role = 'admin', _showCommon = true, _trialDays = 7;
+var _rightsMode = 'mine', _rightsPlanIdx = 0;
+var _rightsPlanList = [
+  { name:'商业协作版', desc:'尊享30+项权益', price:'199', office:'0/2', asset:'15/31', storage:'50GB/人', spaceAlloc:false, upload:'4GB', video:false, watermark:'30个团队/企业', encrypt:'30个团队/企业', shareScope:'30个团队/企业', handover:false, win:false, linux:false },
+  { name:'商业高级版', desc:'尊享150+项权益', price:'399', office:'1/2', asset:'25/31', storage:'365GB/人', spaceAlloc:true, upload:'6GB', video:true, watermark:'50个团队/企业', encrypt:'50个团队/企业', shareScope:'50个团队/企业', handover:true, win:true, linux:true },
+  { name:'商业旗舰版', desc:'尊享300+项权益', price:'599', office:'2/2', asset:'29/31', storage:'2TB/人', spaceAlloc:true, upload:'10GB', video:true, watermark:'不限', encrypt:'不限', shareScope:'不限', handover:true, win:true, linux:true }
+];
+
+function setRightsBoolMark(id, on){
+  var el = document.getElementById(id);
+  if(!el) return;
+  el.textContent = on ? '✓' : '×';
+  el.className = on ? 'rights-check' : 'text-ink-300';
+}
+
+function renderRightsDetail(){
+  var mineCard = document.getElementById('rightsMineCard');
+  var planCard = document.getElementById('rightsPlanCard');
+  if(mineCard && planCard){
+    mineCard.style.display = _rightsMode==='mine' ? '' : 'none';
+    planCard.style.display = _rightsMode==='plan' ? '' : 'none';
+  }
+
+  var data;
+  if(_rightsMode==='mine'){
+    data = { office:'0/2', asset:'9/31', storage:'4GB', spaceAlloc:false, upload:'10MB', video:false, watermark:'3个团队/企业', encrypt:'3个团队/企业', shareScope:'3个团队/企业', handover:false, win:false, linux:false };
+  } else {
+    data = _rightsPlanList[_rightsPlanIdx];
+    document.getElementById('rightsPlanName').textContent = data.name;
+    document.getElementById('rightsPlanDesc').textContent = data.desc;
+    document.getElementById('rightsPlanPrice').textContent = data.price;
+  }
+
+  document.getElementById('rightsOfficeCount').textContent = '权益项: ' + data.office;
+  document.getElementById('rightsAssetCount').textContent = '权益项: ' + data.asset;
+  document.getElementById('rightsStorage').textContent = data.storage;
+  document.getElementById('rightsUpload').textContent = data.upload;
+  document.getElementById('rightsWatermark').textContent = data.watermark;
+  document.getElementById('rightsEncrypt').textContent = data.encrypt;
+  document.getElementById('rightsShareScope').textContent = data.shareScope;
+  setRightsBoolMark('rightsSpaceAlloc', data.spaceAlloc);
+  setRightsBoolMark('rightsVideo', data.video);
+  setRightsBoolMark('rightsHandover', data.handover);
+  setRightsBoolMark('rightsWinMark', data.win);
+  setRightsBoolMark('rightsLinuxMark', data.linux);
+}
+
+function enterRightsPlanMode(){
+  _rightsMode = 'plan';
+  _rightsPlanIdx = 0;
+  renderRightsDetail();
+}
+
+function prevRightsPlan(){
+  if(_rightsPlanIdx===0){
+    _rightsMode = 'mine';
+  } else {
+    _rightsPlanIdx--;
+  }
+  renderRightsDetail();
+}
+
+function nextRightsPlan(){
+  _rightsMode = 'plan';
+  _rightsPlanIdx = (_rightsPlanIdx + 1) % _rightsPlanList.length;
+  renderRightsDetail();
+}
+
+function switchTier(tier){
+  _tier = tier;
+  var isPro = tier==='pro';
+  document.getElementById('tierPro').className = 'px-2 py-0.5 rounded-full ' + (isPro ? 'bg-brand-500 text-white' : 'text-ink-500');
+  document.getElementById('tierTrial').className = 'px-2 py-0.5 rounded-full ' + (isPro ? 'text-ink-500' : 'bg-brand-500 text-white');
+  applyCardStyle();
+}
+
+function switchPkgSource(type){
+  _pkgSource = type;
+  var isPaid = type==='paid';
+  document.getElementById('srcPaid').className = 'px-2 py-0.5 rounded-full ' + (isPaid ? 'bg-brand-500 text-white' : 'text-ink-500');
+  document.getElementById('srcGift').className = 'px-2 py-0.5 rounded-full ' + (isPaid ? 'text-ink-500' : 'bg-brand-500 text-white');
+  applyCardStyle();
+}
+
+function applyCardStyle(){
+  var card = document.getElementById('pkgCard');
+  var nm = document.getElementById('pkgName');
+  var sub = document.getElementById('pkgSubtitle');
+  var divider = document.getElementById('pkgDivider');
+  var footer = document.getElementById('pkgFooter');
+  var decor = document.getElementById('pkgBadgeDecor');
+  var s1 = document.getElementById('pkgStat1');
+  var s2 = document.getElementById('pkgStat2');
+  var s3 = document.getElementById('pkgStat3');
+  var s4 = document.getElementById('pkgStat4');
+  var l1 = document.getElementById('pkgStatLabel1');
+  var l2 = document.getElementById('pkgStatLabel2');
+  var l3 = document.getElementById('pkgStatLabel3');
+  var l4 = document.getElementById('pkgStatLabel4');
+  function setStatColor(valC, labelC){
+    [s1,s2,s3,s4].forEach(function(e){e.style.color=valC;});
+    [l1,l2,l3,l4].forEach(function(e){e.style.color=labelC;});
+  }
+  if(_tier==='pro'){
+    card.style.background = 'linear-gradient(160deg,#FBEDC9 0%,#F6DEAB 52%,#F3D79D 100%)';
+    card.style.boxShadow = '0 2px 12px rgba(0,0,0,.08)';
+    card.style.border = 'none';
+    nm.style.color = '#1F2329';
+    nm.textContent = 'WPS 365 商业旗舰版';
+    sub.style.color = '#A08050';
+    sub.textContent = '有效期至 2027-05-12';
+    divider.style.borderTopColor = 'rgba(180,150,90,.15)';
+    footer.style.background = 'rgba(230,184,104,.2)';
+    decor.style.display = '';
+    s1.textContent = '17'; l1.textContent = '成员席位';
+    s2.textContent = '420+'; l2.textContent = '功能特权';
+    s3.textContent = '6'; l3.textContent = 'WPS AI';
+    s4.textContent = '14.28TB'; l4.textContent = '企业空间';
+    setStatColor('#1F2329','#646A73');
+  } else {
+    card.style.background = 'linear-gradient(160deg,#F2F2F2 0%,#ECECEC 100%)';
+    card.style.boxShadow = '0 1px 4px rgba(0,0,0,.05)';
+    card.style.border = '1px solid #E5E5E5';
+    nm.style.color = '#1F2329';
+    nm.textContent = 'WPS 365 体验版';
+    sub.style.color = '#646A73';
+    sub.textContent = '升级套餐享更多协作、安全权益';
+    divider.style.borderTopColor = '#DFDFDF';
+    footer.style.background = '#E9E9E9';
+    decor.style.display = 'none';
+    s1.textContent = '50'; l1.textContent = '成员席位';
+    s2.textContent = '30+'; l2.textContent = '功能特权';
+    s3.textContent = '0'; l3.textContent = 'WPS AI';
+    s4.textContent = '4GB'; l4.textContent = '企业空间';
+    setStatColor('#1F2329','#646A73');
+  }
+  var isGiftPkg = _pkgSource === 'gift';
+  document.getElementById('trialBadge').style.display = isGiftPkg ? '' : 'none';
+  if(isGiftPkg){
+    sub.textContent = '剩余试用天数 ' + _trialDays + '天';
+  }
+  updatePurchaseBtn();
+}
+
+function updatePurchaseBtn(){
+  var btn = document.getElementById('purchaseBtn');
+  if(_tier==='pro'){
+    btn.textContent = '增购人数';
+    btn.style.background = '#242A31';
+    btn.style.color = '#D9BC7A';
+    btn.style.border = '1px solid #242A31';
+    btn.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,.06),0 1px 2px rgba(0,0,0,.15)';
+    btn.style.letterSpacing = '.5px';
+    btn.style.fontWeight = '600';
+  } else {
+    btn.textContent = '升级套餐';
+    btn.style.background = '#fff';
+    btn.style.color = '#1F2329';
+    btn.style.border = '1px solid #D0D5DD';
+    btn.style.boxShadow = 'none';
+    btn.style.letterSpacing = '0';
+    btn.style.fontWeight = '500';
+  }
+  btn.style.display = '';
+}
+
+function switchRole(role){
+  _role = role;
+  var isAdmin = role==='admin';
+  document.getElementById('roleAdmin').className = 'flex-1 px-2 py-1 rounded-full text-xs text-center transition-all ' + (isAdmin ? 'bg-brand-500 text-white' : 'text-ink-500');
+  document.getElementById('roleMember').className = 'flex-1 px-2 py-1 rounded-full text-xs text-center transition-all ' + (isAdmin ? 'text-ink-500' : 'bg-brand-500 text-white');
+  document.getElementById('adminWelfare').style.display = isAdmin ? '' : 'none';
+  document.getElementById('adminPcGuide').style.display = isAdmin ? '' : 'none';
+  document.getElementById('seatInfo').style.display = isAdmin ? '' : 'none';
+  document.getElementById('tabCloud').style.display = isAdmin ? '' : 'none';
+  document.getElementById('tabSecurity').style.display = isAdmin ? '' : 'none';
+  document.getElementById('tabDoc').style.display = '';
+  document.getElementById('priv-cloud').style.display = 'none';
+  document.getElementById('priv-security').style.display = 'none';
+  if(!isAdmin){
+    var firstTab = document.querySelector('.tab-item');
+    switchPrivTab(firstTab, 'priv-ai');
+  }
+  updatePurchaseBtn();
+}
+
+function switchCommonSection(showCommon){
+  _showCommon = showCommon;
+  var sec = document.getElementById('commonFunctionsSection');
+  if(sec) sec.style.display = showCommon ? '' : 'none';
+  document.getElementById('commonShow').className = 'flex-1 px-2 py-1 rounded-full text-xs text-center transition-all ' + (showCommon ? 'bg-brand-500 text-white' : 'text-ink-500');
+  document.getElementById('commonHide').className = 'flex-1 px-2 py-1 rounded-full text-xs text-center transition-all ' + (showCommon ? 'text-ink-500' : 'bg-brand-500 text-white');
+}
+
+function switchPrivTab(el, id){
+  el.parentElement.querySelectorAll('.tab-item').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.priv-content').forEach(c=>c.style.display='none');
+  document.getElementById(id).style.display='';
+}
+
+renderRightsDetail();
+</script>
+
+<details class="m-6 text-sm text-ink-500 max-w-lg mx-auto"><summary>Demo 说明</summary>
+<ul class="list-disc pl-6 mt-2 space-y-1">
+  <li><b>状态A</b>：套餐临期弹窗 - 内容同PC端（策略位：package_expire_content），展示套餐名称、到期天数、35项权益影响、续费赠送角标</li>
+  <li><b>状态B</b>：套餐过期弹窗 - 内容同PC端（策略位：company_package_expire），展示已失去48项权益及影响；点击「暂不购买」会从底部弹出二次确认抽屉（权益回收表格 + 风险勾选确认），点击「返回上一级」回到过期弹窗</li>
+  <li><b>状态C</b>：二次确认弹窗的独立预览入口（实际交互中从状态B「暂不购买」触发）</li>
+  <li><b>状态F</b>：企业权益中心页面 - 四大区域：①套餐卡片、②我的企业权益（AI特权/云空间/PDF权益/表格权益/安全特权）、③企业福利（签到领福利/成长计划）、④移动端也能用。右侧控制面板可切换：版本（高级版/体验版）、来源（付费/赠送）、终端（Android/iOS）、视角（超管/成员）</li>
+  <li>未实现交互：弹窗关闭后的间隔天数逻辑、消息 push 接入、策略后台配置、具体跳转链接</li>
+  <li>假数据来源：企业名称、用户名、套餐信息、空间/席位数据均为演示用假数据</li>
+  <li>与需求差异：消息中心 push 推送接入方式待调研，本 demo 仅展示页面效果；权益包过期弹窗（二次确认弹窗）未展示</li>
+</ul></details>
+
+</body>
+</html>
