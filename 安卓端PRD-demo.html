@@ -868,7 +868,7 @@ function applyCardStyle(){
 function updatePurchaseBtn(){
   var btn = document.getElementById('purchaseBtn');
   if(_tier==='pro'){
-    btn.textContent = '增购人数';
+    btn.textContent = (_pkgSource==='gift') ? '立即购买' : '增购人数';
     btn.style.background = '#242A31';
     btn.style.color = '#D9BC7A';
     btn.style.border = '1px solid #242A31';
