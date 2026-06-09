@@ -876,7 +876,6 @@
     function defaultStrategy(index) {
       return {
         policyId: `policy_demo_${index}`,
-        exposeTotal: 0,
         audienceGroup: `人群包_${index}（活跃用户）`,
         conditionExpanded: false,
         deliveryMode: "carousel",
@@ -1080,9 +1079,6 @@
         </div>
         <div class="strategy-body">
           <div class="form-grid">
-            <div class="label">可展示次数</div>
-            <input type="number" min="0" data-field="exposeTotal" data-si="${si}" value="${strategy.exposeTotal}" />
-
             <div class="label required">选择条件组</div>
             <div class="inline">
               <select data-field="audienceGroup" data-si="${si}" style="max-width:360px;">
