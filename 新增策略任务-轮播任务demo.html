@@ -669,6 +669,7 @@
             <option value="内容C-升级转化弹窗">内容C-升级转化弹窗</option>
             <option value="内容D-召回提醒弹窗">内容D-召回提醒弹窗</option>
           </select>
+          <button type="button" class="link-btn" data-action="add-content-option">添加投放内容</button>
           <button type="button" class="link-btn" data-action="toggle-content-detail">展开详情</button>
         </div>
 
@@ -1088,7 +1089,10 @@
                 <option value="人群包_3（企业管理员）" ${strategy.audienceGroup === "人群包_3（企业管理员）" ? "selected" : ""}>人群包_3（企业管理员）</option>
                 <option value="人群包_4（未付费企业）" ${strategy.audienceGroup === "人群包_4（未付费企业）" ? "selected" : ""}>人群包_4（未付费企业）</option>
               </select>
-              ${strategy.audienceGroup ? `<button type="button" class="link-btn" data-action="toggle-condition-detail" data-si="${si}">${strategy.conditionExpanded ? "收起详情" : "展开详情"}</button>` : ""}
+              ${strategy.audienceGroup
+                ? `<button type="button" class="link-btn" data-action="toggle-condition-detail" data-si="${si}">${strategy.conditionExpanded ? "收起详情" : "展开详情"}</button>`
+                : `<button type="button" class="link-btn" data-action="add-condition-group" data-si="${si}">添加条件组</button>`
+              }
             </div>
 
             <div class="label required">选择投放模式</div>
@@ -1266,11 +1270,17 @@
           if (endSelect) endSelect.innerHTML = optionHtml;
         }
         const toggleContentBtn = node.querySelector('[data-action="toggle-content-detail"]');
+        const addContentOptionBtn = node.querySelector('[data-action="add-content-option"]');
         if (toggleContentBtn) {
           toggleContentBtn.dataset.si = String(si);
           toggleContentBtn.dataset.ci = String(ci);
           toggleContentBtn.textContent = content.contentExpanded ? "收起详情" : "展开详情";
           toggleContentBtn.style.display = content.contentName ? "" : "none";
+        }
+        if (addContentOptionBtn) {
+          addContentOptionBtn.dataset.si = String(si);
+          addContentOptionBtn.dataset.ci = String(ci);
+          addContentOptionBtn.style.display = content.contentName ? "none" : "";
         }
         const contentDetailBox = node.querySelector(".content-detail-box");
         if (contentDetailBox) {
