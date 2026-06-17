@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>套餐/权益包到期提醒弹窗优化 Demo</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  :root {
+    --c-bg: #F7F8FA;
+    --c-surface: #FFFFFF;
+    --c-border: #E8E9ED;
+    --c-border-light: #F0F1F3;
+    --c-text-1: #1D2129;
+    --c-text-2: #4E5969;
+    --c-text-3: #86909C;
+    --c-text-4: #C9CDD4;
+
+    --c-brand: #3370FF;
+    --c-brand-light: #EDF2FF;
+    --c-brand-border: #BEDAFF;
+
+    --c-warn: #E8684A;
+    --c-warn-light: #FFF3F0;
+    --c-warn-border: #FDCDC5;
+
+    --c-orange: #D97706;
+    --c-orange-light: #FFFBEB;
+    --c-orange-border: #FDE68A;
+
+    --c-green: #0F9D58;
+    --c-green-light: #F0FDF4;
+
+    --c-ai: #6D28D9;
+    --c-ai-light: #F5F3FF;
+    --c-ai-border: #DDD6FE;
+
+    --c-sec: #1E40AF;
+    --c-sec-light: #EFF6FF;
+    --c-sec-border: #BFDBFE;
+
+    --c-mem: #B45309;
+    --c-mem-light: #FFFBEB;
+    --c-mem-border: #FDE68A;
+
+    --radius-s: 6px;
+    --radius-m: 10px;
+    --radius-l: 14px;
+    --shadow-card: 0 1px 3px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.08);
+    --shadow-modal: 0 4px 12px rgba(0,0,0,.06), 0 20px 48px rgba(0,0,0,.12);
+    --transition: 180ms cubic-bezier(.4,0,.2,1);
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); background: var(--c-bg); color: var(--c-text-1); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+  /* ── Control Panel ── */
+  .panel { position: sticky; top: 0; z-index: 100; background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: 20px 32px; }
+  .panel-title { font-size: 15px; font-weight: 600; letter-spacing: -.01em; color: var(--c-text-1); margin-bottom: 14px; }
+  .panel-rows { display: flex; flex-direction: column; gap: 10px; }
+  .panel-row { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+  .ctrl { display: flex; align-items: center; gap: 8px; }
+  .ctrl-label { font-size: 12px; font-weight: 500; color: var(--c-text-3); min-width: 56px; letter-spacing: .02em; }
+  .seg { display: inline-flex; border: 1px solid var(--c-border); border-radius: var(--radius-s); overflow: hidden; }
+  .seg button { padding: 5px 14px; font-size: 12px; font-weight: 500; font-family: var(--font); border: none; background: transparent; color: var(--c-text-3); cursor: pointer; transition: var(--transition); border-right: 1px solid var(--c-border); letter-spacing: .01em; }
+  .seg button:last-child { border-right: none; }
+  .seg button:hover:not(.on) { background: var(--c-bg); color: var(--c-text-2); }
+  .seg button.on { background: var(--c-text-1); color: #fff; }
+
+  /* ── Stage ── */
+  .stage { display: flex; flex-direction: column; align-items: center; padding: 40px 24px 80px; min-height: calc(100vh - 120px); }
+
+  /* ── Flow Steps ── */
+  .flow { display: none; align-items: center; gap: 6px; margin-bottom: 24px; font-size: 12px; color: var(--c-text-3); }
+  .flow.show { display: flex; }
+  .flow-step { padding: 4px 12px; border-radius: 20px; font-weight: 500; cursor: pointer; transition: var(--transition); background: var(--c-bg); border: 1px solid var(--c-border); }
+  .flow-step.current { background: var(--c-text-1); color: #fff; border-color: var(--c-text-1); }
+  .flow-step.done { background: var(--c-green-light); color: var(--c-green); border-color: #BBF7D0; }
+  .flow-arr { color: var(--c-text-4); font-size: 14px; }
+
+  /* ── Banner ── */
+  .banner-wrap { display: none; width: 100%; max-width: 520px; }
+  .banner { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-radius: var(--radius-m); background: var(--c-surface); border: 1px solid var(--c-border); box-shadow: var(--shadow-card); }
+  .banner-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .t-default .banner-dot { background: var(--c-brand); }
+  .t-ai .banner-dot { background: var(--c-ai); }
+  .t-sec .banner-dot { background: var(--c-sec); }
+  .t-mem .banner-dot { background: var(--c-mem); }
+  .banner-body { flex: 1; font-size: 13px; color: var(--c-text-2); }
+  .banner-body strong { font-weight: 600; color: var(--c-text-1); }
+  .banner-body .hl { font-weight: 600; }
+  .t-default .banner-body .hl { color: var(--c-brand); }
+  .t-ai .banner-body .hl { color: var(--c-ai); }
+  .t-sec .banner-body .hl { color: var(--c-sec); }
+  .t-mem .banner-body .hl { color: var(--c-orange); }
+  .banner-cta { padding: 6px 14px; border-radius: var(--radius-s); font-size: 12px; font-weight: 600; font-family: var(--font); border: none; color: #fff; cursor: pointer; white-space: nowrap; transition: var(--transition); }
+  .banner-cta:active { transform: scale(.97); }
+  .t-default .banner-cta { background: var(--c-brand); }
+  .t-ai .banner-cta { background: var(--c-ai); }
+  .t-sec .banner-cta { background: var(--c-sec); }
+  .t-mem .banner-cta { background: var(--c-mem); }
+  .banner-x { width: 24px; height: 24px; border-radius: 50%; border: none; background: transparent; color: var(--c-text-4); cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: var(--transition); }
+  .banner-x:hover { background: var(--c-bg); color: var(--c-text-3); }
+
+  /* ── Modal Shell ── */
+  .m-wrap { display: none; width: 100%; max-width: 420px; }
+  .m-wrap.show { display: block; }
+  .modal { background: var(--c-surface); border-radius: var(--radius-l); box-shadow: var(--shadow-modal); overflow: hidden; position: relative; }
+
+  /* ── Shared modal elements ── */
+  .m-bar { height: 3px; }
+  .t-default .m-bar { background: var(--c-brand); }
+  .t-ai .m-bar { background: linear-gradient(90deg, #7C3AED, #A78BFA); }
+  .t-sec .m-bar { background: linear-gradient(90deg, var(--c-sec), #3B82F6); }
+  .t-mem .m-bar { background: linear-gradient(90deg, var(--c-mem), #F59E0B); }
+
+  .m-close {
+    position: absolute; top: 12px; right: 14px; z-index: 2;
+    width: 28px; height: 28px; border-radius: 50%;
+    border: none; background: var(--c-bg); color: var(--c-text-3);
+    cursor: pointer; font-size: 14px; transition: var(--transition);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .m-close:hover { background: var(--c-border); color: var(--c-text-2); }
+  .m-close:active { transform: scale(.94); }
+
+  /* ─────────────────────────────────────────────────────────
+     ADMIN SOON LAYOUT
+  ───────────────────────────────────────────────────────── */
+
+  /* Modal name */
+  .as-name {
+    display: flex; align-items: center; gap: 6px;
+    padding: 16px 48px 0 20px; margin-bottom: 12px;
+    font-size: 13px; font-weight: 600; color: var(--c-brand);
+  }
+  .as-name svg { flex-shrink: 0; }
+
+  /* Title */
+  .as-title {
+    font-size: 18px; font-weight: 800; letter-spacing: -.02em;
+    line-height: 1.35; color: var(--c-text-1);
+    padding: 0 48px 0 20px; margin-bottom: 6px;
+  }
+
+  /* Subtitle */
+  .as-subtitle {
+    padding: 0 20px; margin-bottom: 18px;
+    font-size: 13px; color: var(--c-text-3); line-height: 1.5;
+  }
+  .as-title .hl { font-weight: 800; }
+  .t-default .as-title .hl { color: var(--c-warn); }
+  .t-ai .as-title .hl { color: var(--c-ai); }
+  .t-sec .as-title .hl { color: var(--c-sec); }
+  .t-mem .as-title .hl { color: var(--c-orange); }
+
+  /* Context line */
+  .as-context {
+    margin: 0 20px 16px; padding: 0;
+    font-size: 12px; color: var(--c-text-4); line-height: 1.5;
+  }
+  .as-context strong { font-weight: 500; color: var(--c-text-3); }
+
+  /* Section header */
+  .as-section-hd {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 20px; margin-bottom: 10px;
+    font-size: 13px; font-weight: 700; color: var(--c-text-1);
+  }
+  .as-section-left {
+    display: flex; align-items: center; gap: 6px;
+  }
+  .as-section-left svg { flex-shrink: 0; }
+  .as-section-right {
+    font-size: 12px; font-weight: 400; color: var(--c-text-3);
+  }
+
+  /* Impact cards */
+  .as-impacts { padding: 0 20px; margin-bottom: 6px; }
+  .as-impact {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 10px 14px; margin-bottom: 6px;
+    border-radius: var(--radius-s);
+    border-left: 3px solid;
+    background: var(--c-bg);
+  }
+  .as-impact:last-child { margin-bottom: 0; }
+  .t-default .as-impact { border-left-color: var(--c-brand); }
+  .t-ai .as-impact { border-left-color: var(--c-ai); }
+  .t-sec .as-impact { border-left-color: var(--c-sec); }
+  .t-mem .as-impact { border-left-color: var(--c-orange); }
+  .as-impact-left { flex: 1; min-width: 0; }
+  .as-impact-hd {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 13px; font-weight: 700; color: var(--c-text-1);
+    margin-bottom: 2px;
+  }
+  .as-impact-hd svg { color: var(--c-text-3); flex-shrink: 0; }
+  .as-impact-desc { font-size: 12px; color: var(--c-text-2); line-height: 1.4; }
+  .as-impact-data {
+    flex-shrink: 0; font-size: 12px; font-weight: 600;
+    text-align: right; white-space: nowrap;
+  }
+  .t-default .as-impact-data { color: var(--c-brand); }
+  .t-ai .as-impact-data { color: var(--c-ai); }
+  .t-sec .as-impact-data { color: var(--c-sec); }
+  .t-mem .as-impact-data { color: var(--c-orange); }
+
+  /* Expired alert banner */
+  .as-alert {
+    display: flex; align-items: center; gap: 8px;
+    margin: 0 20px 14px; padding: 8px 12px;
+    border-radius: var(--radius-s);
+    background: var(--c-warn-light); border: 1px solid var(--c-warn-border);
+    font-size: 12px; font-weight: 500; color: var(--c-warn);
+  }
+  .as-alert svg { flex-shrink: 0; }
+
+  /* Expired impact style override */
+  .modal.expired .as-impact { border-left-color: var(--c-warn); }
+  .modal.expired .as-impact-data { color: var(--c-green); }
+  .modal.expired .as-name { color: var(--c-warn); }
+  .modal.expired .as-title .hl { color: var(--c-warn) !important; }
+
+  /* More link */
+  .as-more {
+    display: flex; align-items: center; justify-content: center;
+    gap: 4px; padding: 8px 20px 18px;
+    font-size: 12px; font-weight: 500; color: var(--c-text-3);
+    cursor: pointer; transition: color var(--transition);
+  }
+  .as-more:hover { color: var(--c-brand); }
+  .as-more svg { flex-shrink: 0; }
+
+  /* ─── Compare Page ─── */
+  .cmp-wrap { display: none; width: 100%; max-width: 820px; }
+  .cmp-wrap.show { display: block; }
+  .cmp-page {
+    background: var(--c-surface); border-radius: var(--radius-l);
+    box-shadow: var(--shadow-modal); overflow: hidden;
+  }
+  .cmp-hdr {
+    display: flex; align-items: center; gap: 8px;
+    padding: 18px 20px; border-bottom: 1px solid var(--c-border);
+  }
+  .cmp-back {
+    width: 28px; height: 28px; border-radius: 50%; border: none;
+    background: var(--c-bg); color: var(--c-text-3); cursor: pointer;
+    font-size: 14px; display: flex; align-items: center; justify-content: center;
+    transition: var(--transition); flex-shrink: 0;
+  }
+  .cmp-back:hover { background: var(--c-border); color: var(--c-text-2); }
+  .cmp-hdr-title { font-size: 14px; font-weight: 700; color: var(--c-text-1); }
+
+  .cmp-cols {
+    display: grid; grid-template-columns: minmax(120px,1.2fr) repeat(4,1fr);
+    border-bottom: 1px solid var(--c-border);
+  }
+  .cmp-top-tags {
+    display: grid; grid-template-columns: minmax(120px,1.2fr) repeat(4,1fr);
+    border-bottom: none; margin-bottom: 0;
+  }
+  .cmp-top-tags .cmp-tag-cell {
+    text-align: center; padding: 0 8px 4px;
+  }
+  .cmp-top-tags .cmp-tag-cell:first-child { padding: 0; }
+  .cmp-col-tag {
+    display: inline-block; font-size: 11px; font-weight: 700;
+    padding: 3px 10px; border-radius: 4px; letter-spacing: .02em;
+  }
+  .cmp-tag-brand { background: var(--c-brand); color: #fff; }
+  .cmp-tag-warn { background: var(--c-warn); color: #fff; }
+
+  .cmp-col-label {
+    padding: 6px 12px 14px; text-align: center;
+    font-size: 11px; color: var(--c-text-3);
+  }
+  .cmp-col-label:first-child { text-align: left; padding-left: 20px; }
+  .cmp-col-name { font-size: 14px; font-weight: 700; color: var(--c-text-1); display: block; margin-top: 2px; }
+  .cmp-col-desc { font-size: 10px; color: var(--c-text-3); display: block; margin-top: 2px; }
+  .cmp-col-price { font-size: 11px; color: var(--c-text-2); margin-top: 4px; }
+  .cmp-col-price .price-num { font-size: 18px; font-weight: 800; color: var(--c-text-1); }
+  .cmp-col-fn { font-size: 13px; font-weight: 700; color: var(--c-text-1); display: flex; align-items: flex-end; padding-bottom: 16px !important; }
+  .cmp-col-current { background: rgba(51,112,255,.04); }
+
+  .cmp-buy {
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-top: 8px; padding: 5px 16px; border-radius: var(--radius-s);
+    border: 1.5px solid var(--c-text-1); background: transparent;
+    font-size: 11px; font-weight: 600; font-family: var(--font);
+    color: var(--c-text-1); cursor: pointer; transition: var(--transition);
+  }
+  .cmp-buy:hover { background: var(--c-text-1); color: #fff; }
+  .cmp-buy-primary {
+    background: var(--c-brand); color: #fff; border-color: var(--c-brand);
+  }
+  .cmp-buy-primary:hover { background: var(--c-brand); filter: brightness(.9); color: #fff; }
+
+  .cmp-body { max-height: 400px; overflow-y: auto; }
+
+  .cmp-cat {
+    display: grid; grid-template-columns: minmax(120px,1.2fr) repeat(4,1fr);
+    background: var(--c-bg); border-bottom: 1px solid var(--c-border);
+    font-size: 12px; font-weight: 700; color: var(--c-text-1);
+  }
+  .cmp-cat-cell { padding: 10px 12px; display: flex; align-items: center; justify-content: center; }
+  .cmp-cat-cell:first-child { padding-left: 20px; justify-content: flex-start; }
+  .cmp-cat-count { font-weight: 500; color: var(--c-text-3); }
+
+  .cmp-row {
+    display: grid; grid-template-columns: minmax(120px,1.2fr) repeat(4,1fr);
+    border-bottom: 1px solid var(--c-border-light);
+    font-size: 12px; color: var(--c-text-2);
+    transition: background var(--transition);
+  }
+  .cmp-row:hover { background: #FAFBFC; }
+  .cmp-cell { padding: 10px 12px; display: flex; align-items: center; }
+  .cmp-cell:first-child { padding-left: 20px; color: var(--c-text-1); font-weight: 500; }
+  .cmp-cell:not(:first-child) { justify-content: center; }
+  .cmp-cell:nth-child(3) { background: rgba(51,112,255,.03); }
+  .cmp-cat-cell:nth-child(3) { background: rgba(51,112,255,.05); }
+  .cmp-top-tags .cmp-tag-cell:nth-child(3) { background: var(--c-brand-light); border-radius: var(--radius-m) var(--radius-m) 0 0; }
+
+  .cmp-x { color: var(--c-text-4); }
+  .cmp-check { color: var(--c-brand); }
+  .cmp-val-hl { color: var(--c-brand); font-weight: 600; }
+
+  .cmp-expand {
+    display: flex; align-items: center; gap: 6px;
+    padding: 12px 20px; font-size: 12px; font-weight: 600;
+    color: var(--c-text-2); cursor: pointer; border: none;
+    background: none; font-family: var(--font);
+    transition: color var(--transition);
+  }
+  .cmp-expand:hover { color: var(--c-brand); }
+  .cmp-expand svg { flex-shrink: 0; }
+
+  /* CTA */
+  .as-cta { padding: 0 20px 16px; }
+  .btn-as {
+    width: 100%; height: 48px; border-radius: 10px;
+    border: none; font-size: 15px; font-weight: 600; font-family: var(--font);
+    color: #fff; cursor: pointer; transition: all .2s ease;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    letter-spacing: .01em;
+  }
+  .btn-as:hover { filter: brightness(.93); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(51,112,255,.3); }
+  .btn-as:active { transform: scale(.98) translateY(0); box-shadow: none; }
+  .t-default .btn-as { background: var(--c-brand); }
+  .t-ai .btn-as { background: var(--c-ai); }
+  .t-sec .btn-as { background: var(--c-sec); }
+  .t-mem .btn-as { background: var(--c-mem); }
+  .btn-as svg { flex-shrink: 0; }
+
+  /* Bottom links */
+  .as-links {
+    display: flex; align-items: center; justify-content: center;
+    gap: 16px; font-size: 12px; padding: 0 20px 20px;
+  }
+  .as-links .sep { width: 1px; height: 12px; background: var(--c-border); }
+
+  .as-links .link-info {
+    display: inline-flex; align-items: center; gap: 4px;
+    color: var(--c-text-3); font-weight: 500;
+    cursor: default; transition: color var(--transition);
+  }
+  .as-links .link-info:hover { color: var(--c-text-2); }
+  .as-links .link-info svg { flex-shrink: 0; }
+
+  .as-popover-tip {
+    display: none; position: absolute; bottom: calc(100% + 8px); left: 50%;
+    transform: translateX(-50%);
+    background: var(--c-surface); border: 1px solid var(--c-border);
+    border-radius: var(--radius-m); box-shadow: var(--shadow-l);
+    padding: 10px 14px; white-space: nowrap;
+    font-size: 12px; color: var(--c-text-2); z-index: 10;
+  }
+  .as-popover:hover .as-popover-tip { display: block; }
+
+  .as-popover { position: relative; display: inline-flex; }
+  .as-popover-trigger {
+    display: inline-flex; align-items: center; gap: 4px;
+    color: var(--c-text-3); text-decoration: none; font-weight: 500;
+    cursor: pointer; transition: color var(--transition);
+  }
+  .as-popover-trigger:hover { color: var(--c-text-2); }
+  .as-popover-trigger svg { flex-shrink: 0; }
+
+  .as-popover-card {
+    display: none; position: absolute; bottom: calc(100% + 8px); left: 50%;
+    transform: translateX(-50%);
+    background: var(--c-surface); border: 1px solid var(--c-border);
+    border-radius: var(--radius-m); box-shadow: var(--shadow-card);
+    z-index: 20; min-width: 140px;
+  }
+  .as-popover:hover .as-popover-card { display: block; }
+
+  .as-qr-placeholder {
+    display: flex; align-items: center; justify-content: center;
+    width: 140px; height: 140px; margin: 16px auto 8px;
+    background: var(--c-bg); border-radius: var(--radius-s);
+  }
+  .as-qr-text {
+    text-align: center; font-size: 11px; color: var(--c-text-3);
+    padding: 0 12px 14px; line-height: 1.4;
+  }
+
+  .as-remind-opts { padding: 4px 0; min-width: 160px; }
+  .as-remind-opt {
+    display: block; padding: 8px 16px; font-size: 12px; font-weight: 500;
+    color: var(--c-text-1); text-decoration: none; cursor: pointer;
+    transition: background var(--transition); white-space: nowrap;
+  }
+  .as-remind-opt:hover { background: var(--c-bg); }
+
+  /* ─────────────────────────────────────────────────────────
+     STANDARD LAYOUT (非超管临期 的其他场景)
+  ───────────────────────────────────────────────────────── */
+  .m-body { padding: 0 20px 16px; }
+
+  .m-head { margin-bottom: 6px; }
+  .m-title { font-size: 18px; font-weight: 800; letter-spacing: -.02em; line-height: 1.35; color: var(--c-text-1); }
+  .m-title .hl { font-weight: 700; }
+  .t-default .m-title .hl { color: var(--c-warn); }
+  .t-ai .m-title .hl { color: var(--c-ai); }
+  .t-sec .m-title .hl { color: var(--c-sec); }
+  .t-mem .m-title .hl { color: var(--c-orange); }
+  .m-title.expired .hl { color: var(--c-warn) !important; }
+
+  .m-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+  .tag { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; letter-spacing: .01em; }
+  .tag-plan { background: var(--c-bg); color: var(--c-text-2); }
+  .tag-date { background: var(--c-orange-light); color: var(--c-orange); }
+  .tag-date.warn { background: var(--c-warn-light); color: var(--c-warn); }
+  .tag-inv { background: var(--c-green-light); color: var(--c-green); }
+
+  .m-value { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: var(--radius-s); margin-bottom: 16px; font-size: 12px; font-weight: 500; border: 1px solid; }
+  .t-default .m-value { background: var(--c-brand-light); color: var(--c-brand); border-color: var(--c-brand-border); }
+  .t-ai .m-value { background: var(--c-ai-light); color: var(--c-ai); border-color: var(--c-ai-border); }
+  .t-sec .m-value { background: var(--c-sec-light); color: var(--c-sec); border-color: var(--c-sec-border); }
+  .t-mem .m-value { background: var(--c-mem-light); color: var(--c-mem); border-color: var(--c-mem-border); }
+  .m-value svg { flex-shrink: 0; }
+
+  .m-impacts { margin-bottom: 16px; }
+  .impact { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-radius: var(--radius-s); background: var(--c-bg); font-size: 13px; margin-bottom: 6px; transition: background var(--transition); }
+  .impact:last-child { margin-bottom: 0; }
+  .impact:hover { background: var(--c-border-light); }
+  .impact-dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 7px; flex-shrink: 0; }
+  .t-default .impact-dot { background: var(--c-brand); }
+  .t-ai .impact-dot { background: var(--c-ai); }
+  .t-sec .impact-dot { background: var(--c-sec); }
+  .t-mem .impact-dot { background: var(--c-orange); }
+  .impact-body { flex: 1; line-height: 1.5; }
+  .impact-body .sub { font-size: 12px; font-weight: 600; display: block; margin-top: 1px; }
+  .t-default .impact-body .sub { color: var(--c-brand); }
+  .t-ai .impact-body .sub { color: var(--c-ai); }
+  .t-sec .impact-body .sub { color: var(--c-sec); }
+  .t-mem .impact-body .sub { color: var(--c-orange); }
+  .m-more { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: var(--c-text-4); cursor: pointer; border: none; background: none; padding: 4px 0; margin-top: 4px; transition: color var(--transition); font-family: var(--font); }
+  .m-more:hover { color: var(--c-text-3); }
+
+  /* Standard CTA */
+  .m-cta { padding: 0 20px 20px; }
+  .btn-main { width: 100%; height: 42px; border-radius: var(--radius-s); border: none; font-size: 14px; font-weight: 600; font-family: var(--font); color: #fff; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 10px; letter-spacing: -.01em; }
+  .btn-main:hover { filter: brightness(.92); }
+  .btn-main:active { transform: scale(.98); }
+  .t-default .btn-main { background: var(--c-brand); }
+  .t-ai .btn-main { background: var(--c-ai); }
+  .t-sec .btn-main { background: var(--c-sec); }
+  .t-mem .btn-main { background: var(--c-mem); }
+  .btn-main .btn-sub { font-size: 11px; font-weight: 400; opacity: .7; }
+  .btn-main .badge { font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 8px; background: rgba(255,255,255,.25); letter-spacing: .02em; }
+  .btn-main.outline { background: transparent !important; filter: none; border: 1.5px solid; }
+  .t-default .btn-main.outline { color: var(--c-brand); border-color: var(--c-brand); }
+  .t-ai .btn-main.outline { color: var(--c-ai); border-color: var(--c-ai); }
+  .t-sec .btn-main.outline { color: var(--c-sec); border-color: var(--c-sec); }
+  .t-mem .btn-main.outline { color: var(--c-mem); border-color: var(--c-mem); }
+
+  .notify-ok { display: none; align-items: center; justify-content: center; gap: 6px; padding: 6px 12px; border-radius: var(--radius-s); background: var(--c-green-light); color: var(--c-green); font-size: 12px; font-weight: 500; margin-bottom: 8px; }
+
+  .cta-links { display: flex; align-items: center; justify-content: center; gap: 14px; font-size: 12px; }
+  .cta-links a { color: var(--c-text-3); text-decoration: none; font-weight: 500; transition: color var(--transition); cursor: pointer; }
+  .cta-links a:hover { color: var(--c-text-2); }
+  .cta-links .sep { width: 1px; height: 12px; background: var(--c-border); }
+  .remind { position: relative; display: inline-block; }
+  .remind-menu { display: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius-s); box-shadow: var(--shadow-card); padding: 4px 0; min-width: 110px; z-index: 10; }
+  .remind:hover .remind-menu { display: block; }
+  .remind-menu a { display: block; padding: 6px 14px; font-size: 12px; color: var(--c-text-1); text-decoration: none; transition: background var(--transition); white-space: nowrap; }
+  .remind-menu a:hover { background: var(--c-bg); }
+
+  /* ── Confirm Modal (Step 2) ── */
+  .cf-wrap { display: none; width: 100%; max-width: 420px; }
+  .cf-wrap.show { display: block; }
+  .cf { background: var(--c-surface); border-radius: var(--radius-l); box-shadow: var(--shadow-modal); overflow: hidden; position: relative; }
+  .cf-name-warn { color: var(--c-orange); }
+  .cf-title-warn {
+    font-size: 18px; font-weight: 800; letter-spacing: -.02em;
+    line-height: 1.35; color: var(--c-text-1);
+    padding: 0 48px 0 20px; margin-bottom: 6px;
+  }
+  .cf-impacts { margin-bottom: 16px; }
+  .cf-impacts .as-impact { border-left-color: var(--c-warn); }
+  .cf-impacts .as-impact-data { color: var(--c-warn); }
+  .cf-more-link { cursor: pointer; }
+  .cf-divider { height: 1px; background: var(--c-border); margin: 4px 20px 14px; }
+  .abandon { padding: 0 20px 20px; }
+  .abandon-check {
+    display: flex; align-items: flex-start; gap: 8px;
+    font-size: 13px; color: var(--c-text-1); cursor: pointer;
+    margin-bottom: 12px; line-height: 1.5;
+    padding: 10px 14px; border-radius: var(--radius-s);
+    background: var(--c-bg); border: 1px solid var(--c-border);
+  }
+  .abandon-check input { margin-top: 3px; flex-shrink: 0; cursor: pointer; width: 15px; height: 15px; accent-color: var(--c-warn); }
+  .abandon-text { display: flex; flex-direction: column; gap: 4px; }
+  .btn-abandon { width: 100%; height: 38px; border: 1.5px solid var(--c-border); border-radius: var(--radius-s); font-size: 13px; font-weight: 500; font-family: var(--font); color: var(--c-text-4); background: var(--c-surface); cursor: not-allowed; opacity: .5; transition: var(--transition); }
+  .btn-abandon.ok { cursor: pointer; opacity: 1; color: var(--c-warn); border-color: var(--c-warn-border); }
+  .btn-abandon.ok:hover { background: var(--c-warn-light); border-color: var(--c-warn); }
+  .btn-abandon.ok:active { transform: scale(.98); }
+  .buffer-hint {
+    display: none;
+    font-size: 11px; color: var(--c-orange); line-height: 1.4;
+  }
+  .buffer-hint strong { font-weight: 700; }
+  .buffer-hint.show { display: block; }
+</style>
+</head>
+<body>
+
+<div class="panel">
+  <div class="panel-title">到期提醒弹窗优化 Demo</div>
+  <div class="panel-rows">
+    <div class="panel-row">
+      <div class="ctrl">
+        <span class="ctrl-label">弹窗类型</span>
+        <div class="seg" data-k="type">
+          <button class="on" data-v="pkg-soon">套餐临期</button>
+          <button data-v="pkg-expired">套餐到期</button>
+          <button data-v="ben-soon" style="display:none;">权益包临期</button>
+          <button data-v="ben-expired" style="display:none;">权益包到期</button>
+        </div>
+      </div>
+      <div class="ctrl">
+        <span class="ctrl-label">临期天数</span>
+        <div class="seg" data-k="days">
+          <button data-v="60">60天</button>
+          <button class="on" data-v="14">14天</button>
+          <button data-v="1">1天</button>
+        </div>
+      </div>
+    </div>
+    <div class="panel-row">
+      <div class="ctrl">
+        <span class="ctrl-label">主题样式</span>
+        <div class="seg" data-k="theme">
+          <button class="on" data-v="default">通用</button>
+          <button data-v="ai">AI</button>
+          <button data-v="sec">安全</button>
+          <button data-v="mem">会员</button>
+        </div>
+      </div>
+      <div class="ctrl" style="display:none;">
+        <span class="ctrl-label">用户角色</span>
+        <div class="seg" data-k="role">
+          <button class="on" data-v="admin">超管</button>
+          <button data-v="member">成员</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="stage">
+
+  <div class="flow" id="flow">
+    <div class="flow-step current" id="fs1" onclick="goStep(1)">1. 到期提醒</div>
+    <span class="flow-arr">&rarr;</span>
+    <div class="flow-step" id="fs2" onclick="goStep(2)">2. 权益回收确认</div>
+    <span class="flow-arr">&rarr;</span>
+    <div class="flow-step" style="opacity:.4;cursor:default">3. 缓冲期</div>
+  </div>
+
+  <div class="banner-wrap" id="bannerWrap">
+    <div class="banner t-default" id="banner">
+      <div class="banner-dot"></div>
+      <div class="banner-body" id="bannerBody"></div>
+      <button class="banner-cta" id="bannerCta">查看续费方案</button>
+      <button class="banner-x">&times;</button>
+    </div>
+  </div>
+
+  <div class="m-wrap" id="mWrap">
+    <div class="modal t-default" id="modal">
+      <!-- inner content built dynamically by render() -->
+    </div>
+  </div>
+
+  <!-- Compare Page -->
+  <div class="cmp-wrap" id="cmpWrap">
+    <div class="cmp-page">
+      <div class="cmp-hdr">
+        <button class="cmp-back" id="cmpBack">&larr;</button>
+        <div class="cmp-hdr-title">选择适合你的企业套餐</div>
+      </div>
+      <div class="cmp-top-tags">
+        <div class="cmp-tag-cell"></div>
+        <div class="cmp-tag-cell"><span class="cmp-col-tag cmp-tag-warn">过期后</span></div>
+        <div class="cmp-tag-cell"><span class="cmp-col-tag cmp-tag-brand">当前套餐</span></div>
+        <div class="cmp-tag-cell"></div>
+        <div class="cmp-tag-cell"></div>
+      </div>
+      <div class="cmp-cols">
+        <div class="cmp-col-label cmp-col-fn">功能</div>
+        <div class="cmp-col-label">
+          <span class="cmp-col-name">体验版</span>
+          <span class="cmp-col-desc">初创企业办公无忧</span>
+          <div class="cmp-col-price">免费</div>
+        </div>
+        <div class="cmp-col-label cmp-col-current">
+          <span class="cmp-col-name">商业协作版</span>
+          <span class="cmp-col-desc">全面提升团队高效协作</span>
+          <div class="cmp-col-price"><span class="price-num">199</span> 元/人/年</div>
+          <button class="cmp-buy cmp-buy-primary">立即续费</button>
+        </div>
+        <div class="cmp-col-label">
+          <span class="cmp-col-name">商业高级版</span>
+          <span class="cmp-col-desc">企业安全与效率兼顾</span>
+          <div class="cmp-col-price"><span class="price-num">399</span> 元/人/年</div>
+          <button class="cmp-buy">立即升级</button>
+        </div>
+        <div class="cmp-col-label">
+          <span class="cmp-col-name">商业旗舰版</span>
+          <span class="cmp-col-desc">大型企业全场景覆盖</span>
+          <div class="cmp-col-price"><span class="price-num">599</span> 元/人/年</div>
+          <button class="cmp-buy">立即升级</button>
+        </div>
+      </div>
+      <div class="cmp-body" id="cmpBody"></div>
+    </div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="cf-wrap" id="cfWrap">
+    <div class="cf">
+      <div class="as-name cf-name-warn">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5 1.5 13h13L8 1.5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 6v3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="12" r=".8" fill="currentColor"/></svg>
+        权益回收确认
+      </div>
+      <button class="m-close" onclick="goStep(1)">&times;</button>
+
+      <div class="as-title cf-title-warn" id="cfTitle">确认暂不续费？</div>
+      <div class="as-subtitle">确认后将进入缓冲期，缓冲期结束后以下企业能力将被回收，可能影响团队正常使用。</div>
+
+      <div class="as-impacts cf-impacts" id="riskList"></div>
+
+
+      <div class="as-cta">
+        <button class="btn-as" id="cfBtn" style="background:var(--c-brand);">
+          <span>继续续费，避免权益回收</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div class="abandon">
+        <label class="abandon-check">
+          <input type="checkbox" id="abCheck" onchange="togAbandon()">
+          <div class="abandon-text">
+            <span>我已了解回收风险，确认暂不续费</span>
+            <span class="buffer-hint" id="bufferHint">缓冲期剩余 <strong>7</strong> 天，期间仍可随时续费避免回收</span>
+          </div>
+        </label>
+        <button class="btn-abandon" id="abBtn" disabled>确认不续费，进入缓冲期</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ── SVG icons ── */
+const ICO = {
+  val: `<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1v14M1 8h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`,
+};
+
+/* ── 超管临期数据 ── */
+const CMP = {
+  default: {
+    titleFn: d => `您订阅的WPS 365商业协作版 <span class="hl">${d}天后到期</span>`,
+    subtitle: '团队内有5名成员正在使用，到期后影响：',
+    impacts: [
+      { cat: '空间失效', ico: 'collab', desc: '150GB 企业空间到期，成员无法更新文档', data: '已使用 150GB' },
+      { cat: '上传受限', ico: 'collab', desc: '大文件上传能力到期后降级', data: '近30天上传 47 次' },
+      { cat: '加密回收', ico: 'lock', desc: '团队文档失去加密保护', data: '已加密 5 个团队' },
+    ],
+    ctaTxt: '去续费',
+    ctaBadge: '赠90天',
+  },
+  ai: {
+    titleFn: d => `您订阅的AI办公能力 <span class="hl">${d}天后中断</span>`,
+    subtitle: '团队近30天已使用AI功能438次，到期后将影响：',
+    impacts: [
+      { cat: '写作中断', ico: 'collab', desc: 'AI 智能写作即将不可用', data: '近30天使用 286 次' },
+      { cat: '排版降级', ico: 'brand', desc: 'AI 排版美化即将不可用', data: '近30天使用 152 次' },
+      { cat: '翻译受阻', ico: 'collab', desc: 'AI 翻译摘要即将不可用', data: '影响 68 位成员' },
+    ],
+    ctaTxt: '续费保留 AI 能力',
+    ctaBadge: '赠90天',
+  },
+  sec: {
+    titleFn: d => `您订阅的安全防护能力 <span class="hl">${d}天后失效</span>`,
+    subtitle: '当前5个团队、86位成员受安全策略保护，到期后将影响：',
+    impacts: [
+      { cat: '加密回收', ico: 'lock', desc: '团队文档加密保护即将回收', data: '已保护 5 个团队' },
+      { cat: '管控失效', ico: 'lock', desc: '文档外发管控即将失效', data: '已管控 5 个团队分享范围' },
+      { cat: '水印关闭', ico: 'brand', desc: '企业文档水印即将关闭', data: '已为 5 个团队开启追溯' },
+    ],
+    ctaTxt: '续费保障企业安全',
+    ctaBadge: '赠90天',
+  },
+  mem: {
+    titleFn: d => `您订阅的专属办公权益 <span class="hl">${d}天后失效</span>`,
+    subtitle: '企业空间已用320GB/500GB，到期后将影响：',
+    impacts: [
+      { cat: '空间缩减', ico: 'collab', desc: '企业空间 500GB 到期后降至 10GB', data: '当前已用 320GB' },
+      { cat: '上传受限', ico: 'collab', desc: '单文件上传 6GB 到期后降至 10MB', data: '近30天上传大文件 47 次' },
+      { cat: '素材失效', ico: 'brand', desc: '专属模板/字体/素材即将不可用', data: '近30天使用 89 次' },
+    ],
+    ctaTxt: '续费保留专属权益',
+    ctaBadge: '赠90天',
+  },
+};
+
+/* ── 标准场景数据 ── */
+const D = {
+  impacts: {
+    default: {
+      soon: [
+        { t: '成员无法更新协作文档', d: '150GB 企业空间到期' },
+        { t: '团队文档失去加密保护', d: '已开启 5 个加密团队' },
+        { t: '团队文档失去文档水印', d: '已开启 5 个水印团队' },
+      ],
+      exp: [
+        { t: '协作文档能力已中断', d: '续费后立即恢复' },
+        { t: '团队文档加密保护已关闭', d: '续费后恢复 5 个团队' },
+        { t: '文档水印追溯已失效', d: '续费后恢复 5 个团队' },
+      ]
+    },
+    ai: {
+      soon: [
+        { t: 'AI 智能写作即将不可用', d: '近30天使用 286 次' },
+        { t: 'AI 排版美化即将不可用', d: '近30天使用 152 次' },
+        { t: 'AI 翻译摘要即将不可用', d: '影响 68 位成员' },
+      ],
+      exp: [
+        { t: 'AI 智能写作已不可用', d: '续费后立即恢复' },
+        { t: 'AI 排版美化已不可用', d: '续费后立即恢复' },
+        { t: 'AI 翻译摘要已不可用', d: '续费后立即恢复' },
+      ]
+    },
+    sec: {
+      soon: [
+        { t: '团队文档加密保护即将回收', d: '已保护 5 个团队' },
+        { t: '文档外发管控即将失效', d: '已管控 5 个团队分享范围' },
+        { t: '企业文档水印即将关闭', d: '已为 5 个团队开启追溯' },
+      ],
+      exp: [
+        { t: '团队文档加密保护已回收', d: '续费后自动恢复' },
+        { t: '文档外发管控已失效', d: '已无法限制分享范围' },
+        { t: '企业文档水印已关闭', d: '续费后恢复追溯' },
+      ]
+    },
+    mem: {
+      soon: [
+        { t: '企业空间 500GB 到期后降至 10GB', d: '当前已用 320GB' },
+        { t: '单文件上传 6GB 到期后降至 10MB', d: '近30天上传大文件 47 次' },
+        { t: '专属模板/字体/素材即将不可用', d: '近30天使用 89 次' },
+      ],
+      exp: [
+        { t: '企业空间已从 500GB 降至 10GB', d: '续费后立即恢复' },
+        { t: '单文件上传已从 6GB 降至 10MB', d: '续费后立即恢复' },
+        { t: '专属模板/字体/素材已不可用', d: '续费后立即恢复' },
+      ]
+    },
+  },
+  risks: {
+    default: [
+      { t: '文档加密保护将关闭', d: '已为 5 个团队开启', c: '2个团队将被关闭加密保护' },
+      { t: '文档外发管控将关闭', d: '已管控 5 个团队', c: '无法限制企业文档分享范围' },
+      { t: '企业文档水印将关闭', d: '已开启水印', c: '重要资料可能遭拍照，截屏泄露' },
+    ],
+    ai: [
+      { t: 'AI 智能写作能力将被回收', d: '近30天使用 286 次', c: '团队成员效率将显著下降' },
+      { t: 'AI 排版美化能力将被回收', d: '近30天使用 152 次', c: '文档排版需手动完成' },
+      { t: 'AI 翻译摘要能力将被回收', d: '影响 68 位成员', c: '多语言协作将受阻' },
+    ],
+    sec: [
+      { t: '文档加密保护将被回收', d: '已保护 5 个团队', c: '重要资料可能遭泄漏' },
+      { t: '文档外发管控将关闭', d: '已管控 5 个团队', c: '有数据泄漏风险' },
+      { t: '企业文档水印将关闭', d: '已为 5 个团队开启', c: '无法追溯泄密个人' },
+    ],
+    mem: [
+      { t: '企业空间将从 500GB 降至 10GB', d: '当前已用 320GB', c: '文件无法更新保存' },
+      { t: '单文件上传限制将从 6GB 降至 10MB', d: '近30天 47 次', c: '大文件业务中断' },
+      { t: '专属模板/字体/素材将被回收', d: '近30天使用 89 次', c: '文档品质下降' },
+    ],
+  },
+  val: {
+    default: '您的企业当前有 128 位成员使用中，覆盖 12 个团队',
+    ai: '团队近 30 天已使用 AI 功能 438 次',
+    sec: '当前 5 个团队、86 位成员受安全策略保护',
+    mem: '团队已使用企业空间 320 GB / 500 GB',
+  },
+  titles: {
+    'pkg-soon': {
+      default: d => `WPS 365商业协作版 <span class="hl">${d}天后到期</span>`,
+      ai: d => `AI办公能力 <span class="hl">${d}天后中断</span>`,
+      sec: d => `安全防护能力 <span class="hl">${d}天后失效</span>`,
+      mem: d => `专属办公权益 <span class="hl">${d}天后失效</span>`,
+    },
+    'pkg-expired': {
+      default: () => `WPS 365 商业协作版 <span class="hl">已到期</span>`,
+      ai: () => `AI 办公能力 <span class="hl">已到期</span>`,
+      sec: () => `企业安全防护 <span class="hl">已到期</span>`,
+      mem: () => `团队专属权益 <span class="hl">已到期</span>`,
+    },
+    'ben-soon': {
+      default: d => `PDF 企业权益包 <span class="hl">${d}天后到期</span>`,
+      ai: d => `AI 增值权益包 <span class="hl">${d}天后到期</span>`,
+      sec: d => `安全管控权益包 <span class="hl">${d}天后到期</span>`,
+      mem: d => `会员增值权益包 <span class="hl">${d}天后到期</span>`,
+    },
+    'ben-expired': {
+      default: () => `PDF 企业权益包 <span class="hl">已到期</span>`,
+      ai: () => `AI 增值权益包 <span class="hl">已到期</span>`,
+      sec: () => `安全管控权益包 <span class="hl">已到期</span>`,
+      mem: () => `会员增值权益包 <span class="hl">已到期</span>`,
+    },
+  },
+  plans: { 'pkg-soon':'商业协作版','pkg-expired':'商业协作版','ben-soon':'PDF企业权益包','ben-expired':'PDF企业权益包' },
+  cta: {
+    admin: {
+      soon: { default:'去续费', ai:'续费保留 AI 能力', sec:'续费保障企业安全', mem:'续费保留专属权益' },
+      exp: { default:'立即续费', ai:'立即恢复 AI 能力', sec:'立即恢复安全防护', mem:'立即恢复专属权益' },
+    },
+    member: {
+      soon: { default:'通知管理员去续费', ai:'通知管理员续费 AI', sec:'通知管理员续费安全服务', mem:'通知管理员续费权益' },
+      exp: { default:'通知管理员恢复服务', ai:'通知管理员恢复 AI', sec:'通知管理员恢复安全防护', mem:'通知管理员恢复权益' },
+    },
+  },
+  banner: {
+    default: d => `<strong>WPS 365 商业协作版</strong> 将于 <span class="hl">${d}天后</span> 到期，续费后权益不中断`,
+    ai: d => `<strong>AI 高效办公能力</strong> 将于 <span class="hl">${d}天后</span> 中断`,
+    sec: d => `<strong>企业安全防护</strong> 将于 <span class="hl">${d}天后</span> 失效`,
+    mem: d => `<strong>团队专属权益</strong> 将于 <span class="hl">${d}天后</span> 失效`,
+  },
+  cfTitle: { 'pkg-expired':'确认暂不续费套餐？', 'ben-expired':'确认暂不续费权益包？' },
+};
+
+let S = { type:'pkg-soon', days:'14', theme:'default', role:'admin' };
+let step = 1;
+const isSoon = () => S.type.includes('soon');
+const isExp  = () => S.type.includes('expired');
+const tc = t => `t-${t}`;
+const isAdminSoon = () => S.role === 'admin' && isSoon();
+const isAdminExp  = () => S.role === 'admin' && isExp();
+
+/* ── Build: admin expired layout ── */
+function buildAdminExpHTML() {
+  const { theme } = S;
+  const expData = {
+    default: {
+      title: '您订阅的WPS 365商业协作版 <span class="hl">已到期</span>',
+      subtitle: '企业内有5名成员正在使用，已失去以下功能：',
+      impacts: [
+        { cat: '空间失效', desc: '150GB 企业空间已不可用', restore: '续费后立即恢复' },
+        { cat: '上传降级', desc: '大文件上传已降至 10MB', restore: '续费后恢复 6GB' },
+        { cat: '加密关闭', desc: '团队文档加密保护已关闭', restore: '续费后恢复 5 个团队' },
+      ],
+    },
+    ai: {
+      title: '您订阅的AI办公能力 <span class="hl">已到期</span>',
+      subtitle: '企业内有5名成员正在使用，已失去以下功能：',
+      impacts: [
+        { cat: '写作停用', desc: 'AI 智能写作已不可用', restore: '续费后立即恢复' },
+        { cat: '排版停用', desc: 'AI 排版美化已不可用', restore: '续费后立即恢复' },
+        { cat: '翻译停用', desc: 'AI 翻译摘要已不可用', restore: '续费后立即恢复' },
+      ],
+    },
+    sec: {
+      title: '您订阅的安全防护能力 <span class="hl">已到期</span>',
+      subtitle: '企业内有5名成员正在使用，已失去以下功能：',
+      impacts: [
+        { cat: '加密关闭', desc: '团队文档加密保护已关闭', restore: '续费后恢复 5 个团队' },
+        { cat: '管控失效', desc: '文档外发管控已失效', restore: '续费后恢复管控' },
+        { cat: '水印关闭', desc: '企业文档水印已关闭', restore: '续费后恢复追溯' },
+      ],
+    },
+    mem: {
+      title: '您订阅的专属办公权益 <span class="hl">已到期</span>',
+      subtitle: '企业内有5名成员正在使用，已失去以下功能：',
+      impacts: [
+        { cat: '空间缩减', desc: '企业空间已从 500GB 降至 10GB', restore: '续费后立即恢复' },
+        { cat: '上传受限', desc: '大文件上传已从 6GB 降至 10MB', restore: '续费后立即恢复' },
+        { cat: '素材失效', desc: '专属模板/字体/素材已不可用', restore: '续费后立即恢复' },
+      ],
+    },
+  };
+  const c = expData[theme];
+
+  const impactsHtml = c.impacts.map(i => `
+    <div class="as-impact">
+      <div class="as-impact-left">
+        <div class="as-impact-hd">${i.cat}</div>
+        <div class="as-impact-desc">${i.desc}</div>
+      </div>
+      <div class="as-impact-data">${i.restore}</div>
+    </div>`).join('');
+
+  return `
+    <div class="as-name" style="color:var(--c-warn);">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5 2.5 4v4.2c0 3 2.3 5.8 5.5 6.5 3.2-.7 5.5-3.5 5.5-6.5V4L8 1.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M5.5 8 7 9.5l3-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      服务过期提醒
+    </div>
+    <button class="m-close">&times;</button>
+
+    <div class="as-title">${c.title}</div>
+    <div class="as-subtitle">${c.subtitle}</div>
+
+    <div class="as-impacts">${impactsHtml}</div>
+
+    <div class="as-more">
+      查看全部权益变化
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+
+    <div class="as-cta">
+      <button class="btn-as" id="btnMain">
+        <span>立即续费，恢复全部功能</span>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+
+    <div class="as-links">
+      <div class="as-popover">
+        <span class="link-info">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 7h6M5 9.5h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          支持合同/发票
+        </span>
+        <div class="as-popover-tip">管理后台可在线申请电子发票和合同</div>
+      </div>
+      <span class="sep"></span>
+      <div class="as-popover">
+        <a class="as-popover-trigger">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M11 5.5a3 3 0 1 0-6 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><rect x="3" y="7" width="10" height="7" rx="1.5" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="10.5" r="1" stroke="currentColor" stroke-width="1.2"/></svg>
+          联系销售
+        </a>
+        <div class="as-popover-card">
+          <div class="as-qr-placeholder">
+            <svg width="48" height="48" viewBox="0 0 64 64" fill="none"><rect x="8" y="8" width="20" height="20" rx="2" stroke="var(--c-text-4)" stroke-width="2"/><rect x="36" y="8" width="20" height="20" rx="2" stroke="var(--c-text-4)" stroke-width="2"/><rect x="8" y="36" width="20" height="20" rx="2" stroke="var(--c-text-4)" stroke-width="2"/><rect x="12" y="12" width="12" height="12" rx="1" fill="var(--c-text-4)"/><rect x="40" y="12" width="12" height="12" rx="1" fill="var(--c-text-4)"/><rect x="12" y="40" width="12" height="12" rx="1" fill="var(--c-text-4)"/><rect x="38" y="38" width="6" height="6" fill="var(--c-text-4)"/><rect x="50" y="38" width="6" height="6" fill="var(--c-text-4)"/><rect x="38" y="50" width="6" height="6" fill="var(--c-text-4)"/><rect x="50" y="50" width="6" height="6" fill="var(--c-text-4)"/><rect x="44" y="44" width="6" height="6" fill="var(--c-text-4)"/></svg>
+          </div>
+          <div class="as-qr-text">微信扫码联系专属顾问</div>
+        </div>
+      </div>
+      <span class="sep"></span>
+      <a class="as-popover-trigger" id="notRenewLink">暂不续费</a>
+    </div>`;
+}
+
+/* ── Build: admin soon layout ── */
+function buildAdminSoonHTML() {
+  const { days, theme } = S;
+  const c = CMP[theme];
+
+  const impactIcons = {
+    collab: `<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M2 13V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H5l-3 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>`,
+    lock: `<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="3" y="7.5" width="10" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 7.5V5a2.5 2.5 0 0 1 5 0v2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`,
+    brand: `<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M5 7h6M5 9.5h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`,
+  };
+
+  const impactsHtml = c.impacts.map(i => `
+    <div class="as-impact">
+      <div class="as-impact-left">
+        <div class="as-impact-hd">${i.cat} ${impactIcons[i.ico]}</div>
+        <div class="as-impact-desc">${i.desc}</div>
+      </div>
+      <div class="as-impact-data">${i.data}</div>
+    </div>`).join('');
+
+  return `
+    <div class="as-name">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5 2.5 4v4.2c0 3 2.3 5.8 5.5 6.5 3.2-.7 5.5-3.5 5.5-6.5V4L8 1.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M5.5 8 7 9.5l3-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      服务到期提醒
+    </div>
+    <button class="m-close">&times;</button>
+
+    <div class="as-title">${c.titleFn(days)}</div>
+    <div class="as-subtitle">${c.subtitle}</div>
+
+    <div class="as-impacts">${impactsHtml}</div>
+
+    <div class="as-more">
+      查看全部权益变化
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+
+    <div class="as-cta">
+      <button class="btn-as" id="btnMain">
+        <span>立即续费，领${c.ctaBadge}额外赠礼</span>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+
+    <div class="as-links">
+      <div class="as-popover">
+        <span class="link-info">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 7h6M5 9.5h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          支持合同/发票
+        </span>
+        <div class="as-popover-tip">管理后台可在线申请电子发票和合同</div>
+      </div>
+      <span class="sep"></span>
+      <div class="as-popover">
+        <a class="as-popover-trigger">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M11 5.5a3 3 0 1 0-6 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><rect x="3" y="7" width="10" height="7" rx="1.5" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="10.5" r="1" stroke="currentColor" stroke-width="1.2"/></svg>
+          联系销售
+        </a>
+        <div class="as-popover-card">
+          <div class="as-qr-placeholder">
+            <svg width="48" height="48" viewBox="0 0 64 64" fill="none"><rect x="8" y="8" width="20" height="20" rx="2" stroke="var(--c-text-4)" stroke-width="2"/><rect x="36" y="8" width="20" height="20" rx="2" stroke="var(--c-text-4)" stroke-width="2"/><rect x="8" y="36" width="20" height="20" rx="2" stroke="var(--c-text-4)" stroke-width="2"/><rect x="12" y="12" width="12" height="12" rx="1" fill="var(--c-text-4)"/><rect x="40" y="12" width="12" height="12" rx="1" fill="var(--c-text-4)"/><rect x="12" y="40" width="12" height="12" rx="1" fill="var(--c-text-4)"/><rect x="38" y="38" width="6" height="6" fill="var(--c-text-4)"/><rect x="50" y="38" width="6" height="6" fill="var(--c-text-4)"/><rect x="38" y="50" width="6" height="6" fill="var(--c-text-4)"/><rect x="50" y="50" width="6" height="6" fill="var(--c-text-4)"/><rect x="44" y="44" width="6" height="6" fill="var(--c-text-4)"/></svg>
+          </div>
+          <div class="as-qr-text">微信扫码联系专属销售</div>
+        </div>
+      </div>
+      <span class="sep"></span>
+      <div class="as-popover">
+        <a class="as-popover-trigger">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v3.5l2.5 1.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          稍后提醒
+        </a>
+        <div class="as-popover-card as-remind-opts">
+          <a class="as-remind-opt">到期前 3 天再提醒我</a>
+          <a class="as-remind-opt">到期前 7 天再提醒我</a>
+        </div>
+      </div>
+    </div>`;
+}
+
+/* ── Build: standard layout ── */
+function buildStandardHTML() {
+  return `
+    <div class="as-name">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5 2.5 4v4.2c0 3 2.3 5.8 5.5 6.5 3.2-.7 5.5-3.5 5.5-6.5V4L8 1.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M5.5 8 7 9.5l3-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      服务到期提醒
+    </div>
+    <button class="m-close">&times;</button>
+    <div class="m-body">
+      <div class="m-head">
+        <div class="m-title" id="mTitle"></div>
+      </div>
+      <div class="as-subtitle" id="mSubtitle"></div>
+      <div class="m-impacts">
+        <div id="mImpacts"></div>
+      </div>
+    </div>
+    <div class="m-cta">
+      <button class="btn-main" id="btnMain"></button>
+      <div class="notify-ok" id="notifyOk">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        已通知管理员，将收到续费提醒
+      </div>
+      <div class="cta-links" id="ctaLinks"></div>
+    </div>`;
+}
+
+/* ── Populate standard layout fields ── */
+function populateStandard() {
+  const { type, days, theme, role } = S;
+  const exp = isExp();
+  const thCls = tc(theme);
+
+  $('modal').className = `modal ${thCls}`;
+
+  const titleEl = $('mTitle');
+  const titleFn = D.titles[type]?.[theme];
+  titleEl.innerHTML = titleFn ? `您订阅的${titleFn(days)}` : '';
+  titleEl.className = exp ? 'm-title expired' : 'm-title';
+
+  const subtitleEl = $('mSubtitle');
+  if (subtitleEl) {
+    const subtitleMap = {
+      default: '团队内有5名成员正在使用，到期后影响：',
+      ai: '团队近30天已使用AI功能438次，到期后影响：',
+      sec: '当前5个团队、86位成员受安全策略保护，到期后影响：',
+      mem: '企业空间已用320GB/500GB，到期后影响：',
+    };
+    subtitleEl.textContent = subtitleMap[theme] || subtitleMap.default;
+  }
+
+  const ik = isSoon() ? 'soon' : 'exp';
+  $('mImpacts').innerHTML = D.impacts[theme][ik].map(i =>
+    `<div class="as-impact">
+      <div class="as-impact-left">
+        <div class="as-impact-desc">${i.t}</div>
+      </div>
+      <div class="as-impact-data">${i.d}</div>
+    </div>`
+  ).join('');
+
+  const ctaKey = isSoon() ? 'soon' : 'exp';
+  const ctaTxt = D.cta[role][ctaKey][theme];
+  const btn = $('btnMain');
+  btn.className = role === 'member' ? 'btn-main outline' : 'btn-main';
+  btn.innerHTML = `<span>${ctaTxt}</span>`;
+
+  $('notifyOk').style.display = 'none';
+
+  const links = $('ctaLinks');
+  if (role === 'admin') {
+    links.innerHTML = `<a>联系销售</a><span class="sep"></span><div class="remind"><a id="remindLink">稍后提醒</a><div class="remind-menu"><a>1 天后提醒</a><a>3 天后提醒</a><a>7 天后提醒</a></div></div>`;
+  } else {
+    links.innerHTML = `<a>了解到期影响</a><span class="sep"></span><div class="remind"><a>稍后提醒</a><div class="remind-menu"><a>1 天后提醒</a><a>3 天后提醒</a><a>7 天后提醒</a></div></div>`;
+  }
+}
+
+function goStep(n) {
+  step = n;
+  const mw = $('mWrap'), cw = $('cfWrap'), f1 = $('fs1'), f2 = $('fs2');
+  if (n === 1) {
+    mw.classList.add('show'); cw.classList.remove('show');
+    f1.className = 'flow-step current'; f2.className = 'flow-step';
+  } else {
+    mw.classList.remove('show'); cw.classList.add('show');
+    f1.className = 'flow-step done'; f2.className = 'flow-step current';
+    renderCf();
+  }
+  const ck = $('abCheck'); if (ck) { ck.checked = false; togAbandon(); }
+}
+
+function renderCf() {
+  const rs = D.risks[S.theme];
+  $('riskList').innerHTML = rs.map(r =>
+    `<div class="as-impact">
+      <div class="as-impact-left">
+        <div class="as-impact-hd">${r.t}</div>
+        <div class="as-impact-desc">${r.d}</div>
+      </div>
+      <div class="as-impact-data">${r.c}</div>
+    </div>`
+  ).join('');
+  $('cfTitle').textContent = D.cfTitle[S.type] || '确认暂不续费？';
+}
+
+function render() {
+  step = 1;
+  const { type, days, theme, role } = S;
+  const isBanner = isSoon() && days === '60';
+  const exp = isExp();
+  const thCls = tc(theme);
+
+  $('flow').className = (isAdminExp()) ? 'flow show' : 'flow';
+  $('fs1').className = 'flow-step current'; $('fs2').className = 'flow-step';
+  $('cfWrap').classList.remove('show');
+  $('cmpWrap').classList.remove('show');
+
+  $('bannerWrap').style.display = isBanner ? 'block' : 'none';
+  const mw = $('mWrap');
+  if (isBanner) { mw.classList.remove('show'); return; }
+  mw.classList.add('show');
+
+  // banner content (always update)
+  const bnr = $('banner');
+  bnr.className = `banner ${thCls}`;
+  $('bannerBody').innerHTML = D.banner[theme](days);
+  $('bannerCta').textContent = role === 'admin' ? '查看续费方案' : '通知管理员';
+
+  // modal content
+  const modal = $('modal');
+  if (isAdminSoon()) {
+    modal.className = `modal ${thCls}`;
+    modal.innerHTML = buildAdminSoonHTML();
+  } else if (isAdminExp()) {
+    modal.className = `modal ${thCls} expired`;
+    modal.innerHTML = buildAdminExpHTML();
+  } else {
+    modal.innerHTML = buildStandardHTML();
+    populateStandard();
+  }
+
+  // days control opacity
+  const dg = document.querySelector('[data-k="days"]');
+  dg.style.opacity = isSoon() ? '1' : '.35';
+  dg.style.pointerEvents = isSoon() ? 'auto' : 'none';
+}
+
+function togAbandon() {
+  const b = $('abBtn');
+  const hint = $('bufferHint');
+  if ($('abCheck').checked) {
+    b.disabled = false; b.classList.add('ok');
+    if (hint) hint.classList.add('show');
+  } else {
+    b.disabled = true; b.classList.remove('ok');
+    if (hint) hint.classList.remove('show');
+  }
+}
+
+function $(id) { return document.getElementById(id); }
+
+/* ── Event delegation ── */
+document.addEventListener('click', e => {
+  // Primary button
+  const btnMain = e.target.closest('#btnMain');
+  if (btnMain) {
+    if (S.role === 'member') {
+      const notifyOk = $('notifyOk');
+      if (notifyOk) notifyOk.style.display = 'flex';
+      const span = btnMain.querySelector('span');
+      if (span) span.textContent = '已通知';
+    }
+  }
+  // Remind / snooze → step 2 (expired only)
+  const remindLink = e.target.closest('#remindLink');
+  if (remindLink && isExp() && S.role === 'admin') {
+    e.preventDefault();
+    goStep(2);
+  }
+  const notRenewLink = e.target.closest('#notRenewLink');
+  if (notRenewLink) {
+    e.preventDefault();
+    goStep(2);
+  }
+});
+
+/* ── Seg controls ── */
+document.querySelectorAll('.seg').forEach(g => {
+  const k = g.dataset.k;
+  g.querySelectorAll('button').forEach(b => {
+    b.addEventListener('click', () => {
+      g.querySelectorAll('button').forEach(x => x.classList.remove('on'));
+      b.classList.add('on');
+      S[k] = b.dataset.v;
+      render();
+    });
+  });
+});
+
+/* ── Compare page ── */
+const CMP_TABLE = [
+  { cat: '组织管理', counts: ['3/9','3/9','5/9','9/9'], rows: [
+    { name: '自定义企业通讯录字段', paid: '×', free: '×', adv: '✓', flag: '✓' },
+    { name: 'AD域账号同步', paid: '×', free: '×', adv: '✓', flag: '✓' },
+    { name: '后台日志追溯时间', paid: '最近6个月', free: '当天', adv: '最近1年', flag: '最近2年' },
+    { name: '自定义后台管理员操作权限', paid: '×', free: '×', adv: '✓', flag: '✓' },
+    { name: '自定义后台管理员部门管控范围', paid: '×', free: '×', adv: '×', flag: '✓' },
+  ]},
+  { cat: '客户支持', counts: ['1/6','0/6','3/6','6/6'], rows: [
+    { name: '人工客服', paid: '5*8在线', free: '×', adv: '5*12在线', flag: '7*12在线' },
+    { name: '技术支持', paid: '×', free: '×', adv: '✓', flag: '专属技术经理' },
+  ]},
+  { cat: '协作办公', counts: ['8/12','2/12','10/12','12/12'], rows: [
+    { name: '企业云空间', paid: '150GB', free: '10GB', adv: '500GB', flag: '2TB' },
+    { name: '单文件上传', paid: '6GB', free: '10MB', adv: '20GB', flag: '40GB' },
+    { name: '协作文档', paid: '✓', free: '×', adv: '✓', flag: '✓' },
+    { name: '团队文档加密', paid: '✓', free: '×', adv: '✓', flag: '✓' },
+    { name: '文档水印', paid: '✓', free: '×', adv: '✓', flag: '✓' },
+  ]},
+  { cat: '安全管控', counts: ['5/8','0/8','7/8','8/8'], rows: [
+    { name: '文档外发管控', paid: '✓', free: '×', adv: '✓', flag: '✓' },
+    { name: '敏感内容检测', paid: '✓', free: '×', adv: '✓', flag: '✓' },
+    { name: '操作审计日志', paid: '✓', free: '×', adv: '✓', flag: '✓' },
+    { name: '离职文档交接', paid: '✓', free: '×', adv: '✓', flag: '✓' },
+    { name: 'IP 访问限制', paid: '×', free: '×', adv: '✓', flag: '✓' },
+  ]},
+];
+
+const svgX = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M5 5l4 4M9 5l-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>`;
+const svgCk = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 7 6.5 9l3-3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+function cellHtml(v) {
+  if (v === '×') return `<span class="cmp-x">${svgX}</span>`;
+  if (v === '✓') return `<span class="cmp-check">${svgCk}</span>`;
+  return `<span class="cmp-val-hl">${v}</span>`;
+}
+
+function renderCmpPage() {
+  $('cmpBody').innerHTML = CMP_TABLE.map(cat => {
+    const [cPaid,cFree,cAdv,cFlag] = cat.counts;
+    const catRow = `<div class="cmp-cat">
+      <div class="cmp-cat-cell">${cat.cat}</div>
+      <div class="cmp-cat-cell"><span class="cmp-cat-count">权益项: ${cFree}</span></div>
+      <div class="cmp-cat-cell"><span class="cmp-cat-count">权益项: ${cPaid}</span></div>
+      <div class="cmp-cat-cell"><span class="cmp-cat-count">权益项: ${cAdv}</span></div>
+      <div class="cmp-cat-cell"><span class="cmp-cat-count">权益项: ${cFlag}</span></div>
+    </div>`;
+    const rows = cat.rows.map(r => `<div class="cmp-row">
+      <div class="cmp-cell">${r.name}</div>
+      <div class="cmp-cell">${cellHtml(r.free)}</div>
+      <div class="cmp-cell">${cellHtml(r.paid)}</div>
+      <div class="cmp-cell">${cellHtml(r.adv)}</div>
+      <div class="cmp-cell">${cellHtml(r.flag)}</div>
+    </div>`).join('');
+    return catRow + rows;
+  }).join('') + `<button class="cmp-expand">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M8 5.5v5M5.5 8h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    展开查看更多权益
+  </button>`;
+}
+
+function showCmpPage() {
+  $('mWrap').classList.remove('show');
+  $('cmpWrap').classList.add('show');
+  renderCmpPage();
+}
+
+function hideCmpPage() {
+  $('cmpWrap').classList.remove('show');
+  $('mWrap').classList.add('show');
+}
+
+$('cmpBack').addEventListener('click', hideCmpPage);
+
+document.addEventListener('click', e => {
+  if (e.target.closest('.as-more')) {
+    showCmpPage();
+  }
+});
+
+render();
+</script>
+</body>
+</html>
