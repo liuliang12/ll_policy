@@ -536,8 +536,8 @@
       <div class="ctrl">
         <span class="ctrl-label">弹窗类型</span>
         <div class="seg" data-k="type">
-          <button class="on" data-v="pkg-soon">套餐临期</button>
-          <button data-v="pkg-expired">套餐到期</button>
+          <button class="on" data-v="pkg-soon">临期弹窗</button>
+          <button data-v="pkg-expired">过期弹窗</button>
           <button data-v="ben-soon" style="display:none;">权益包临期</button>
           <button data-v="ben-expired" style="display:none;">权益包到期</button>
         </div>
@@ -606,8 +606,8 @@
       </div>
       <div class="cmp-top-tags">
         <div class="cmp-tag-cell"></div>
-        <div class="cmp-tag-cell"><span class="cmp-col-tag cmp-tag-warn">过期后</span></div>
-        <div class="cmp-tag-cell"><span class="cmp-col-tag cmp-tag-brand">当前套餐</span></div>
+        <div class="cmp-tag-cell"><span class="cmp-col-tag cmp-tag-warn" id="cmpTag1">过期后</span></div>
+        <div class="cmp-tag-cell"><span class="cmp-col-tag cmp-tag-brand" id="cmpTag2">当前套餐</span></div>
         <div class="cmp-tag-cell"></div>
         <div class="cmp-tag-cell"></div>
       </div>
@@ -648,7 +648,6 @@
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5 1.5 13h13L8 1.5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 6v3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="12" r=".8" fill="currentColor"/></svg>
         权益回收确认
       </div>
-      <button class="m-close" onclick="goStep(1)">&times;</button>
 
       <div class="as-title cf-title-warn" id="cfTitle">确认暂不续费？</div>
       <div class="as-subtitle">确认后将进入缓冲期，缓冲期结束后以下企业能力将被回收，可能影响团队正常使用。</div>
@@ -687,11 +686,11 @@ const ICO = {
 const CMP = {
   default: {
     titleFn: d => `您订阅的WPS 365商业协作版 <span class="hl">${d}天后到期</span>`,
-    subtitle: '团队内有5名成员正在使用，到期后影响：',
+    subtitle: '即将失去企业专属权益，5名成员使用中，可能造成以下影响：',
     impacts: [
-      { cat: '空间失效', ico: 'collab', desc: '150GB 企业空间到期，成员无法更新文档', data: '已使用 150GB' },
+      { cat: '空间失效', ico: 'collab', desc: '150GB 企业空间到期，成员无法更新协作文档', data: '已使用 98GB' },
       { cat: '上传受限', ico: 'collab', desc: '大文件上传能力到期后降级', data: '近30天上传 47 次' },
-      { cat: '加密回收', ico: 'lock', desc: '团队文档失去加密保护', data: '已加密 5 个团队' },
+      { cat: '水印失效', ico: 'brand', desc: '到期后，失去企业专属水印保护', data: '企业水印已开启' },
     ],
     ctaTxt: '去续费',
     ctaBadge: '赠90天',
@@ -785,9 +784,9 @@ const D = {
   },
   risks: {
     default: [
-      { t: '文档加密保护将关闭', d: '已为 5 个团队开启', c: '2个团队将被关闭加密保护' },
-      { t: '文档外发管控将关闭', d: '已管控 5 个团队', c: '无法限制企业文档分享范围' },
       { t: '企业文档水印将关闭', d: '已开启水印', c: '重要资料可能遭拍照，截屏泄露' },
+      { t: '文档加密保护将被回收', d: '已加密 5 个团队', c: '2个团队将被关闭加密保护' },
+      { t: '文档外发管控将关闭', d: '禁止外发管控已开启', c: '无法限制企业文档分享范围' },
     ],
     ai: [
       { t: 'AI 智能写作能力将被回收', d: '近30天使用 286 次', c: '团队成员效率将显著下降' },
@@ -871,16 +870,16 @@ function buildAdminExpHTML() {
   const expData = {
     default: {
       title: '您订阅的WPS 365商业协作版 <span class="hl">已到期</span>',
-      subtitle: '企业内有5名成员正在使用，已失去以下功能：',
+      subtitle: '已失去企业专属权益，5名成员使用中，可能造成以下影响：',
       impacts: [
-        { cat: '空间失效', desc: '150GB 企业空间已不可用', restore: '续费后立即恢复' },
-        { cat: '上传降级', desc: '大文件上传已降至 10MB', restore: '续费后恢复 6GB' },
-        { cat: '加密关闭', desc: '团队文档加密保护已关闭', restore: '续费后恢复 5 个团队' },
+        { cat: '水印失效', desc: '企业专属水印保护已失去', restore: '续费后可重新启用' },
+        { cat: '加密回收', desc: '可用加密团队个数已降至2个', restore: '续费后恢复为5个团队' },
+        { cat: '管控失效', desc: '无法企业文档分享范围', restore: '续费后可重新启用' },
       ],
     },
     ai: {
       title: '您订阅的AI办公能力 <span class="hl">已到期</span>',
-      subtitle: '企业内有5名成员正在使用，已失去以下功能：',
+      subtitle: '已失去企业专属权益，5名成员使用中，可能造成以下影响：',
       impacts: [
         { cat: '写作停用', desc: 'AI 智能写作已不可用', restore: '续费后立即恢复' },
         { cat: '排版停用', desc: 'AI 排版美化已不可用', restore: '续费后立即恢复' },
@@ -889,7 +888,7 @@ function buildAdminExpHTML() {
     },
     sec: {
       title: '您订阅的安全防护能力 <span class="hl">已到期</span>',
-      subtitle: '企业内有5名成员正在使用，已失去以下功能：',
+      subtitle: '已失去企业专属权益，5名成员使用中，可能造成以下影响：',
       impacts: [
         { cat: '加密关闭', desc: '团队文档加密保护已关闭', restore: '续费后恢复 5 个团队' },
         { cat: '管控失效', desc: '文档外发管控已失效', restore: '续费后恢复管控' },
@@ -898,7 +897,7 @@ function buildAdminExpHTML() {
     },
     mem: {
       title: '您订阅的专属办公权益 <span class="hl">已到期</span>',
-      subtitle: '企业内有5名成员正在使用，已失去以下功能：',
+      subtitle: '已失去企业专属权益，5名成员使用中，可能造成以下影响：',
       impacts: [
         { cat: '空间缩减', desc: '企业空间已从 500GB 降至 10GB', restore: '续费后立即恢复' },
         { cat: '上传受限', desc: '大文件上传已从 6GB 降至 10MB', restore: '续费后立即恢复' },
@@ -1039,8 +1038,8 @@ function buildAdminSoonHTML() {
           稍后提醒
         </a>
         <div class="as-popover-card as-remind-opts">
-          <a class="as-remind-opt">到期前 3 天再提醒我</a>
           <a class="as-remind-opt">到期前 7 天再提醒我</a>
+          <a class="as-remind-opt">到期前 1 天再提醒我</a>
         </div>
       </div>
     </div>`;
@@ -1089,7 +1088,7 @@ function populateStandard() {
   const subtitleEl = $('mSubtitle');
   if (subtitleEl) {
     const subtitleMap = {
-      default: '团队内有5名成员正在使用，到期后影响：',
+      default: '即将失去企业专属权益，5名成员使用中，可能造成以下影响：',
       ai: '团队近30天已使用AI功能438次，到期后影响：',
       sec: '当前5个团队、86位成员受安全策略保护，到期后影响：',
       mem: '企业空间已用320GB/500GB，到期后影响：',
@@ -1310,6 +1309,17 @@ function renderCmpPage() {
 function showCmpPage() {
   $('mWrap').classList.remove('show');
   $('cmpWrap').classList.add('show');
+  if (isExp()) {
+    $('cmpTag1').textContent = '当前套餐';
+    $('cmpTag1').className = 'cmp-col-tag cmp-tag-brand';
+    $('cmpTag2').textContent = '已过期套餐';
+    $('cmpTag2').className = 'cmp-col-tag cmp-tag-warn';
+  } else {
+    $('cmpTag1').textContent = '过期后';
+    $('cmpTag1').className = 'cmp-col-tag cmp-tag-warn';
+    $('cmpTag2').textContent = '当前套餐';
+    $('cmpTag2').className = 'cmp-col-tag cmp-tag-brand';
+  }
   renderCmpPage();
 }
 
