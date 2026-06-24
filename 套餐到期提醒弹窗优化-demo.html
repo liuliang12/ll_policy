@@ -142,7 +142,7 @@
   .as-title {
     font-size: 18px; font-weight: 800; letter-spacing: -.02em;
     line-height: 1.35; color: var(--c-text-1);
-    padding: 0 48px 0 20px; margin-bottom: 6px;
+    padding: 20px 48px 0 20px; margin-bottom: 6px;
   }
 
   /* Subtitle */
@@ -217,6 +217,43 @@
     font-size: 12px; font-weight: 500; color: var(--c-warn);
   }
   .as-alert svg { flex-shrink: 0; }
+
+  /* Expired impact list box */
+  .exp-impact-box {
+    margin: 0 20px 16px; padding: 4px 14px;
+    border-radius: var(--radius-s);
+    background: var(--c-bg); border: 1px solid var(--c-border);
+  }
+  .exp-impact-item {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 10px 0;
+  }
+  .exp-impact-item + .exp-impact-item { border-top: 1px solid var(--c-border-light); }
+  .exp-impact-title { font-size: 13px; font-weight: 600; color: var(--c-text-1); flex-shrink: 0; }
+  .exp-impact-desc { font-size: 12px; color: var(--c-text-3); line-height: 1.4; text-align: right; flex: 1; min-width: 0; }
+
+  /* Soon impact list box */
+  .soon-impact-box {
+    margin: 0 20px 16px; padding: 4px 14px;
+    border-radius: var(--radius-s);
+    background: var(--c-bg); border: 1px solid var(--c-border);
+  }
+  .soon-impact-item {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 10px 0;
+  }
+  .soon-impact-item + .soon-impact-item { border-top: 1px solid var(--c-border-light); }
+  .soon-impact-left { flex: 1; min-width: 0; }
+  .soon-impact-title { font-size: 13px; font-weight: 600; color: var(--c-text-1); margin-bottom: 2px; }
+  .soon-impact-desc { font-size: 12px; color: var(--c-text-3); line-height: 1.4; }
+  .soon-impact-tag {
+    flex-shrink: 0; font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 4px;
+    background: var(--c-brand-light); color: var(--c-brand); border: 1px solid var(--c-brand-border);
+    white-space: nowrap;
+  }
+  .t-ai .soon-impact-tag { background: var(--c-ai-light); color: var(--c-ai); border-color: var(--c-ai-border); }
+  .t-sec .soon-impact-tag { background: var(--c-sec-light); color: var(--c-sec); border-color: var(--c-sec-border); }
+  .t-mem .soon-impact-tag { background: var(--c-mem-light); color: var(--c-mem); border-color: var(--c-mem-border); }
 
   /* Expired impact style override */
   .modal.expired .as-impact { border-left-color: var(--c-warn); }
@@ -418,7 +455,7 @@
   /* ─────────────────────────────────────────────────────────
      STANDARD LAYOUT (非超管临期 的其他场景)
   ───────────────────────────────────────────────────────── */
-  .m-body { padding: 0 20px 16px; }
+  .m-body { padding: 20px 20px 16px; }
 
   .m-head { margin-bottom: 6px; }
   .m-title { font-size: 18px; font-weight: 800; letter-spacing: -.02em; line-height: 1.35; color: var(--c-text-1); }
@@ -494,37 +531,42 @@
   .cf-wrap { display: none; width: 100%; max-width: 420px; }
   .cf-wrap.show { display: block; }
   .cf { background: var(--c-surface); border-radius: var(--radius-l); box-shadow: var(--shadow-modal); overflow: hidden; position: relative; }
-  .cf-name-warn { color: var(--c-orange); }
   .cf-title-warn {
     font-size: 18px; font-weight: 800; letter-spacing: -.02em;
     line-height: 1.35; color: var(--c-text-1);
-    padding: 0 48px 0 20px; margin-bottom: 6px;
+    padding: 20px 48px 0 20px; margin-bottom: 6px;
   }
-  .cf-impacts { margin-bottom: 16px; }
-  .cf-impacts .as-impact { border-left-color: var(--c-warn); }
-  .cf-impacts .as-impact-data { color: var(--c-warn); }
-  .cf-more-link { cursor: pointer; }
+  .cf-risk-box {
+    margin: 0 20px 16px; padding: 8px 14px;
+    border-radius: var(--radius-m);
+    background: var(--c-warn-light);
+    border: 1px solid var(--c-warn-border);
+  }
+  .cf-risk-item {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 10px 0;
+  }
+  .cf-risk-item + .cf-risk-item { border-top: 1px solid rgba(232, 104, 74, .15); }
+  .cf-risk-left { flex: 1; min-width: 0; }
+  .cf-risk-title { font-size: 13px; font-weight: 600; color: #C2410C; margin-bottom: 2px; }
+  .cf-risk-desc { font-size: 12px; color: var(--c-warn); line-height: 1.4; }
+  .cf-risk-tag {
+    flex-shrink: 0; font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 4px;
+    background: rgba(255, 255, 255, .75); color: var(--c-warn); border: 1px solid var(--c-warn-border);
+    white-space: nowrap;
+  }
   .cf-divider { height: 1px; background: var(--c-border); margin: 4px 20px 14px; }
   .abandon { padding: 0 20px 20px; }
   .abandon-check {
-    display: flex; align-items: flex-start; gap: 8px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
     font-size: 13px; color: var(--c-text-1); cursor: pointer;
     margin-bottom: 12px; line-height: 1.5;
-    padding: 10px 14px; border-radius: var(--radius-s);
-    background: var(--c-bg); border: 1px solid var(--c-border);
   }
-  .abandon-check input { margin-top: 3px; flex-shrink: 0; cursor: pointer; width: 15px; height: 15px; accent-color: var(--c-warn); }
-  .abandon-text { display: flex; flex-direction: column; gap: 4px; }
+  .abandon-check input { flex-shrink: 0; cursor: pointer; width: 15px; height: 15px; accent-color: var(--c-warn); }
   .btn-abandon { width: 100%; height: 38px; border: 1.5px solid var(--c-border); border-radius: var(--radius-s); font-size: 13px; font-weight: 500; font-family: var(--font); color: var(--c-text-4); background: var(--c-surface); cursor: not-allowed; opacity: .5; transition: var(--transition); }
   .btn-abandon.ok { cursor: pointer; opacity: 1; color: var(--c-warn); border-color: var(--c-warn-border); }
   .btn-abandon.ok:hover { background: var(--c-warn-light); border-color: var(--c-warn); }
   .btn-abandon.ok:active { transform: scale(.98); }
-  .buffer-hint {
-    display: none;
-    font-size: 11px; color: var(--c-orange); line-height: 1.4;
-  }
-  .buffer-hint strong { font-weight: 700; }
-  .buffer-hint.show { display: block; }
 </style>
 </head>
 <body>
@@ -644,32 +686,23 @@
   <!-- Step 2 -->
   <div class="cf-wrap" id="cfWrap">
     <div class="cf">
-      <div class="as-name cf-name-warn">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5 1.5 13h13L8 1.5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 6v3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="12" r=".8" fill="currentColor"/></svg>
-        权益回收确认
-      </div>
+      <div class="as-title cf-title-warn" id="cfTitle">确认放弃以下企业能力？</div>
+      <div class="as-subtitle">确认后将进入14天缓冲期倒计时，届时以下能力将被回收：</div>
 
-      <div class="as-title cf-title-warn" id="cfTitle">确认暂不续费？</div>
-      <div class="as-subtitle">确认后将进入缓冲期，缓冲期结束后以下企业能力将被回收，可能影响团队正常使用。</div>
-
-      <div class="as-impacts cf-impacts" id="riskList"></div>
+      <div class="cf-risk-box" id="riskList"></div>
 
 
       <div class="as-cta">
         <button class="btn-as" id="cfBtn" style="background:var(--c-brand);">
-          <span>继续续费，避免权益回收</span>
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>不放弃，我要续费</span>
         </button>
       </div>
       <div class="abandon">
         <label class="abandon-check">
           <input type="checkbox" id="abCheck" onchange="togAbandon()">
-          <div class="abandon-text">
-            <span>我已了解回收风险，确认暂不续费</span>
-            <span class="buffer-hint" id="bufferHint">缓冲期剩余 <strong>7</strong> 天，期间仍可随时续费避免回收</span>
-          </div>
+          <span>我已了解回收风险并确认放弃</span>
         </label>
-        <button class="btn-abandon" id="abBtn" disabled>确认不续费，进入缓冲期</button>
+        <button class="btn-abandon" id="abBtn" disabled>确认放弃，进入缓冲期</button>
       </div>
     </div>
   </div>
@@ -686,11 +719,11 @@ const ICO = {
 const CMP = {
   default: {
     titleFn: d => `您订阅的WPS 365商业协作版 <span class="hl">${d}天后到期</span>`,
-    subtitle: '即将失去企业专属权益，5名成员使用中，可能造成以下影响：',
+    subtitle: '5名成员使用中，到期后可能造成以下影响：',
     impacts: [
-      { cat: '空间失效', ico: 'collab', desc: '150GB 企业空间到期，成员无法更新协作文档', data: '已使用 98GB' },
-      { cat: '上传受限', ico: 'collab', desc: '大文件上传能力到期后降级', data: '近30天上传 47 次' },
-      { cat: '水印失效', ico: 'brand', desc: '到期后，失去企业专属水印保护', data: '企业水印已开启' },
+      { t: '空间失效', d: '150GB 企业空间到期，无法更新协作文档', usage: '已使用 98GB' },
+      { t: '上传受限', d: '大文件上传能力到期后降级为10MB', usage: '已上传47次' },
+      { t: '水印失效', d: '到期后，失去企业专属水印保护', usage: '水印启用中' },
     ],
     ctaTxt: '去续费',
     ctaBadge: '赠90天',
@@ -699,9 +732,9 @@ const CMP = {
     titleFn: d => `您订阅的AI办公能力 <span class="hl">${d}天后中断</span>`,
     subtitle: '团队近30天已使用AI功能438次，到期后将影响：',
     impacts: [
-      { cat: '写作中断', ico: 'collab', desc: 'AI 智能写作即将不可用', data: '近30天使用 286 次' },
-      { cat: '排版降级', ico: 'brand', desc: 'AI 排版美化即将不可用', data: '近30天使用 152 次' },
-      { cat: '翻译受阻', ico: 'collab', desc: 'AI 翻译摘要即将不可用', data: '影响 68 位成员' },
+      { t: '写作中断', d: 'AI 智能写作即将不可用', usage: '近30天使用 286 次' },
+      { t: '排版降级', d: 'AI 排版美化即将不可用', usage: '近30天使用 152 次' },
+      { t: '翻译受阻', d: 'AI 翻译摘要即将不可用', usage: '影响 68 位成员' },
     ],
     ctaTxt: '续费保留 AI 能力',
     ctaBadge: '赠90天',
@@ -710,9 +743,9 @@ const CMP = {
     titleFn: d => `您订阅的安全防护能力 <span class="hl">${d}天后失效</span>`,
     subtitle: '当前5个团队、86位成员受安全策略保护，到期后将影响：',
     impacts: [
-      { cat: '加密回收', ico: 'lock', desc: '团队文档加密保护即将回收', data: '已保护 5 个团队' },
-      { cat: '管控失效', ico: 'lock', desc: '文档外发管控即将失效', data: '已管控 5 个团队分享范围' },
-      { cat: '水印关闭', ico: 'brand', desc: '企业文档水印即将关闭', data: '已为 5 个团队开启追溯' },
+      { t: '加密回收', d: '团队文档加密保护即将回收', usage: '已保护 5 个团队' },
+      { t: '管控失效', d: '文档外发管控即将失效', usage: '外发管控已开启' },
+      { t: '水印关闭', d: '企业文档水印即将关闭', usage: '水印启用中' },
     ],
     ctaTxt: '续费保障企业安全',
     ctaBadge: '赠90天',
@@ -721,9 +754,9 @@ const CMP = {
     titleFn: d => `您订阅的专属办公权益 <span class="hl">${d}天后失效</span>`,
     subtitle: '企业空间已用320GB/500GB，到期后将影响：',
     impacts: [
-      { cat: '空间缩减', ico: 'collab', desc: '企业空间 500GB 到期后降至 10GB', data: '当前已用 320GB' },
-      { cat: '上传受限', ico: 'collab', desc: '单文件上传 6GB 到期后降至 10MB', data: '近30天上传大文件 47 次' },
-      { cat: '素材失效', ico: 'brand', desc: '专属模板/字体/素材即将不可用', data: '近30天使用 89 次' },
+      { t: '空间缩减', d: '企业空间 500GB 到期后降至 10GB', usage: '当前已用 320GB' },
+      { t: '上传受限', d: '单文件上传 6GB 到期后降至 10MB', usage: '已上传47次' },
+      { t: '素材失效', d: '专属模板/字体/素材即将不可用', usage: '近30天使用 89 次' },
     ],
     ctaTxt: '续费保留专属权益',
     ctaBadge: '赠90天',
@@ -784,24 +817,24 @@ const D = {
   },
   risks: {
     default: [
-      { t: '企业文档水印将关闭', d: '已开启水印', c: '重要资料可能遭拍照，截屏泄露' },
-      { t: '文档加密保护将被回收', d: '已加密 5 个团队', c: '2个团队将被关闭加密保护' },
-      { t: '文档外发管控将关闭', d: '禁止外发管控已开启', c: '无法限制企业文档分享范围' },
+      { t: '企业文档水印将关闭', d: '重要资料可能遭截屏、拍照外泄', usage: '启用中' },
+      { t: '禁止文档外发管控将关闭', d: '无法限制企业文档分享范围', usage: '管控中' },
+      { t: '自定义角色将无法使用', d: '管理效率降低，不能实现分级管理', usage: '生效中' },
     ],
     ai: [
-      { t: 'AI 智能写作能力将被回收', d: '近30天使用 286 次', c: '团队成员效率将显著下降' },
-      { t: 'AI 排版美化能力将被回收', d: '近30天使用 152 次', c: '文档排版需手动完成' },
-      { t: 'AI 翻译摘要能力将被回收', d: '影响 68 位成员', c: '多语言协作将受阻' },
+      { t: '写作中断', d: 'AI 智能写作即将不可用', usage: '近30天使用 286 次' },
+      { t: '排版降级', d: 'AI 排版美化即将不可用', usage: '近30天使用 152 次' },
+      { t: '翻译受阻', d: 'AI 翻译摘要即将不可用', usage: '影响 68 位成员' },
     ],
     sec: [
-      { t: '文档加密保护将被回收', d: '已保护 5 个团队', c: '重要资料可能遭泄漏' },
-      { t: '文档外发管控将关闭', d: '已管控 5 个团队', c: '有数据泄漏风险' },
-      { t: '企业文档水印将关闭', d: '已为 5 个团队开启', c: '无法追溯泄密个人' },
+      { t: '加密回收', d: '团队文档加密保护即将回收', usage: '已保护 5 个团队' },
+      { t: '管控失效', d: '文档外发管控即将失效', usage: '外发管控已开启' },
+      { t: '水印关闭', d: '企业文档水印即将关闭', usage: '企业水印已开启' },
     ],
     mem: [
-      { t: '企业空间将从 500GB 降至 10GB', d: '当前已用 320GB', c: '文件无法更新保存' },
-      { t: '单文件上传限制将从 6GB 降至 10MB', d: '近30天 47 次', c: '大文件业务中断' },
-      { t: '专属模板/字体/素材将被回收', d: '近30天使用 89 次', c: '文档品质下降' },
+      { t: '空间缩减', d: '企业空间 500GB 到期后降至 10GB', usage: '当前已用 320GB' },
+      { t: '上传受限', d: '单文件上传 6GB 到期后降至 10MB', usage: '近30天上传 47 次' },
+      { t: '素材失效', d: '专属模板/字体/素材即将不可用', usage: '近30天使用 89 次' },
     ],
   },
   val: {
@@ -853,7 +886,7 @@ const D = {
     sec: d => `<strong>企业安全防护</strong> 将于 <span class="hl">${d}天后</span> 失效`,
     mem: d => `<strong>团队专属权益</strong> 将于 <span class="hl">${d}天后</span> 失效`,
   },
-  cfTitle: { 'pkg-expired':'确认暂不续费套餐？', 'ben-expired':'确认暂不续费权益包？' },
+  cfTitle: { 'pkg-expired':'确认放弃以下企业能力？', 'ben-expired':'确认暂不续费权益包？' },
 };
 
 let S = { type:'pkg-soon', days:'14', theme:'default', role:'admin' };
@@ -870,63 +903,56 @@ function buildAdminExpHTML() {
   const expData = {
     default: {
       title: '您订阅的WPS 365商业协作版 <span class="hl">已到期</span>',
-      subtitle: '已失去企业专属权益，5名成员使用中，可能造成以下影响：',
+      subtitle: '5名成员受到影响，已失去以下核心权益：',
       impacts: [
-        { cat: '水印失效', desc: '企业专属水印保护已失去', restore: '续费后可重新启用' },
-        { cat: '加密回收', desc: '可用加密团队个数已降至2个', restore: '续费后恢复为5个团队' },
-        { cat: '管控失效', desc: '无法企业文档分享范围', restore: '续费后可重新启用' },
+        { t: '空间失效', d: '150GB 企业空间已不可用' },
+        { t: '上传受限', d: '上传文件大小已降至 10MB' },
+        { t: '水印失效', d: '企业专属水印保护将失去' },
       ],
     },
     ai: {
       title: '您订阅的AI办公能力 <span class="hl">已到期</span>',
-      subtitle: '已失去企业专属权益，5名成员使用中，可能造成以下影响：',
+      subtitle: '5名成员受到影响，已失去以下核心权益：',
       impacts: [
-        { cat: '写作停用', desc: 'AI 智能写作已不可用', restore: '续费后立即恢复' },
-        { cat: '排版停用', desc: 'AI 排版美化已不可用', restore: '续费后立即恢复' },
-        { cat: '翻译停用', desc: 'AI 翻译摘要已不可用', restore: '续费后立即恢复' },
+        { t: '写作停用', d: 'AI 智能写作已不可用' },
+        { t: '排版停用', d: 'AI 排版美化已不可用' },
+        { t: '翻译停用', d: 'AI 翻译摘要已不可用' },
       ],
     },
     sec: {
       title: '您订阅的安全防护能力 <span class="hl">已到期</span>',
-      subtitle: '已失去企业专属权益，5名成员使用中，可能造成以下影响：',
+      subtitle: '5名成员受到影响，已失去以下核心权益：',
       impacts: [
-        { cat: '加密关闭', desc: '团队文档加密保护已关闭', restore: '续费后恢复 5 个团队' },
-        { cat: '管控失效', desc: '文档外发管控已失效', restore: '续费后恢复管控' },
-        { cat: '水印关闭', desc: '企业文档水印已关闭', restore: '续费后恢复追溯' },
+        { t: '加密关闭', d: '团队文档加密保护已关闭' },
+        { t: '管控失效', d: '文档外发管控已失效' },
+        { t: '水印关闭', d: '企业文档水印已关闭' },
       ],
     },
     mem: {
       title: '您订阅的专属办公权益 <span class="hl">已到期</span>',
-      subtitle: '已失去企业专属权益，5名成员使用中，可能造成以下影响：',
+      subtitle: '5名成员受到影响，已失去以下核心权益：',
       impacts: [
-        { cat: '空间缩减', desc: '企业空间已从 500GB 降至 10GB', restore: '续费后立即恢复' },
-        { cat: '上传受限', desc: '大文件上传已从 6GB 降至 10MB', restore: '续费后立即恢复' },
-        { cat: '素材失效', desc: '专属模板/字体/素材已不可用', restore: '续费后立即恢复' },
+        { t: '空间缩减', d: '企业空间已从 500GB 降至 10GB' },
+        { t: '上传受限', d: '上传文件大小已降至 10MB' },
+        { t: '素材失效', d: '专属模板/字体/素材已不可用' },
       ],
     },
   };
   const c = expData[theme];
 
   const impactsHtml = c.impacts.map(i => `
-    <div class="as-impact">
-      <div class="as-impact-left">
-        <div class="as-impact-hd">${i.cat}</div>
-        <div class="as-impact-desc">${i.desc}</div>
-      </div>
-      <div class="as-impact-data">${i.restore}</div>
+    <div class="exp-impact-item">
+      <div class="exp-impact-title">${i.t}</div>
+      <div class="exp-impact-desc">${i.d}</div>
     </div>`).join('');
 
   return `
-    <div class="as-name" style="color:var(--c-warn);">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5 2.5 4v4.2c0 3 2.3 5.8 5.5 6.5 3.2-.7 5.5-3.5 5.5-6.5V4L8 1.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M5.5 8 7 9.5l3-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      服务过期提醒
-    </div>
     <button class="m-close">&times;</button>
 
     <div class="as-title">${c.title}</div>
     <div class="as-subtitle">${c.subtitle}</div>
 
-    <div class="as-impacts">${impactsHtml}</div>
+    <div class="exp-impact-box">${impactsHtml}</div>
 
     <div class="as-more">
       查看全部权益变化
@@ -936,19 +962,10 @@ function buildAdminExpHTML() {
     <div class="as-cta">
       <button class="btn-as" id="btnMain">
         <span>立即续费，恢复全部功能</span>
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
     </div>
 
     <div class="as-links">
-      <div class="as-popover">
-        <span class="link-info">
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 7h6M5 9.5h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-          支持合同/发票
-        </span>
-        <div class="as-popover-tip">管理后台可在线申请电子发票和合同</div>
-      </div>
-      <span class="sep"></span>
       <div class="as-popover">
         <a class="as-popover-trigger">
           <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M11 5.5a3 3 0 1 0-6 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><rect x="3" y="7" width="10" height="7" rx="1.5" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="10.5" r="1" stroke="currentColor" stroke-width="1.2"/></svg>
@@ -971,32 +988,22 @@ function buildAdminSoonHTML() {
   const { days, theme } = S;
   const c = CMP[theme];
 
-  const impactIcons = {
-    collab: `<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M2 13V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H5l-3 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>`,
-    lock: `<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="3" y="7.5" width="10" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 7.5V5a2.5 2.5 0 0 1 5 0v2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`,
-    brand: `<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M5 7h6M5 9.5h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`,
-  };
-
   const impactsHtml = c.impacts.map(i => `
-    <div class="as-impact">
-      <div class="as-impact-left">
-        <div class="as-impact-hd">${i.cat} ${impactIcons[i.ico]}</div>
-        <div class="as-impact-desc">${i.desc}</div>
+    <div class="soon-impact-item">
+      <div class="soon-impact-left">
+        <div class="soon-impact-title">${i.t}</div>
+        <div class="soon-impact-desc">${i.d}</div>
       </div>
-      <div class="as-impact-data">${i.data}</div>
+      <div class="soon-impact-tag">${i.usage}</div>
     </div>`).join('');
 
   return `
-    <div class="as-name">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5 2.5 4v4.2c0 3 2.3 5.8 5.5 6.5 3.2-.7 5.5-3.5 5.5-6.5V4L8 1.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M5.5 8 7 9.5l3-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      服务到期提醒
-    </div>
     <button class="m-close">&times;</button>
 
     <div class="as-title">${c.titleFn(days)}</div>
     <div class="as-subtitle">${c.subtitle}</div>
 
-    <div class="as-impacts">${impactsHtml}</div>
+    <div class="soon-impact-box">${impactsHtml}</div>
 
     <div class="as-more">
       查看全部权益变化
@@ -1006,19 +1013,10 @@ function buildAdminSoonHTML() {
     <div class="as-cta">
       <button class="btn-as" id="btnMain">
         <span>立即续费，领${c.ctaBadge}额外赠礼</span>
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
     </div>
 
     <div class="as-links">
-      <div class="as-popover">
-        <span class="link-info">
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 7h6M5 9.5h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-          支持合同/发票
-        </span>
-        <div class="as-popover-tip">管理后台可在线申请电子发票和合同</div>
-      </div>
-      <span class="sep"></span>
       <div class="as-popover">
         <a class="as-popover-trigger">
           <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M11 5.5a3 3 0 1 0-6 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><rect x="3" y="7" width="10" height="7" rx="1.5" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="10.5" r="1" stroke="currentColor" stroke-width="1.2"/></svg>
@@ -1048,10 +1046,6 @@ function buildAdminSoonHTML() {
 /* ── Build: standard layout ── */
 function buildStandardHTML() {
   return `
-    <div class="as-name">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5 2.5 4v4.2c0 3 2.3 5.8 5.5 6.5 3.2-.7 5.5-3.5 5.5-6.5V4L8 1.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M5.5 8 7 9.5l3-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      服务到期提醒
-    </div>
     <button class="m-close">&times;</button>
     <div class="m-body">
       <div class="m-head">
@@ -1088,7 +1082,7 @@ function populateStandard() {
   const subtitleEl = $('mSubtitle');
   if (subtitleEl) {
     const subtitleMap = {
-      default: '即将失去企业专属权益，5名成员使用中，可能造成以下影响：',
+      default: '5名成员使用中，到期后可能造成以下影响：',
       ai: '团队近30天已使用AI功能438次，到期后影响：',
       sec: '当前5个团队、86位成员受安全策略保护，到期后影响：',
       mem: '企业空间已用320GB/500GB，到期后影响：',
@@ -1139,12 +1133,12 @@ function goStep(n) {
 function renderCf() {
   const rs = D.risks[S.theme];
   $('riskList').innerHTML = rs.map(r =>
-    `<div class="as-impact">
-      <div class="as-impact-left">
-        <div class="as-impact-hd">${r.t}</div>
-        <div class="as-impact-desc">${r.d}</div>
+    `<div class="cf-risk-item">
+      <div class="cf-risk-left">
+        <div class="cf-risk-title">${r.t}</div>
+        <div class="cf-risk-desc">${r.d}</div>
       </div>
-      <div class="as-impact-data">${r.c}</div>
+      <div class="cf-risk-tag">${r.usage}</div>
     </div>`
   ).join('');
   $('cfTitle').textContent = D.cfTitle[S.type] || '确认暂不续费？';
@@ -1194,13 +1188,10 @@ function render() {
 
 function togAbandon() {
   const b = $('abBtn');
-  const hint = $('bufferHint');
   if ($('abCheck').checked) {
     b.disabled = false; b.classList.add('ok');
-    if (hint) hint.classList.add('show');
   } else {
     b.disabled = true; b.classList.remove('ok');
-    if (hint) hint.classList.remove('show');
   }
 }
 
