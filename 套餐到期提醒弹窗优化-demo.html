@@ -51,6 +51,9 @@
     --shadow-modal: 0 4px 12px rgba(0,0,0,.06), 0 20px 48px rgba(0,0,0,.12);
     --transition: 180ms cubic-bezier(.4,0,.2,1);
     --font: 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+
+    --modal-px: 24px;
+    --modal-section-gap: 12px;
   }
 
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -105,7 +108,7 @@
   .banner-x:hover { background: var(--c-bg); color: var(--c-text-3); }
 
   /* ── Modal Shell ── */
-  .m-wrap { display: none; width: 100%; max-width: 420px; }
+  .m-wrap { display: none; width: 100%; max-width: 480px; }
   .m-wrap.show { display: block; }
   .modal { background: var(--c-surface); border-radius: var(--radius-l); box-shadow: var(--shadow-modal); overflow: hidden; position: relative; }
 
@@ -142,14 +145,15 @@
   .as-title {
     font-size: 18px; font-weight: 800; letter-spacing: -.02em;
     line-height: 1.35; color: var(--c-text-1);
-    padding: 20px 48px 0 20px; margin-bottom: 6px;
+    padding: 18px 48px 0 var(--modal-px); margin-bottom: 8px;
   }
 
   /* Subtitle */
   .as-subtitle {
-    padding: 0 20px; margin-bottom: 18px;
+    padding: 0 var(--modal-px); margin-bottom: 14px;
     font-size: 13px; color: var(--c-text-3); line-height: 1.5;
   }
+  .cf-buffer-hl { font-weight: 700; color: var(--c-warn); }
   .as-title .hl { font-weight: 800; }
   .t-default .as-title .hl { color: var(--c-warn); }
   .t-ai .as-title .hl { color: var(--c-ai); }
@@ -218,42 +222,64 @@
   }
   .as-alert svg { flex-shrink: 0; }
 
-  /* Expired impact list box */
-  .exp-impact-box {
-    margin: 0 20px 16px; padding: 4px 14px;
-    border-radius: var(--radius-s);
-    background: var(--c-bg); border: 1px solid var(--c-border);
+  /* Impact list box（临期 / 过期共用） */
+  .impact-box {
+    margin: 0 var(--modal-px) var(--modal-section-gap);
+    padding: 2px 14px;
+    border-radius: var(--radius-m);
+    background: #fff;
+    border: 1px solid var(--c-border);
   }
-  .exp-impact-item {
-    display: flex; align-items: center; justify-content: space-between; gap: 12px;
-    padding: 10px 0;
+  .impact-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 2px;
   }
-  .exp-impact-item + .exp-impact-item { border-top: 1px solid var(--c-border-light); }
-  .exp-impact-title { font-size: 13px; font-weight: 600; color: var(--c-text-1); flex-shrink: 0; }
-  .exp-impact-desc { font-size: 12px; color: var(--c-text-3); line-height: 1.4; text-align: right; flex: 1; min-width: 0; }
-
-  /* Soon impact list box */
-  .soon-impact-box {
-    margin: 0 20px 16px; padding: 4px 14px;
-    border-radius: var(--radius-s);
-    background: var(--c-bg); border: 1px solid var(--c-border);
+  .impact-item + .impact-item { border-top: 1px solid var(--c-border-light); }
+  .impact-icon {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-  .soon-impact-item {
-    display: flex; align-items: center; justify-content: space-between; gap: 12px;
-    padding: 10px 0;
-  }
-  .soon-impact-item + .soon-impact-item { border-top: 1px solid var(--c-border-light); }
-  .soon-impact-left { flex: 1; min-width: 0; }
-  .soon-impact-title { font-size: 13px; font-weight: 600; color: var(--c-text-1); margin-bottom: 2px; }
-  .soon-impact-desc { font-size: 12px; color: var(--c-text-3); line-height: 1.4; }
-  .soon-impact-tag {
-    flex-shrink: 0; font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 4px;
-    background: var(--c-brand-light); color: var(--c-brand); border: 1px solid var(--c-brand-border);
+  .impact-icon-red { background: #FFF0ED; color: #E8684A; }
+  .impact-icon-amber { background: #FFFBEB; color: #D97706; }
+  .impact-icon-blue { background: #EDF2FF; color: #3370FF; }
+  .impact-icon-green { background: #ECFDF5; color: #059669; }
+  .impact-icon-purple { background: #F3E8FF; color: #7C3AED; }
+  .impact-body { flex: 1; min-width: 0; padding-top: 1px; }
+  .impact-title { font-size: 14px; font-weight: 600; color: var(--c-text-1); margin-bottom: 4px; line-height: 1.3; }
+  .impact-desc { font-size: 12px; color: var(--c-text-3); line-height: 1.55; }
+  .impact-hl { color: var(--c-warn); font-weight: 600; }
+  .impact-tag {
+    flex-shrink: 0;
+    align-self: center;
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 400;
+    padding: 5px 10px;
+    border-radius: 4px;
+    background: #F2F3F5;
+    border: none;
+    color: #86909C;
     white-space: nowrap;
+    line-height: 1.2;
   }
-  .t-ai .soon-impact-tag { background: var(--c-ai-light); color: var(--c-ai); border-color: var(--c-ai-border); }
-  .t-sec .soon-impact-tag { background: var(--c-sec-light); color: var(--c-sec); border-color: var(--c-sec-border); }
-  .t-mem .soon-impact-tag { background: var(--c-mem-light); color: var(--c-mem); border-color: var(--c-mem-border); }
+  .impact-tag-label { color: #86909C; }
+  .impact-tag-val { color: #86909C; font-weight: 400; margin-left: 4px; }
+  .impact-tag-warn {
+    background: #F2F3F5;
+    border: none;
+    color: #86909C;
+    font-size: 11px;
+    font-weight: 400;
+    padding: 5px 10px;
+  }
 
   /* Expired impact style override */
   .modal.expired .as-impact { border-left-color: var(--c-warn); }
@@ -264,7 +290,7 @@
   /* More link */
   .as-more {
     display: flex; align-items: center; justify-content: center;
-    gap: 4px; padding: 8px 20px 18px;
+    gap: 4px; padding: 4px var(--modal-px) 10px;
     font-size: 12px; font-weight: 500; color: var(--c-text-3);
     cursor: pointer; transition: color var(--transition);
   }
@@ -375,7 +401,122 @@
   .cmp-expand svg { flex-shrink: 0; }
 
   /* CTA */
-  .as-cta { padding: 0 20px 16px; }
+  .as-cta { padding: 0 var(--modal-px) 12px; }
+  .renew-btn-wrap {
+    position: relative;
+    padding-top: 12px;
+  }
+  .renew-badge {
+    position: absolute;
+    z-index: 2;
+    pointer-events: none;
+  }
+  /* 左上：火焰渐变条 */
+  .renew-badge-countdown {
+    left: 8px;
+    top: 0;
+    display: inline-flex;
+    align-items: center;
+    height: 22px;
+    padding: 0 20px 0 10px;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1;
+    color: #fff;
+    white-space: nowrap;
+    background: linear-gradient(105deg, #E04E1B 0%, #F97316 48%, #FB923C 100%);
+    border-radius: 6px 0 0 6px;
+    box-shadow: 0 2px 8px rgba(232, 78, 27, .32);
+    clip-path: polygon(
+      0 0,
+      0 100%,
+      calc(100% - 16px) 100%,
+      calc(100% - 7px) 74%,
+      100% 50%,
+      calc(100% - 7px) 26%,
+      calc(100% - 16px) 0
+    );
+  }
+  /* 右上：花边圆标 */
+  .renew-badge-save {
+    right: 2px;
+    top: -6px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .renew-badge-save-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .renew-badge-save-text {
+    position: relative;
+    z-index: 1;
+    transform: rotate(45deg);
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 1.15;
+    color: #E04E1B;
+    text-align: center;
+    white-space: nowrap;
+    letter-spacing: -.02em;
+  }
+  .renew-btn {
+    width: 100%;
+    padding: 16px 16px 9px;
+    border-radius: 12px;
+    border: none;
+    background: #5266F1;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    font-family: var(--font);
+    transition: all .2s ease;
+    box-shadow: 0 4px 14px rgba(82, 102, 241, .28);
+  }
+  .renew-btn:hover {
+    filter: brightness(1.04);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(82, 102, 241, .38);
+  }
+  .renew-btn:active {
+    transform: scale(.98) translateY(0);
+    box-shadow: 0 4px 12px rgba(82, 102, 241, .28);
+  }
+  .renew-btn-line1 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: .01em;
+    line-height: 1.2;
+  }
+  .renew-btn-divider {
+    width: 1px;
+    height: 13px;
+    background: rgba(255, 255, 255, .45);
+    flex-shrink: 0;
+  }
+  .renew-price-num { font-size: 15px; font-weight: 700; }
+  .renew-price-unit { font-size: 11px; font-weight: 500; opacity: .92; }
+  .renew-btn-origin {
+    font-size: 11px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, .55);
+    text-decoration: line-through;
+    line-height: 1.2;
+  }
+  .renew-btn-origin .renew-price-num { font-size: 11px; font-weight: 400; }
+  .renew-btn-origin .renew-price-unit { font-size: 9px; font-weight: 400; opacity: .85; }
   .btn-as {
     width: 100%; height: 48px; border-radius: 10px;
     border: none; font-size: 15px; font-weight: 600; font-family: var(--font);
@@ -394,7 +535,7 @@
   /* Bottom links */
   .as-links {
     display: flex; align-items: center; justify-content: center;
-    gap: 16px; font-size: 12px; padding: 0 20px 20px;
+    gap: 16px; font-size: 12px; padding: 0 var(--modal-px) 18px;
   }
   .as-links .sep { width: 1px; height: 12px; background: var(--c-border); }
 
@@ -455,7 +596,7 @@
   /* ─────────────────────────────────────────────────────────
      STANDARD LAYOUT (非超管临期 的其他场景)
   ───────────────────────────────────────────────────────── */
-  .m-body { padding: 20px 20px 16px; }
+  .m-body { padding: 18px var(--modal-px) 14px; }
 
   .m-head { margin-bottom: 6px; }
   .m-title { font-size: 18px; font-weight: 800; letter-spacing: -.02em; line-height: 1.35; color: var(--c-text-1); }
@@ -499,7 +640,7 @@
   .m-more:hover { color: var(--c-text-3); }
 
   /* Standard CTA */
-  .m-cta { padding: 0 20px 20px; }
+  .m-cta { padding: 0 var(--modal-px) 18px; }
   .btn-main { width: 100%; height: 42px; border-radius: var(--radius-s); border: none; font-size: 14px; font-weight: 600; font-family: var(--font); color: #fff; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 10px; letter-spacing: -.01em; }
   .btn-main:hover { filter: brightness(.92); }
   .btn-main:active { transform: scale(.98); }
@@ -528,39 +669,57 @@
   .remind-menu a:hover { background: var(--c-bg); }
 
   /* ── Confirm Modal (Step 2) ── */
-  .cf-wrap { display: none; width: 100%; max-width: 420px; }
+  .cf-wrap { display: none; width: 100%; max-width: 480px; }
   .cf-wrap.show { display: block; }
   .cf { background: var(--c-surface); border-radius: var(--radius-l); box-shadow: var(--shadow-modal); overflow: hidden; position: relative; }
   .cf-title-warn {
     font-size: 18px; font-weight: 800; letter-spacing: -.02em;
     line-height: 1.35; color: var(--c-text-1);
-    padding: 20px 48px 0 20px; margin-bottom: 6px;
+    padding: 18px 48px 0 var(--modal-px); margin-bottom: 8px;
   }
-  .cf-risk-box {
-    margin: 0 20px 16px; padding: 8px 14px;
+  .cf-risk-table {
+    margin: 0 var(--modal-px) var(--modal-section-gap);
     border-radius: var(--radius-m);
+    border: 1px solid var(--c-border);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr);
+  }
+  .cf-risk-hd, .cf-risk-row { display: contents; }
+  .cf-risk-hd-cell {
+    padding: 9px 14px;
+    background: var(--c-bg);
+    border-bottom: 1px solid var(--c-border);
+    font-size: 12px; font-weight: 500; color: var(--c-text-3);
+  }
+  .cf-risk-hd-cell:last-child { color: var(--c-warn); font-weight: 600; }
+  .cf-risk-row { font-size: 12px; }
+  .cf-risk-row > .cf-risk-cell { border-bottom: 1px solid var(--c-border-light); }
+  .cf-risk-row:last-child > .cf-risk-cell { border-bottom: none; }
+  .cf-risk-cell {
+    padding: 11px 14px;
+    display: flex; align-items: center;
+    min-height: 44px;
+  }
+  .cf-risk-cell-name { color: var(--c-text-1); font-weight: 500; line-height: 1.4; white-space: nowrap; }
+  .cf-risk-cell-status {
+    color: var(--c-green); font-weight: 500; gap: 4px; white-space: nowrap;
+  }
+  .cf-status-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--c-green); flex-shrink: 0;
+  }
+  .cf-risk-cell-impact {
     background: var(--c-warn-light);
-    border: 1px solid var(--c-warn-border);
-  }
-  .cf-risk-item {
-    display: flex; align-items: center; justify-content: space-between; gap: 12px;
-    padding: 10px 0;
-  }
-  .cf-risk-item + .cf-risk-item { border-top: 1px solid rgba(232, 104, 74, .15); }
-  .cf-risk-left { flex: 1; min-width: 0; }
-  .cf-risk-title { font-size: 13px; font-weight: 600; color: #C2410C; margin-bottom: 2px; }
-  .cf-risk-desc { font-size: 12px; color: var(--c-warn); line-height: 1.4; }
-  .cf-risk-tag {
-    flex-shrink: 0; font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 4px;
-    background: rgba(255, 255, 255, .75); color: var(--c-warn); border: 1px solid var(--c-warn-border);
-    white-space: nowrap;
+    color: var(--c-warn);
+    line-height: 1.45;
+    min-width: 0;
   }
   .cf-divider { height: 1px; background: var(--c-border); margin: 4px 20px 14px; }
-  .abandon { padding: 0 20px 20px; }
+  .abandon { padding: 0 var(--modal-px) 18px; }
   .abandon-check {
     display: flex; align-items: center; justify-content: center; gap: 8px;
     font-size: 13px; color: var(--c-text-1); cursor: pointer;
-    margin-bottom: 12px; line-height: 1.5;
+    margin-bottom: 10px; line-height: 1.5;
   }
   .abandon-check input { flex-shrink: 0; cursor: pointer; width: 15px; height: 15px; accent-color: var(--c-warn); }
   .btn-abandon { width: 100%; height: 38px; border: 1.5px solid var(--c-border); border-radius: var(--radius-s); font-size: 13px; font-weight: 500; font-family: var(--font); color: var(--c-text-4); background: var(--c-surface); cursor: not-allowed; opacity: .5; transition: var(--transition); }
@@ -686,17 +845,13 @@
   <!-- Step 2 -->
   <div class="cf-wrap" id="cfWrap">
     <div class="cf">
-      <div class="as-title cf-title-warn" id="cfTitle">确认放弃以下企业能力？</div>
-      <div class="as-subtitle">确认后将进入14天缓冲期倒计时，届时以下能力将被回收：</div>
+      <div class="as-title cf-title-warn" id="cfTitle">确认放弃以下企业权益？</div>
+      <div class="as-subtitle">确认后将进入<span class="cf-buffer-hl">14天缓冲期</span>倒计时，届时以下权益将被回收：</div>
 
-      <div class="cf-risk-box" id="riskList"></div>
+      <div id="riskList"></div>
 
 
-      <div class="as-cta">
-        <button class="btn-as" id="cfBtn" style="background:var(--c-brand);">
-          <span>不放弃，我要续费</span>
-        </button>
-      </div>
+      <div class="as-cta" id="cfCta"></div>
       <div class="abandon">
         <label class="abandon-check">
           <input type="checkbox" id="abCheck" onchange="togAbandon()">
@@ -721,9 +876,9 @@ const CMP = {
     titleFn: d => `您订阅的WPS 365商业协作版 <span class="hl">${d}天后到期</span>`,
     subtitle: '5名成员使用中，到期后可能造成以下影响：',
     impacts: [
-      { t: '空间失效', d: '150GB 企业空间到期，无法更新协作文档', usage: '已使用 98GB' },
-      { t: '上传受限', d: '大文件上传能力到期后降级为10MB', usage: '已上传47次' },
-      { t: '水印失效', d: '到期后，失去企业专属水印保护', usage: '水印启用中' },
+      { icon: 'folder-blue', t: '企业空间将回收', d: '150GB 空间将失效，无法更新文档', tag: '98GB 数据受限' },
+      { icon: 'upload-green', t: '大文件上传能力降级', d: '到期后文件上传大小降至 10MB', tag: '大文件上传受限' },
+      { icon: 'shield-purple', t: '企业专属水印将失效', d: '到期后文档将不再显示企业水印', tag: '资料有外泄风险' },
     ],
     ctaTxt: '去续费',
     ctaBadge: '赠90天',
@@ -732,9 +887,9 @@ const CMP = {
     titleFn: d => `您订阅的AI办公能力 <span class="hl">${d}天后中断</span>`,
     subtitle: '团队近30天已使用AI功能438次，到期后将影响：',
     impacts: [
-      { t: '写作中断', d: 'AI 智能写作即将不可用', usage: '近30天使用 286 次' },
-      { t: '排版降级', d: 'AI 排版美化即将不可用', usage: '近30天使用 152 次' },
-      { t: '翻译受阻', d: 'AI 翻译摘要即将不可用', usage: '影响 68 位成员' },
+      { icon: 'ai-purple', t: 'AI 智能写作将中断', d: '到期后 AI 写作功能不可用，团队效率下降', tag: '近30天使用286次' },
+      { icon: 'ai-purple', t: 'AI 排版美化将中断', d: '到期后 AI 排版功能不可用，需手动排版', tag: '近30天使用152次' },
+      { icon: 'ai-purple', t: 'AI 翻译摘要将中断', d: '到期后 AI 翻译功能不可用，多语言协作受阻', tag: '影响68位成员' },
     ],
     ctaTxt: '续费保留 AI 能力',
     ctaBadge: '赠90天',
@@ -743,9 +898,9 @@ const CMP = {
     titleFn: d => `您订阅的安全防护能力 <span class="hl">${d}天后失效</span>`,
     subtitle: '当前5个团队、86位成员受安全策略保护，到期后将影响：',
     impacts: [
-      { t: '加密回收', d: '团队文档加密保护即将回收', usage: '已保护 5 个团队' },
-      { t: '管控失效', d: '文档外发管控即将失效', usage: '外发管控已开启' },
-      { t: '水印关闭', d: '企业文档水印即将关闭', usage: '水印启用中' },
+      { icon: 'shield-purple', t: '文档加密保护将回收', d: '到期后团队文档加密保护失效', tag: '5个团队受影响' },
+      { icon: 'shield-purple', t: '文档外发管控将失效', d: '到期后无法限制企业文档分享范围', tag: '外发管控将关闭' },
+      { icon: 'shield-purple', t: '企业文档水印将关闭', d: '到期后文档将不再显示企业水印', tag: '资料有外泄风险' },
     ],
     ctaTxt: '续费保障企业安全',
     ctaBadge: '赠90天',
@@ -754,12 +909,52 @@ const CMP = {
     titleFn: d => `您订阅的专属办公权益 <span class="hl">${d}天后失效</span>`,
     subtitle: '企业空间已用320GB/500GB，到期后将影响：',
     impacts: [
-      { t: '空间缩减', d: '企业空间 500GB 到期后降至 10GB', usage: '当前已用 320GB' },
-      { t: '上传受限', d: '单文件上传 6GB 到期后降至 10MB', usage: '已上传47次' },
-      { t: '素材失效', d: '专属模板/字体/素材即将不可用', usage: '近30天使用 89 次' },
+      { icon: 'folder-blue', t: '企业空间将缩减', d: '到期后企业空间从 500GB 降至 10GB', tag: '320GB 数据受限' },
+      { icon: 'upload-green', t: '大文件上传能力降级', d: '到期后单文件上传大小降至 10MB', tag: '大文件上传受限' },
+      { icon: 'upload-green', t: '专属素材将失效', d: '到期后专属模板/字体/素材不可用', tag: '文档品质下降' },
     ],
     ctaTxt: '续费保留专属权益',
     ctaBadge: '赠90天',
+  },
+};
+
+/* ── 超管过期数据 ── */
+const EXP = {
+  default: {
+    title: '您订阅的WPS 365商业协作版 <span class="hl">已到期</span>',
+    subtitle: '5 名成员受到影响，以下核心权益已失去：',
+    impacts: [
+      { icon: 'folder-blue', t: '企业空间已失效', d: '150GB 空间已失效，无法更新文档', tag: '98GB 数据受限' },
+      { icon: 'upload-green', t: '大文件上传能力已降级', d: '文件上传大小已降至 10MB', tag: '大文件上传受限' },
+      { icon: 'shield-purple', t: '企业专属水印已失效', d: '文档将不再显示企业水印', tag: '资料有外泄风险' },
+    ],
+  },
+  ai: {
+    title: '您订阅的AI办公能力 <span class="hl">已到期</span>',
+    subtitle: '5 名成员受到影响，以下核心权益已失去：',
+    impacts: [
+      { icon: 'ai-purple', t: 'AI 智能写作已中断', d: 'AI 写作功能已不可用，团队效率下降', tag: '近30天使用286次' },
+      { icon: 'ai-purple', t: 'AI 排版美化已中断', d: 'AI 排版功能已不可用，需手动排版', tag: '近30天使用152次' },
+      { icon: 'ai-purple', t: 'AI 翻译摘要已中断', d: 'AI 翻译功能已不可用，多语言协作受阻', tag: '影响68位成员' },
+    ],
+  },
+  sec: {
+    title: '您订阅的安全防护能力 <span class="hl">已到期</span>',
+    subtitle: '5 名成员受到影响，以下核心权益已失去：',
+    impacts: [
+      { icon: 'shield-purple', t: '文档加密保护已失效', d: '团队文档加密保护已关闭', tag: '5个团队受影响' },
+      { icon: 'shield-purple', t: '文档外发管控已失效', d: '已无法限制企业文档分享范围', tag: '外发管控已关闭' },
+      { icon: 'shield-purple', t: '企业文档水印已关闭', d: '文档已不再显示企业水印', tag: '资料有外泄风险' },
+    ],
+  },
+  mem: {
+    title: '您订阅的专属办公权益 <span class="hl">已到期</span>',
+    subtitle: '5 名成员受到影响，以下核心权益已失去：',
+    impacts: [
+      { icon: 'folder-blue', t: '企业空间已缩减', d: '企业空间已从 500GB 降至 10GB', tag: '320GB 数据受限' },
+      { icon: 'upload-green', t: '大文件上传能力已降级', d: '单文件上传大小已降至 10MB', tag: '大文件上传受限' },
+      { icon: 'upload-green', t: '专属素材已失效', d: '专属模板/字体/素材已不可用', tag: '文档品质下降' },
+    ],
   },
 };
 
@@ -817,24 +1012,24 @@ const D = {
   },
   risks: {
     default: [
-      { t: '企业文档水印将关闭', d: '重要资料可能遭截屏、拍照外泄', usage: '启用中' },
-      { t: '禁止文档外发管控将关闭', d: '无法限制企业文档分享范围', usage: '管控中' },
-      { t: '自定义角色将无法使用', d: '管理效率降低，不能实现分级管理', usage: '生效中' },
+      { name: '企业文档水印', status: '开启中', impact: '水印失效，重要资料可能被截屏、拍照外泄' },
+      { name: '禁止文档外发', status: '管控中', impact: '管控失效，无法限制企业文档分享范围' },
+      { name: '自定义角色', status: '生效中', impact: '配置失效，管理效率降低，不能实现分级管理' },
     ],
     ai: [
-      { t: '写作中断', d: 'AI 智能写作即将不可用', usage: '近30天使用 286 次' },
-      { t: '排版降级', d: 'AI 排版美化即将不可用', usage: '近30天使用 152 次' },
-      { t: '翻译受阻', d: 'AI 翻译摘要即将不可用', usage: '影响 68 位成员' },
+      { name: 'AI 智能写作', status: '使用中', impact: '团队成员效率将显著下降' },
+      { name: 'AI 排版美化', status: '使用中', impact: '文档排版需手动完成' },
+      { name: 'AI 翻译摘要', status: '使用中', impact: '多语言协作将受阻' },
     ],
     sec: [
-      { t: '加密回收', d: '团队文档加密保护即将回收', usage: '已保护 5 个团队' },
-      { t: '管控失效', d: '文档外发管控即将失效', usage: '外发管控已开启' },
-      { t: '水印关闭', d: '企业文档水印即将关闭', usage: '企业水印已开启' },
+      { name: '文档加密', status: '已保护', impact: '重要资料可能遭泄漏' },
+      { name: '外发管控', status: '管控中', impact: '有数据泄漏风险' },
+      { name: '企业水印', status: '开启中', impact: '无法追溯泄密个人' },
     ],
     mem: [
-      { t: '空间缩减', d: '企业空间 500GB 到期后降至 10GB', usage: '当前已用 320GB' },
-      { t: '上传受限', d: '单文件上传 6GB 到期后降至 10MB', usage: '近30天上传 47 次' },
-      { t: '素材失效', d: '专属模板/字体/素材即将不可用', usage: '近30天使用 89 次' },
+      { name: '企业空间', status: '使用中', impact: '文件无法更新保存' },
+      { name: '大文件上传', status: '使用中', impact: '大文件业务中断' },
+      { name: '专属素材', status: '使用中', impact: '文档品质下降' },
     ],
   },
   val: {
@@ -886,7 +1081,7 @@ const D = {
     sec: d => `<strong>企业安全防护</strong> 将于 <span class="hl">${d}天后</span> 失效`,
     mem: d => `<strong>团队专属权益</strong> 将于 <span class="hl">${d}天后</span> 失效`,
   },
-  cfTitle: { 'pkg-expired':'确认放弃以下企业能力？', 'ben-expired':'确认暂不续费权益包？' },
+  cfTitle: { 'pkg-expired':'确认放弃以下企业权益？', 'ben-expired':'确认暂不续费权益包？' },
 };
 
 let S = { type:'pkg-soon', days:'14', theme:'default', role:'admin' };
@@ -897,54 +1092,100 @@ const tc = t => `t-${t}`;
 const isAdminSoon = () => S.role === 'admin' && isSoon();
 const isAdminExp  = () => S.role === 'admin' && isExp();
 
+/* ── 功能说明区图标 ── */
+const IMPACT_ICO = {
+  folder: `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M3 5.5A1.5 1.5 0 0 1 4.5 4H7l1.5 2H13.5A1.5 1.5 0 0 1 15 7.5v6A1.5 1.5 0 0 1 13.5 15h-9A1.5 1.5 0 0 1 3 13.5v-8z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>`,
+  upload: `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M9 4v7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M6.5 7.5 9 4l2.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 14h9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>`,
+  shield: `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M9 2.8 13.8 4.8v4.2c0 2.8-1.9 5.1-4.8 6.4-2.9-1.3-4.8-3.6-4.8-6.4V4.8L9 2.8z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>`,
+  ai: `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M9 2.5l1.1 3.4h3.6l-2.9 2.1 1.1 3.4L9 9.3l-2.9 2.1 1.1-3.4-2.9-2.1h3.6L9 2.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>`,
+};
+
+function buildImpactRow(i, { tag } = {}) {
+  const iconMap = {
+    'folder-blue': ['impact-icon-blue', IMPACT_ICO.folder],
+    'upload-green': ['impact-icon-green', IMPACT_ICO.upload],
+    'shield-purple': ['impact-icon-purple', IMPACT_ICO.shield],
+    'ai-purple': ['impact-icon-purple', IMPACT_ICO.ai],
+    'upload-red': ['impact-icon-red', IMPACT_ICO.upload],
+    'upload-amber': ['impact-icon-amber', IMPACT_ICO.upload],
+    'shield-amber': ['impact-icon-amber', IMPACT_ICO.shield],
+    'ai-amber': ['impact-icon-amber', IMPACT_ICO.ai],
+  };
+  const [iconCls, svg] = iconMap[i.icon] || iconMap['upload-amber'];
+  const t = tag ?? i.tag;
+  let tagHtml = '';
+  if (t) {
+    tagHtml = typeof t === 'string'
+      ? `<span class="impact-tag impact-tag-warn">${t}</span>`
+      : `<span class="impact-tag"><span class="impact-tag-label">${t.label}</span><span class="impact-tag-val">${t.val}</span></span>`;
+  }
+  return `
+    <div class="impact-item">
+      <div class="impact-icon ${iconCls}">${svg}</div>
+      <div class="impact-body">
+        <div class="impact-title">${i.t}</div>
+        <div class="impact-desc">${i.d}</div>
+      </div>
+      ${tagHtml}
+    </div>`;
+}
+
+/* ── 续费按钮（带价格 / 优惠角标）── */
+const RENEW = {
+  priceNum: '¥139',
+  priceUnit: '/人/年',
+  originNum: '¥199',
+  originUnit: '/人/年',
+  save: '30%',
+  promoDays: 3,
+};
+
+function formatRenewPrice(num, unit, numCls = 'renew-price-num', unitCls = 'renew-price-unit') {
+  return `<span class="${numCls}">${num}</span><span class="${unitCls}">${unit}</span>`;
+}
+
+function buildRenewBtnHTML({ id = 'btnMain', action = '立即续期' } = {}) {
+  const days = isSoon() ? (parseInt(S.days, 10) || RENEW.promoDays) : RENEW.promoDays;
+  const scallopPath = (() => {
+    const cx = 32, cy = 32, R = 24, bump = 3.2, n = 18;
+    let d = '';
+    for (let i = 0; i < n; i++) {
+      const a0 = (i / n) * Math.PI * 2 - Math.PI / 2;
+      const a1 = ((i + 0.5) / n) * Math.PI * 2 - Math.PI / 2;
+      const a2 = ((i + 1) / n) * Math.PI * 2 - Math.PI / 2;
+      const x0 = cx + R * Math.cos(a0), y0 = cy + R * Math.sin(a0);
+      const x1 = cx + (R + bump) * Math.cos(a1), y1 = cy + (R + bump) * Math.sin(a1);
+      const x2 = cx + R * Math.cos(a2), y2 = cy + R * Math.sin(a2);
+      d += (i === 0 ? `M ${x0.toFixed(1)} ${y0.toFixed(1)} ` : '') + `Q ${x1.toFixed(1)} ${y1.toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)} `;
+    }
+    return d + 'Z';
+  })();
+  return `
+    <div class="renew-btn-wrap">
+      <span class="renew-badge renew-badge-countdown">优惠剩余${days}天</span>
+      <span class="renew-badge renew-badge-save">
+        <svg class="renew-badge-save-svg" viewBox="0 0 64 64" aria-hidden="true">
+          <path d="${scallopPath}" fill="rgba(255,244,235,0.95)" stroke="#FFB488" stroke-width="1.4"/>
+        </svg>
+        <span class="renew-badge-save-text">已省${RENEW.save}</span>
+      </span>
+      <button class="renew-btn" id="${id}">
+        <span class="renew-btn-line1">
+          <span>${action}</span>
+          <span class="renew-btn-divider"></span>
+          <span>${formatRenewPrice(RENEW.priceNum, RENEW.priceUnit)}</span>
+        </span>
+        <span class="renew-btn-origin">原价${formatRenewPrice(RENEW.originNum, RENEW.originUnit)}</span>
+      </button>
+    </div>`;
+}
+
 /* ── Build: admin expired layout ── */
 function buildAdminExpHTML() {
   const { theme } = S;
-  const expData = {
-    default: {
-      title: '您订阅的WPS 365商业协作版 <span class="hl">已到期</span>',
-      subtitle: '5名成员受到影响，已失去以下核心权益：',
-      impacts: [
-        { t: '空间失效', d: '150GB 企业空间已不可用' },
-        { t: '上传受限', d: '上传文件大小已降至 10MB' },
-        { t: '水印失效', d: '企业专属水印保护将失去' },
-      ],
-    },
-    ai: {
-      title: '您订阅的AI办公能力 <span class="hl">已到期</span>',
-      subtitle: '5名成员受到影响，已失去以下核心权益：',
-      impacts: [
-        { t: '写作停用', d: 'AI 智能写作已不可用' },
-        { t: '排版停用', d: 'AI 排版美化已不可用' },
-        { t: '翻译停用', d: 'AI 翻译摘要已不可用' },
-      ],
-    },
-    sec: {
-      title: '您订阅的安全防护能力 <span class="hl">已到期</span>',
-      subtitle: '5名成员受到影响，已失去以下核心权益：',
-      impacts: [
-        { t: '加密关闭', d: '团队文档加密保护已关闭' },
-        { t: '管控失效', d: '文档外发管控已失效' },
-        { t: '水印关闭', d: '企业文档水印已关闭' },
-      ],
-    },
-    mem: {
-      title: '您订阅的专属办公权益 <span class="hl">已到期</span>',
-      subtitle: '5名成员受到影响，已失去以下核心权益：',
-      impacts: [
-        { t: '空间缩减', d: '企业空间已从 500GB 降至 10GB' },
-        { t: '上传受限', d: '上传文件大小已降至 10MB' },
-        { t: '素材失效', d: '专属模板/字体/素材已不可用' },
-      ],
-    },
-  };
-  const c = expData[theme];
+  const c = EXP[theme];
 
-  const impactsHtml = c.impacts.map(i => `
-    <div class="exp-impact-item">
-      <div class="exp-impact-title">${i.t}</div>
-      <div class="exp-impact-desc">${i.d}</div>
-    </div>`).join('');
+  const impactsHtml = c.impacts.map(i => buildImpactRow(i)).join('');
 
   return `
     <button class="m-close">&times;</button>
@@ -952,7 +1193,7 @@ function buildAdminExpHTML() {
     <div class="as-title">${c.title}</div>
     <div class="as-subtitle">${c.subtitle}</div>
 
-    <div class="exp-impact-box">${impactsHtml}</div>
+    <div class="impact-box">${impactsHtml}</div>
 
     <div class="as-more">
       查看全部权益变化
@@ -960,9 +1201,7 @@ function buildAdminExpHTML() {
     </div>
 
     <div class="as-cta">
-      <button class="btn-as" id="btnMain">
-        <span>立即续费，恢复全部功能</span>
-      </button>
+      ${buildRenewBtnHTML()}
     </div>
 
     <div class="as-links">
@@ -988,14 +1227,7 @@ function buildAdminSoonHTML() {
   const { days, theme } = S;
   const c = CMP[theme];
 
-  const impactsHtml = c.impacts.map(i => `
-    <div class="soon-impact-item">
-      <div class="soon-impact-left">
-        <div class="soon-impact-title">${i.t}</div>
-        <div class="soon-impact-desc">${i.d}</div>
-      </div>
-      <div class="soon-impact-tag">${i.usage}</div>
-    </div>`).join('');
+  const impactsHtml = c.impacts.map(i => buildImpactRow(i)).join('');
 
   return `
     <button class="m-close">&times;</button>
@@ -1003,7 +1235,7 @@ function buildAdminSoonHTML() {
     <div class="as-title">${c.titleFn(days)}</div>
     <div class="as-subtitle">${c.subtitle}</div>
 
-    <div class="soon-impact-box">${impactsHtml}</div>
+    <div class="impact-box">${impactsHtml}</div>
 
     <div class="as-more">
       查看全部权益变化
@@ -1011,9 +1243,7 @@ function buildAdminSoonHTML() {
     </div>
 
     <div class="as-cta">
-      <button class="btn-as" id="btnMain">
-        <span>立即续费，领${c.ctaBadge}额外赠礼</span>
-      </button>
+      ${buildRenewBtnHTML()}
     </div>
 
     <div class="as-links">
@@ -1030,16 +1260,7 @@ function buildAdminSoonHTML() {
         </div>
       </div>
       <span class="sep"></span>
-      <div class="as-popover">
-        <a class="as-popover-trigger">
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v3.5l2.5 1.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          稍后提醒
-        </a>
-        <div class="as-popover-card as-remind-opts">
-          <a class="as-remind-opt">到期前 7 天再提醒我</a>
-          <a class="as-remind-opt">到期前 1 天再提醒我</a>
-        </div>
-      </div>
+      <a class="as-popover-trigger" id="notRenewLink">暂不续费</a>
     </div>`;
 }
 
@@ -1132,16 +1353,23 @@ function goStep(n) {
 
 function renderCf() {
   const rs = D.risks[S.theme];
-  $('riskList').innerHTML = rs.map(r =>
-    `<div class="cf-risk-item">
-      <div class="cf-risk-left">
-        <div class="cf-risk-title">${r.t}</div>
-        <div class="cf-risk-desc">${r.d}</div>
+  const rows = rs.map(r => `
+    <div class="cf-risk-row">
+      <div class="cf-risk-cell cf-risk-cell-name">${r.name}</div>
+      <div class="cf-risk-cell cf-risk-cell-status"><span class="cf-status-dot"></span>${r.status}</div>
+      <div class="cf-risk-cell cf-risk-cell-impact">${r.impact}</div>
+    </div>`).join('');
+  $('riskList').innerHTML = `
+    <div class="cf-risk-table">
+      <div class="cf-risk-hd">
+        <div class="cf-risk-hd-cell">权益项</div>
+        <div class="cf-risk-hd-cell">回收前</div>
+        <div class="cf-risk-hd-cell">回收后影响</div>
       </div>
-      <div class="cf-risk-tag">${r.usage}</div>
-    </div>`
-  ).join('');
+      ${rows}
+    </div>`;
   $('cfTitle').textContent = D.cfTitle[S.type] || '确认暂不续费？';
+  $('cfCta').innerHTML = buildRenewBtnHTML({ id: 'cfBtn', action: '不放弃，我要续费' });
 }
 
 function render() {
