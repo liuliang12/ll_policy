@@ -75,6 +75,305 @@
   /* ── Stage ── */
   .stage { display: flex; flex-direction: column; align-items: center; padding: 40px 24px 80px; min-height: calc(100vh - 120px); }
 
+  .device-viewport {
+    width: 100%;
+    max-width: 480px;
+    position: relative;
+  }
+
+  /* ── Mobile device preview ── */
+  .device-mobile .stage { padding: 24px 16px 48px; }
+  .device-mobile .device-viewport {
+    max-width: 390px;
+    width: 100%;
+    min-height: min(780px, calc(100vh - 200px));
+    background: var(--c-bg);
+    border-radius: 24px;
+    border: 1px solid var(--c-border);
+    box-shadow: 0 12px 40px rgba(15, 23, 42, .12);
+    overflow: hidden;
+    --modal-px: 14px;
+    --modal-section-gap: 10px;
+  }
+  .device-mobile .device-statusbar {
+    height: 28px;
+    background: var(--c-surface);
+    border-bottom: 1px solid var(--c-border-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .device-mobile .device-statusbar span {
+    width: 72px;
+    height: 5px;
+    border-radius: 999px;
+    background: var(--c-border);
+  }
+  .device-mobile .device-content {
+    padding: 16px 12px 24px;
+    min-height: calc(100% - 28px);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .device-pc .device-statusbar,
+  .device-pc .device-content { display: contents; }
+
+  .device-mobile .flow { flex-wrap: wrap; justify-content: center; margin-bottom: 16px; }
+  .device-mobile .banner-wrap { max-width: none; }
+  .device-mobile .banner { flex-wrap: wrap; gap: 10px; }
+  .device-mobile .banner-cta { width: 100%; text-align: center; padding: 8px 14px; }
+
+  /* Mobile: centered modals (compact) */
+  .device-mobile .m-wrap,
+  .device-mobile .cf-wrap {
+    width: 100%;
+    max-width: none;
+  }
+  .device-mobile .m-wrap.show,
+  .device-mobile .cf-wrap.show,
+  .device-mobile .cmp-wrap.show {
+    padding: 28px 22px;
+  }
+  .device-mobile .m-wrap.show,
+  .device-mobile .cf-wrap.show {
+    position: absolute;
+    inset: 0;
+    z-index: 120;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(15, 23, 42, .45);
+  }
+  .device-mobile .m-wrap .modal,
+  .device-mobile .cf-wrap .cf {
+    width: calc(100% - 8px);
+    max-width: 320px;
+    max-height: 72%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-radius: 12px;
+    box-shadow: 0 8px 28px rgba(15, 23, 42, .16);
+  }
+  .device-mobile .cf-wrap.cf-wrap--fallback .cf {
+    max-width: 300px;
+  }
+
+  /* Mobile modal — typography & spacing */
+  .device-mobile .modal .m-close,
+  .device-mobile .cf .m-close {
+    top: 8px;
+    right: 10px;
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+  }
+  .device-mobile .as-title,
+  .device-mobile .cf-title-warn {
+    font-size: 16px;
+    font-weight: 700;
+    padding: 14px 36px 0 var(--modal-px);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .device-mobile .as-subtitle {
+    font-size: 12px;
+    margin-bottom: 10px;
+    line-height: 1.45;
+  }
+  .device-mobile .fallback-modal {
+    padding: 20px var(--modal-px) 0;
+  }
+  .device-mobile .fallback-title {
+    font-size: 15px;
+    margin-bottom: 12px;
+    padding: 0 2px;
+  }
+  .device-mobile .fallback-body {
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 18px;
+    max-width: none;
+    padding: 0;
+  }
+  .device-mobile .fallback-cta { padding-bottom: 10px; }
+  .device-mobile .fallback-cta .renew-btn { min-height: 40px; border-radius: 8px; }
+  .device-mobile .fallback-modal .as-links { padding-bottom: 14px; }
+
+  .device-mobile .impact-box {
+    margin: 0 var(--modal-px) var(--modal-section-gap);
+    padding: 0 10px;
+    border-radius: 8px;
+  }
+  .device-mobile .impact-item {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    grid-template-rows: auto auto;
+    gap: 2px 8px;
+    align-items: start;
+    padding: 10px 0;
+  }
+  .device-mobile .impact-icon {
+    width: 28px;
+    height: 28px;
+    grid-row: 1 / 3;
+    border-radius: 6px;
+  }
+  .device-mobile .impact-icon svg { width: 14px; height: 14px; }
+  .device-mobile .impact-title {
+    font-size: 12px;
+    font-weight: 600;
+    grid-column: 2;
+    line-height: 1.35;
+  }
+  .device-mobile .impact-effect {
+    grid-column: 2;
+    max-width: none;
+    text-align: left;
+    font-size: 11px;
+    line-height: 1.45;
+    color: var(--c-text-3);
+  }
+
+  .device-mobile .as-more {
+    font-size: 11px;
+    padding: 2px var(--modal-px) 6px;
+  }
+  .device-mobile .as-cta {
+    padding: 0 var(--modal-px) 8px;
+  }
+  .device-mobile .as-cta .renew-btn-wrap { padding-top: 0; }
+  .device-mobile .renew-btn {
+    padding: 12px 12px 8px;
+    border-radius: 8px;
+  }
+  .device-mobile .renew-btn.renew-btn--plain {
+    min-height: 40px;
+    padding: 0 12px;
+  }
+  .device-mobile .renew-btn.renew-btn--plain > span { font-size: 14px; }
+  .device-mobile .renew-btn-line1 { font-size: 14px; gap: 6px; }
+  .device-mobile .renew-badge-countdown {
+    height: 18px;
+    font-size: 9px;
+    padding: 0 14px 0 8px;
+  }
+  .device-mobile .renew-badge-save {
+    width: 42px;
+    height: 42px;
+    right: 0;
+    top: -4px;
+  }
+  .device-mobile .renew-badge-save-text { font-size: 8px; }
+  .device-mobile .as-links {
+    gap: 12px;
+    font-size: 11px;
+    padding: 0 var(--modal-px) 14px;
+  }
+
+  .device-mobile .cf-fallback-list {
+    margin: 0 var(--modal-px) 12px;
+  }
+  .device-mobile .cf-fallback-item {
+    font-size: 12px;
+    line-height: 1.5;
+    padding-left: 12px;
+  }
+  .device-mobile .cf-fallback-item + .cf-fallback-item { margin-top: 8px; }
+  .device-mobile .cf-fallback-item::before {
+    width: 4px;
+    height: 4px;
+    top: 0.55em;
+  }
+  .device-mobile .abandon {
+    padding: 0 var(--modal-px) 12px;
+  }
+  .device-mobile .abandon-check {
+    font-size: 12px;
+    margin-bottom: 8px;
+    gap: 6px;
+  }
+  .device-mobile .abandon-check input { width: 14px; height: 14px; }
+  .device-mobile .btn-abandon {
+    height: 36px;
+    font-size: 12px;
+  }
+
+  .device-mobile .cmp-wrap {
+    position: absolute;
+    inset: 0;
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  .device-mobile .cmp-page {
+    width: calc(100% - 8px);
+    max-width: 336px;
+    max-height: 72%;
+    border-radius: 12px;
+    box-shadow: 0 8px 28px rgba(15, 23, 42, .16);
+    animation: none;
+  }
+  .device-mobile .cmp-hdr {
+    padding: 12px 36px 0;
+    min-height: 38px;
+  }
+  .device-mobile .cmp-hdr-title { font-size: 14px; }
+  .device-mobile .cmp-close {
+    width: 24px;
+    height: 24px;
+    right: 10px;
+    top: 10px;
+    font-size: 14px;
+  }
+  .device-mobile .cmp-notice-wrap {
+    padding: 8px 12px 10px;
+  }
+  .device-mobile .cmp-notice {
+    padding: 8px 10px;
+    font-size: 11px;
+    line-height: 1.5;
+    border-radius: 6px;
+  }
+  .device-mobile .cmp-notice-ico svg { width: 14px; height: 14px; }
+  .device-mobile .cmp-head {
+    margin: 0 10px;
+    border-radius: 8px;
+    grid-template-columns: minmax(64px, 1fr) repeat(4, minmax(72px, 1fr));
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    min-width: calc(100% - 20px);
+    width: max-content;
+    max-width: calc(100% - 20px);
+  }
+  .device-mobile .cmp-plan-col { padding: 6px 4px 8px; }
+  .device-mobile .cmp-plan-name { font-size: 12px; }
+  .device-mobile .cmp-plan-desc { font-size: 9px; min-height: 18px; }
+  .device-mobile .cmp-plan-price .price-num { font-size: 13px; }
+  .device-mobile .cmp-buy {
+    min-width: 68px;
+    height: 24px;
+    font-size: 10px;
+    padding: 0 8px;
+  }
+  .device-mobile .cmp-body {
+    padding: 0 10px 12px;
+    margin-top: 8px;
+  }
+  .device-mobile .cmp-fallback-table { margin: 0 10px 12px; }
+  .device-mobile .cmp-fallback-hd > span,
+  .device-mobile .cmp-fallback-row > span {
+    padding: 8px 10px;
+    font-size: 11px;
+    min-height: 36px;
+  }
+  .device-mobile .cmp-fallback-name { font-size: 12px; }
+  .device-mobile .cmp-row .cmp-cell,
+  .device-mobile .cmp-cat-cell { font-size: 11px; padding: 8px 6px; }
+
+  .device-pc .m-wrap.show,
+  .device-pc .cf-wrap.show { display: block; }
+
   /* ── Flow Steps ── */
   .flow { display: none; align-items: center; gap: 6px; margin-bottom: 24px; font-size: 12px; color: var(--c-text-3); }
   .flow.show { display: flex; }
@@ -153,6 +452,53 @@
     padding: 0 var(--modal-px); margin-bottom: 14px;
     font-size: 13px; color: var(--c-text-3); line-height: 1.5;
   }
+
+  /* Fallback modal — centered layout */
+  .modal-fallback { text-align: center; }
+  .fallback-modal {
+    padding: 32px var(--modal-px) 0;
+  }
+  .fallback-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--c-text-1);
+    line-height: 1.5;
+    margin-bottom: 18px;
+    padding: 0 8px;
+  }
+  .fallback-title .hl { font-weight: 700; }
+  .t-default .fallback-title .hl { color: var(--c-warn); }
+  .t-ai .fallback-title .hl { color: var(--c-ai); }
+  .t-sec .fallback-title .hl { color: var(--c-sec); }
+  .t-mem .fallback-title .hl { color: var(--c-orange); }
+  .fallback-body {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--c-text-3);
+    line-height: 1.7;
+    margin: 0 auto 32px;
+    padding: 0 12px;
+    max-width: 360px;
+  }
+  .fallback-cta {
+    padding: 0 0 16px;
+  }
+  .fallback-cta .renew-btn-wrap { padding-top: 0; }
+  .fallback-cta .renew-btn {
+    background: linear-gradient(90deg, #4F6EF7 0%, #5865F8 50%, #6B6AF7 100%);
+    min-height: 48px;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(82, 102, 241, .32);
+  }
+  .fallback-modal .as-links { padding-bottom: 22px; }
+  .modal-fallback .m-body {
+    text-align: center;
+    padding: 32px var(--modal-px) 0;
+  }
+  .modal-fallback .m-head { margin-bottom: 0; }
+  .modal-fallback .m-impacts { display: none; }
+  .modal-fallback .m-cta { padding-top: 0; }
+
   .cf-buffer-hl { font-weight: 700; color: var(--c-warn); }
   .as-title .hl { font-weight: 800; }
   .t-default .as-title .hl { color: var(--c-warn); }
@@ -252,33 +598,33 @@
   .impact-icon-green { background: #ECFDF5; color: #059669; }
   .impact-icon-purple { background: #F3E8FF; color: #7C3AED; }
   .impact-body { flex: 1; min-width: 0; padding-top: 1px; }
-  .impact-title { font-size: 14px; font-weight: 600; color: var(--c-text-1); margin-bottom: 4px; line-height: 1.3; }
-  .impact-desc { font-size: 12px; color: var(--c-text-3); line-height: 1.55; }
-  .impact-hl { color: var(--c-warn); font-weight: 600; }
-  .impact-tag {
-    flex-shrink: 0;
-    align-self: center;
-    display: inline-flex;
-    align-items: center;
-    font-size: 11px;
-    font-weight: 400;
-    padding: 5px 10px;
-    border-radius: 4px;
-    background: #F2F3F5;
-    border: none;
-    color: #86909C;
-    white-space: nowrap;
-    line-height: 1.2;
+  .impact-title {
+    flex: 1;
+    min-width: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--c-text-1);
+    line-height: 1.35;
   }
-  .impact-tag-label { color: #86909C; }
-  .impact-tag-val { color: #86909C; font-weight: 400; margin-left: 4px; }
-  .impact-tag-warn {
-    background: #F2F3F5;
-    border: none;
-    color: #86909C;
-    font-size: 11px;
+  .impact-effect {
+    flex-shrink: 0;
+    max-width: 44%;
+    font-size: 12px;
     font-weight: 400;
-    padding: 5px 10px;
+    color: var(--c-text-3);
+    text-align: right;
+    line-height: 1.45;
+  }
+
+  .as-fallback-tip {
+    margin: 0 var(--modal-px) 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: #FFFBEB;
+    border: 1px solid #FDE68A;
+    font-size: 12px;
+    line-height: 1.55;
+    color: #92400E;
   }
 
   /* Expired impact style override */
@@ -584,6 +930,48 @@
   .cmp-expand:hover { color: var(--c-brand); }
   .cmp-expand svg { flex-shrink: 0; }
 
+  .cmp-fallback-table {
+    margin: 0 20px 20px;
+    border: 1px solid var(--c-border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .cmp-fallback-hd,
+  .cmp-fallback-row {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr 1.4fr;
+    align-items: center;
+  }
+  .cmp-fallback-hd {
+    background: var(--c-bg);
+    border-bottom: 1px solid var(--c-border);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--c-text-3);
+  }
+  .cmp-fallback-hd > span,
+  .cmp-fallback-row > span {
+    padding: 10px 14px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  .cmp-fallback-row + .cmp-fallback-row { border-top: 1px solid var(--c-border-light); }
+  .cmp-fallback-name { font-size: 13px; font-weight: 500; color: var(--c-text-1); }
+  .cmp-fallback-status { font-size: 12px; color: var(--c-green); font-weight: 500; gap: 4px; }
+  .cmp-fallback-impact { font-size: 12px; color: var(--c-warn); line-height: 1.45; }
+  .cmp-fallback-tag {
+    display: inline-block;
+    margin-left: 6px;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: #FFF7E8;
+    color: #D97706;
+    vertical-align: middle;
+  }
+
   /* CTA */
   .as-cta { padding: 0 var(--modal-px) 12px; }
   .renew-btn-wrap {
@@ -870,6 +1258,24 @@
   /* ── Confirm Modal (Step 2) ── */
   .cf-wrap { display: none; width: 100%; max-width: 480px; }
   .cf-wrap.show { display: block; }
+  .cf-wrap.cf-wrap--fallback {
+    max-width: 400px;
+    --modal-px: 20px;
+  }
+  .cf-wrap.cf-wrap--fallback .cf-title-warn {
+    padding: 18px var(--modal-px) 0;
+  }
+  .cf-wrap.cf-wrap--fallback .cf-fallback-list {
+    margin-bottom: 18px;
+  }
+  .cf-wrap.cf-wrap--fallback .cf-fallback-item {
+    font-size: 13px;
+    line-height: 1.55;
+    margin-bottom: 10px;
+  }
+  .cf-wrap.cf-wrap--fallback .abandon {
+    padding-bottom: 16px;
+  }
   .cf { background: var(--c-surface); border-radius: var(--radius-l); box-shadow: var(--shadow-modal); overflow: hidden; position: relative; }
   .cf-title-warn {
     font-size: 18px; font-weight: 800; letter-spacing: -.02em;
@@ -913,6 +1319,29 @@
     line-height: 1.45;
     min-width: 0;
   }
+  .cf-fallback-list {
+    margin: 0 var(--modal-px) var(--modal-section-gap);
+    padding: 0;
+    list-style: none;
+  }
+  .cf-fallback-item {
+    position: relative;
+    padding-left: 14px;
+    font-size: 13px;
+    color: var(--c-text-1);
+    line-height: 1.55;
+  }
+  .cf-fallback-item + .cf-fallback-item { margin-top: 10px; }
+  .cf-fallback-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--c-text-3);
+  }
   .cf-divider { height: 1px; background: var(--c-border); margin: 4px 20px 14px; }
   .abandon { padding: 0 var(--modal-px) 18px; }
   .abandon-check {
@@ -927,7 +1356,7 @@
   .btn-abandon.ok:active { transform: scale(.98); }
 </style>
 </head>
-<body>
+<body class="device-pc">
 
 <div class="panel">
   <div class="panel-title">到期提醒弹窗优化 Demo</div>
@@ -950,22 +1379,27 @@
           <button data-v="1">1天</button>
         </div>
       </div>
-    </div>
-    <div class="panel-row">
       <div class="ctrl">
-        <span class="ctrl-label">主题样式</span>
-        <div class="seg" data-k="theme">
-          <button class="on" data-v="default">通用</button>
-          <button data-v="ai">AI</button>
-          <button data-v="sec">安全</button>
-          <button data-v="mem">会员</button>
+        <span class="ctrl-label">端类型</span>
+        <div class="seg" data-k="device">
+          <button class="on" data-v="pc">PC</button>
+          <button data-v="mobile">移动端</button>
         </div>
       </div>
+    </div>
+    <div class="panel-row">
       <div class="ctrl" style="display:none;">
         <span class="ctrl-label">用户角色</span>
         <div class="seg" data-k="role">
           <button class="on" data-v="admin">超管</button>
           <button data-v="member">成员</button>
+        </div>
+      </div>
+      <div class="ctrl">
+        <span class="ctrl-label">内容态</span>
+        <div class="seg" data-k="mode">
+          <button class="on" data-v="normal">正常态</button>
+          <button data-v="fallback">兜底态</button>
         </div>
       </div>
       <div class="ctrl">
@@ -979,7 +1413,11 @@
   </div>
 </div>
 
-<div class="stage">
+<div class="stage" id="stage">
+
+  <div class="device-viewport" id="deviceViewport">
+    <div class="device-statusbar" aria-hidden="true"><span></span></div>
+    <div class="device-content">
 
   <div class="flow" id="flow">
     <div class="flow-step current" id="fs1" onclick="goStep(1)">1. 到期提醒</div>
@@ -1018,7 +1456,7 @@
           <div class="cmp-notice-text" id="cmpNoticeText"></div>
         </div>
       </div>
-      <div class="cmp-head">
+      <div class="cmp-head" id="cmpHead">
         <div class="cmp-head-side"><span class="cmp-head-fn" id="cmpHeadFn">权益</span></div>
         <div class="cmp-plan-col" id="cmpPlanCol1">
           <div class="cmp-plan-tag" id="cmpPlanTagWrap1"><span class="cmp-col-tag cmp-tag-gold" id="cmpTag1">过期后</span></div>
@@ -1057,7 +1495,7 @@
   <div class="cf-wrap" id="cfWrap">
     <div class="cf">
       <div class="as-title cf-title-warn" id="cfTitle">确认放弃以下企业权益？</div>
-      <div class="as-subtitle">确认后将进入<span class="cf-buffer-hl">14天缓冲期</span>倒计时，届时以下权益将被回收：</div>
+      <div class="as-subtitle" id="cfSubtitle">确认后将进入<span class="cf-buffer-hl">14天缓冲期</span>倒计时，届时以下权益将被回收：</div>
 
       <div id="riskList"></div>
 
@@ -1070,6 +1508,9 @@
         </label>
         <button class="btn-abandon" id="abBtn" disabled>确认放弃，进入缓冲期</button>
       </div>
+    </div>
+  </div>
+
     </div>
   </div>
 
@@ -1087,9 +1528,9 @@ const CMP = {
     titleFn: d => `您订阅的WPS 365商业协作版 <span class="hl">${d}天后到期</span>`,
     subtitle: '5名成员使用中，到期后可能造成以下影响：',
     impacts: [
-      { icon: 'folder-blue', t: '企业空间将回收', d: '150GB 空间将失效，无法更新文档', tag: '98GB 数据受限' },
-      { icon: 'upload-green', t: '大文件上传能力降级', d: '到期后文件上传大小降至 10MB', tag: '大文件上传受限' },
-      { icon: 'shield-purple', t: '企业专属水印将失效', d: '到期后文档将不再显示企业水印', tag: '资料有外泄风险' },
+      { icon: 'folder-blue', t: '150GB空间将回收', d: '98个文件可能更新受限' },
+      { icon: 'upload-green', t: '大文件上传能力降级', d: '单文件上传大小降至10MB' },
+      { icon: 'shield-purple', t: '企业专属水印将失效', d: '成员文件有外泄风险' },
     ],
     ctaTxt: '去续费',
     ctaBadge: '赠90天',
@@ -1098,9 +1539,9 @@ const CMP = {
     titleFn: d => `您订阅的AI办公能力 <span class="hl">${d}天后中断</span>`,
     subtitle: '团队近30天已使用AI功能438次，到期后将影响：',
     impacts: [
-      { icon: 'ai-purple', t: 'AI 智能写作将中断', d: '到期后 AI 写作功能不可用，团队效率下降', tag: '近30天使用286次' },
-      { icon: 'ai-purple', t: 'AI 排版美化将中断', d: '到期后 AI 排版功能不可用，需手动排版', tag: '近30天使用152次' },
-      { icon: 'ai-purple', t: 'AI 翻译摘要将中断', d: '到期后 AI 翻译功能不可用，多语言协作受阻', tag: '影响68位成员' },
+      { icon: 'ai-purple', t: 'AI 智能写作将中断', d: '近30天使用286次' },
+      { icon: 'ai-purple', t: 'AI 排版美化将中断', d: '近30天使用152次' },
+      { icon: 'ai-purple', t: 'AI 翻译摘要将中断', d: '影响68位成员' },
     ],
     ctaTxt: '续费保留 AI 能力',
     ctaBadge: '赠90天',
@@ -1109,9 +1550,9 @@ const CMP = {
     titleFn: d => `您订阅的安全防护能力 <span class="hl">${d}天后失效</span>`,
     subtitle: '当前5个团队、86位成员受安全策略保护，到期后将影响：',
     impacts: [
-      { icon: 'shield-purple', t: '文档加密保护将回收', d: '到期后团队文档加密保护失效', tag: '5个团队受影响' },
-      { icon: 'shield-purple', t: '文档外发管控将失效', d: '到期后无法限制企业文档分享范围', tag: '外发管控将关闭' },
-      { icon: 'shield-purple', t: '企业文档水印将关闭', d: '到期后文档将不再显示企业水印', tag: '资料有外泄风险' },
+      { icon: 'shield-purple', t: '文档加密保护将回收', d: '5个团队受影响' },
+      { icon: 'shield-purple', t: '文档外发管控将失效', d: '外发管控将关闭' },
+      { icon: 'shield-purple', t: '企业文档水印将关闭', d: '资料有外泄风险' },
     ],
     ctaTxt: '续费保障企业安全',
     ctaBadge: '赠90天',
@@ -1120,9 +1561,9 @@ const CMP = {
     titleFn: d => `您订阅的专属办公权益 <span class="hl">${d}天后失效</span>`,
     subtitle: '企业空间已用320GB/500GB，到期后将影响：',
     impacts: [
-      { icon: 'folder-blue', t: '企业空间将缩减', d: '到期后企业空间从 500GB 降至 10GB', tag: '320GB 数据受限' },
-      { icon: 'upload-green', t: '大文件上传能力降级', d: '到期后单文件上传大小降至 10MB', tag: '大文件上传受限' },
-      { icon: 'upload-green', t: '专属素材将失效', d: '到期后专属模板/字体/素材不可用', tag: '文档品质下降' },
+      { icon: 'folder-blue', t: '企业空间将缩减', d: '320GB 数据受限' },
+      { icon: 'upload-green', t: '大文件上传能力降级', d: '单文件上传大小降至10MB' },
+      { icon: 'upload-green', t: '专属素材将失效', d: '文档品质下降' },
     ],
     ctaTxt: '续费保留专属权益',
     ctaBadge: '赠90天',
@@ -1135,37 +1576,73 @@ const EXP = {
     title: '您订阅的WPS 365商业协作版 <span class="hl">已到期</span>',
     subtitle: '5 名成员受到影响，以下核心权益已失去：',
     impacts: [
-      { icon: 'folder-blue', t: '企业空间已失效', d: '150GB 空间已失效，无法更新文档', tag: '98GB 数据受限' },
-      { icon: 'upload-green', t: '大文件上传能力已降级', d: '文件上传大小已降至 10MB', tag: '大文件上传受限' },
-      { icon: 'shield-purple', t: '企业专属水印已失效', d: '文档将不再显示企业水印', tag: '资料有外泄风险' },
+      { icon: 'folder-blue', t: '150GB空间已失效', d: '98个文件可能更新受限' },
+      { icon: 'upload-green', t: '大文件上传能力已降级', d: '单文件上传大小降至10MB' },
+      { icon: 'shield-purple', t: '企业专属水印已失效', d: '成员文件有外泄风险' },
     ],
   },
   ai: {
     title: '您订阅的AI办公能力 <span class="hl">已到期</span>',
     subtitle: '5 名成员受到影响，以下核心权益已失去：',
     impacts: [
-      { icon: 'ai-purple', t: 'AI 智能写作已中断', d: 'AI 写作功能已不可用，团队效率下降', tag: '近30天使用286次' },
-      { icon: 'ai-purple', t: 'AI 排版美化已中断', d: 'AI 排版功能已不可用，需手动排版', tag: '近30天使用152次' },
-      { icon: 'ai-purple', t: 'AI 翻译摘要已中断', d: 'AI 翻译功能已不可用，多语言协作受阻', tag: '影响68位成员' },
+      { icon: 'ai-purple', t: 'AI 智能写作已中断', d: '近30天使用286次' },
+      { icon: 'ai-purple', t: 'AI 排版美化已中断', d: '近30天使用152次' },
+      { icon: 'ai-purple', t: 'AI 翻译摘要已中断', d: '影响68位成员' },
     ],
   },
   sec: {
     title: '您订阅的安全防护能力 <span class="hl">已到期</span>',
     subtitle: '5 名成员受到影响，以下核心权益已失去：',
     impacts: [
-      { icon: 'shield-purple', t: '文档加密保护已失效', d: '团队文档加密保护已关闭', tag: '5个团队受影响' },
-      { icon: 'shield-purple', t: '文档外发管控已失效', d: '已无法限制企业文档分享范围', tag: '外发管控已关闭' },
-      { icon: 'shield-purple', t: '企业文档水印已关闭', d: '文档已不再显示企业水印', tag: '资料有外泄风险' },
+      { icon: 'shield-purple', t: '文档加密保护已失效', d: '5个团队受影响' },
+      { icon: 'shield-purple', t: '文档外发管控已失效', d: '外发管控已关闭' },
+      { icon: 'shield-purple', t: '企业文档水印已关闭', d: '资料有外泄风险' },
     ],
   },
   mem: {
     title: '您订阅的专属办公权益 <span class="hl">已到期</span>',
     subtitle: '5 名成员受到影响，以下核心权益已失去：',
     impacts: [
-      { icon: 'folder-blue', t: '企业空间已缩减', d: '企业空间已从 500GB 降至 10GB', tag: '320GB 数据受限' },
-      { icon: 'upload-green', t: '大文件上传能力已降级', d: '单文件上传大小已降至 10MB', tag: '大文件上传受限' },
-      { icon: 'upload-green', t: '专属素材已失效', d: '专属模板/字体/素材已不可用', tag: '文档品质下降' },
+      { icon: 'folder-blue', t: '企业空间已缩减', d: '320GB 数据受限' },
+      { icon: 'upload-green', t: '大文件上传能力已降级', d: '单文件上传大小降至10MB' },
+      { icon: 'upload-green', t: '专属素材已失效', d: '文档品质下降' },
     ],
+  },
+};
+
+/* ── 兜底态：观测权益不在当前商品内，但商品到期仍会影响企业权益 ── */
+const FALLBACK = {
+  skuName: 'PDF企业权益包',
+  benefitCount: 3,
+  bufferDays: 14,
+  copy: {
+    soon: {
+      titleFn: (sku, days) => `您订阅的${sku} <span class="hl">${days}天后到期</span>`,
+      desc: count => `${count}项权益即将到期，为保证企业高级功能的使用，请及时续费`,
+    },
+    exp: {
+      titleFn: sku => `您订阅的${sku} <span class="hl">已过期</span>`,
+      desc: count => `${count}项权益已过期，为保证企业高级功能的使用，请及时续费`,
+    },
+    confirm: {
+      title: '确认不续费？',
+      subtitleFn: days => `确认后将开启<span class="cf-buffer-hl">${days}天缓冲期</span>倒计时，届时部分权益将被回收：`,
+      items: [
+        '部分配置数据可能失效或重置为默认值',
+        '超出基础额度的内容可能被锁定',
+      ],
+      primaryBtn: '我要续费，避免回收',
+      secondaryBtn: '确认不续费，进入缓冲期',
+    },
+  },
+  risks: [
+    { name: '企业文档水印', status: '开启中', impact: '到期后水印失效，重要资料可能被外泄' },
+    { name: '禁止文档外发', status: '管控中', impact: '到期后管控失效，无法限制文档分享范围' },
+    { name: '自定义角色', status: '生效中', impact: '到期后配置失效，无法实现分级管理' },
+  ],
+  cmpNotice: {
+    soon: days => `3项观测权益将在 <span class="hl">${days}天后</span>随商品到期而失效，续期可完整保留。`,
+    exp: `3项观测权益已因商品到期受到影响，续费可立即恢复。`,
   },
 };
 
@@ -1295,14 +1772,21 @@ const D = {
   cfTitle: { 'pkg-expired':'确认放弃以下企业权益？', 'ben-expired':'确认暂不续费权益包？' },
 };
 
-let S = { type:'pkg-soon', days:'14', theme:'default', role:'admin', promo:'yes' };
+let S = { type:'pkg-soon', days:'14', theme:'default', role:'admin', promo:'yes', mode:'normal', device:'pc' };
 let step = 1;
 const isSoon = () => S.type.includes('soon');
 const isExp  = () => S.type.includes('expired');
+const isFallback = () => S.mode === 'fallback';
+const isMobile = () => S.device === 'mobile';
 const hasPromo = () => S.promo === 'yes';
 const tc = t => `t-${t}`;
 const isAdminSoon = () => S.role === 'admin' && isSoon();
 const isAdminExp  = () => S.role === 'admin' && isExp();
+
+function applyDevice() {
+  document.body.classList.remove('device-pc', 'device-mobile');
+  document.body.classList.add(isMobile() ? 'device-mobile' : 'device-pc');
+}
 
 /* ── 功能说明区图标 ── */
 const IMPACT_ICO = {
@@ -1312,7 +1796,7 @@ const IMPACT_ICO = {
   ai: `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M9 2.5l1.1 3.4h3.6l-2.9 2.1 1.1 3.4L9 9.3l-2.9 2.1 1.1-3.4-2.9-2.1h3.6L9 2.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>`,
 };
 
-function buildImpactRow(i, { tag } = {}) {
+function buildImpactRow(i) {
   const iconMap = {
     'folder-blue': ['impact-icon-blue', IMPACT_ICO.folder],
     'upload-green': ['impact-icon-green', IMPACT_ICO.upload],
@@ -1324,21 +1808,11 @@ function buildImpactRow(i, { tag } = {}) {
     'ai-amber': ['impact-icon-amber', IMPACT_ICO.ai],
   };
   const [iconCls, svg] = iconMap[i.icon] || iconMap['upload-amber'];
-  const t = tag ?? i.tag;
-  let tagHtml = '';
-  if (t) {
-    tagHtml = typeof t === 'string'
-      ? `<span class="impact-tag impact-tag-warn">${t}</span>`
-      : `<span class="impact-tag"><span class="impact-tag-label">${t.label}</span><span class="impact-tag-val">${t.val}</span></span>`;
-  }
   return `
     <div class="impact-item">
       <div class="impact-icon ${iconCls}">${svg}</div>
-      <div class="impact-body">
-        <div class="impact-title">${i.t}</div>
-        <div class="impact-desc">${i.d}</div>
-      </div>
-      ${tagHtml}
+      <div class="impact-title">${i.t}</div>
+      <div class="impact-effect">${i.d}</div>
     </div>`;
 }
 
@@ -1356,8 +1830,8 @@ function formatRenewPrice(num, unit, numCls = 'renew-price-num', unitCls = 'rene
   return `<span class="${numCls}">${num}</span><span class="${unitCls}">${unit}</span>`;
 }
 
-function buildRenewBtnHTML({ id = 'btnMain', action = '立即续费' } = {}) {
-  if (!hasPromo()) {
+function buildRenewBtnHTML({ id = 'btnMain', action = '立即续费', forcePlain = false } = {}) {
+  if (!hasPromo() || forcePlain) {
     return `
     <div class="renew-btn-wrap renew-btn-wrap--plain">
       <button class="renew-btn renew-btn--plain" id="${id}">
@@ -1400,11 +1874,51 @@ function buildRenewBtnHTML({ id = 'btnMain', action = '立即续费' } = {}) {
     </div>`;
 }
 
+function buildFallbackLinksHTML(qrText) {
+  return `
+    <div class="as-links">
+      <div class="as-popover">
+        <a class="as-popover-trigger">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M11 5.5a3 3 0 1 0-6 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><rect x="3" y="7" width="10" height="7" rx="1.5" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="10.5" r="1" stroke="currentColor" stroke-width="1.2"/></svg>
+          联系销售
+        </a>
+        <div class="as-popover-card">
+          <div class="as-qr-placeholder">
+            <svg width="48" height="48" viewBox="0 0 64 64" fill="none"><rect x="8" y="8" width="20" height="20" rx="2" stroke="var(--c-text-4)" stroke-width="2"/><rect x="36" y="8" width="20" height="20" rx="2" stroke="var(--c-text-4)" stroke-width="2"/><rect x="8" y="36" width="20" height="20" rx="2" stroke="var(--c-text-4)" stroke-width="2"/><rect x="12" y="12" width="12" height="12" rx="1" fill="var(--c-text-4)"/><rect x="40" y="12" width="12" height="12" rx="1" fill="var(--c-text-4)"/><rect x="12" y="40" width="12" height="12" rx="1" fill="var(--c-text-4)"/><rect x="38" y="38" width="6" height="6" fill="var(--c-text-4)"/><rect x="50" y="38" width="6" height="6" fill="var(--c-text-4)"/><rect x="38" y="50" width="6" height="6" fill="var(--c-text-4)"/><rect x="50" y="50" width="6" height="6" fill="var(--c-text-4)"/><rect x="44" y="44" width="6" height="6" fill="var(--c-text-4)"/></svg>
+          </div>
+          <div class="as-qr-text">${qrText}</div>
+        </div>
+      </div>
+      <span class="sep"></span>
+      <a class="as-popover-trigger" id="notRenewLink">暂不续费</a>
+    </div>`;
+}
+
+function buildFallbackAdminHTML(title, subtitle, qrText = '微信扫码联系专属顾问') {
+  return `
+    <button class="m-close">&times;</button>
+    <div class="fallback-modal">
+      <div class="fallback-title">${title}</div>
+      <div class="fallback-body">${subtitle}</div>
+      <div class="fallback-cta">
+        ${buildRenewBtnHTML({ forcePlain: true })}
+      </div>
+      ${buildFallbackLinksHTML(qrText)}
+    </div>`;
+}
+
 /* ── Build: admin expired layout ── */
 function buildAdminExpHTML() {
   const { theme } = S;
-  const c = EXP[theme];
+  if (isFallback()) {
+    const sku = FALLBACK.skuName;
+    return buildFallbackAdminHTML(
+      FALLBACK.copy.exp.titleFn(sku),
+      FALLBACK.copy.exp.desc(FALLBACK.benefitCount)
+    );
+  }
 
+  const c = EXP[theme];
   const impactsHtml = c.impacts.map(i => buildImpactRow(i)).join('');
 
   return `
@@ -1445,8 +1959,16 @@ function buildAdminExpHTML() {
 /* ── Build: admin soon layout ── */
 function buildAdminSoonHTML() {
   const { days, theme } = S;
-  const c = CMP[theme];
+  if (isFallback()) {
+    const sku = FALLBACK.skuName;
+    return buildFallbackAdminHTML(
+      FALLBACK.copy.soon.titleFn(sku, days),
+      FALLBACK.copy.soon.desc(FALLBACK.benefitCount),
+      '微信扫码联系专属销售'
+    );
+  }
 
+  const c = CMP[theme];
   const impactsHtml = c.impacts.map(i => buildImpactRow(i)).join('');
 
   return `
@@ -1513,43 +2035,69 @@ function populateStandard() {
   const exp = isExp();
   const thCls = tc(theme);
 
-  $('modal').className = `modal ${thCls}`;
+  $('modal').className = `modal ${thCls}${isFallback() ? ' modal-fallback' : ''}`;
 
   const titleEl = $('mTitle');
-  const titleFn = D.titles[type]?.[theme];
-  titleEl.innerHTML = titleFn ? `您订阅的${titleFn(days)}` : '';
-  titleEl.className = exp ? 'm-title expired' : 'm-title';
+  if (isFallback()) {
+    const sku = FALLBACK.skuName;
+    titleEl.innerHTML = isSoon()
+      ? FALLBACK.copy.soon.titleFn(sku, days)
+      : FALLBACK.copy.exp.titleFn(sku);
+    titleEl.className = 'fallback-title';
+  } else {
+    const titleFn = D.titles[type]?.[theme];
+    titleEl.innerHTML = titleFn ? `您订阅的${titleFn(days)}` : '';
+    titleEl.className = exp ? 'm-title expired' : 'm-title';
+  }
 
   const subtitleEl = $('mSubtitle');
   if (subtitleEl) {
-    const subtitleMap = {
-      default: '5名成员使用中，到期后可能造成以下影响：',
-      ai: '团队近30天已使用AI功能438次，到期后影响：',
-      sec: '当前5个团队、86位成员受安全策略保护，到期后影响：',
-      mem: '企业空间已用320GB/500GB，到期后影响：',
-    };
-    subtitleEl.textContent = subtitleMap[theme] || subtitleMap.default;
+    if (isFallback()) {
+      subtitleEl.textContent = isSoon()
+        ? FALLBACK.copy.soon.desc(FALLBACK.benefitCount)
+        : FALLBACK.copy.exp.desc(FALLBACK.benefitCount);
+      subtitleEl.className = 'fallback-body';
+    } else {
+      subtitleEl.textContent = ({
+        default: '5名成员使用中，到期后可能造成以下影响：',
+        ai: '团队近30天已使用AI功能438次，到期后影响：',
+        sec: '当前5个团队、86位成员受安全策略保护，到期后影响：',
+        mem: '企业空间已用320GB/500GB，到期后影响：',
+      }[theme] || '5名成员使用中，到期后可能造成以下影响：');
+      subtitleEl.className = 'as-subtitle';
+    }
   }
 
-  const ik = isSoon() ? 'soon' : 'exp';
-  $('mImpacts').innerHTML = D.impacts[theme][ik].map(i =>
-    `<div class="as-impact">
-      <div class="as-impact-left">
-        <div class="as-impact-desc">${i.t}</div>
-      </div>
-      <div class="as-impact-data">${i.d}</div>
-    </div>`
-  ).join('');
+  if (!isFallback()) {
+    const ik = isSoon() ? 'soon' : 'exp';
+    $('mImpacts').innerHTML = D.impacts[theme][ik].map(i =>
+      `<div class="as-impact">
+        <div class="as-impact-left">
+          <div class="as-impact-desc">${i.t}</div>
+        </div>
+        <div class="as-impact-data">${i.d}</div>
+      </div>`
+    ).join('');
+  } else {
+    $('mImpacts').innerHTML = '';
+  }
 
   const ctaKey = isSoon() ? 'soon' : 'exp';
   const ctaTxt = D.cta[role][ctaKey][theme];
   const btn = $('btnMain');
-  btn.className = role === 'member' ? 'btn-main outline' : 'btn-main';
-  btn.innerHTML = `<span>${ctaTxt}</span>`;
+  if (isFallback()) {
+    $('m-cta').innerHTML = `
+      <div class="fallback-cta">${buildRenewBtnHTML({ forcePlain: true })}</div>
+      ${buildFallbackLinksHTML('微信扫码联系专属顾问')}`;
+  } else {
+    btn.className = role === 'member' ? 'btn-main outline' : 'btn-main';
+    btn.innerHTML = `<span>${ctaTxt}</span>`;
+  }
 
   $('notifyOk').style.display = 'none';
 
   const links = $('ctaLinks');
+  if (isFallback()) return;
   if (role === 'admin') {
     links.innerHTML = `<a>联系销售</a><span class="sep"></span><div class="remind"><a id="remindLink">稍后提醒</a><div class="remind-menu"><a>1 天后提醒</a><a>3 天后提醒</a><a>7 天后提醒</a></div></div>`;
   } else {
@@ -1568,31 +2116,50 @@ function goStep(n) {
     f1.className = 'flow-step done'; f2.className = 'flow-step current';
     renderCf();
   }
-  const ck = $('abCheck'); if (ck) { ck.checked = false; togAbandon(); }
 }
 
 function renderCf() {
-  const rs = D.risks[S.theme];
-  const rows = rs.map(r => `
-    <div class="cf-risk-row">
-      <div class="cf-risk-cell cf-risk-cell-name">${r.name}</div>
-      <div class="cf-risk-cell cf-risk-cell-status"><span class="cf-status-dot"></span>${r.status}</div>
-      <div class="cf-risk-cell cf-risk-cell-impact">${r.impact}</div>
-    </div>`).join('');
-  $('riskList').innerHTML = `
-    <div class="cf-risk-table">
-      <div class="cf-risk-hd">
-        <div class="cf-risk-hd-cell">权益项</div>
-        <div class="cf-risk-hd-cell">回收前</div>
-        <div class="cf-risk-hd-cell">回收后影响</div>
-      </div>
-      ${rows}
-    </div>`;
-  $('cfTitle').textContent = D.cfTitle[S.type] || '确认暂不续费？';
-  $('cfCta').innerHTML = buildRenewBtnHTML({ id: 'cfBtn', action: '不放弃，我要续费' });
+  $('cfWrap').classList.toggle('cf-wrap--fallback', isFallback());
+  if (isFallback()) {
+    const { confirm } = FALLBACK.copy;
+    $('cfTitle').textContent = confirm.title;
+    $('cfSubtitle').innerHTML = confirm.subtitleFn(FALLBACK.bufferDays);
+    $('riskList').innerHTML = `
+      <ul class="cf-fallback-list">
+        ${confirm.items.map(item => `<li class="cf-fallback-item">${item}</li>`).join('')}
+      </ul>`;
+    $('cfCta').innerHTML = buildRenewBtnHTML({ id: 'cfBtn', action: confirm.primaryBtn });
+    $('abBtn').textContent = confirm.secondaryBtn;
+    const ck = $('abCheck');
+    if (ck) { ck.checked = false; togAbandon(); }
+  } else {
+    const rs = D.risks[S.theme];
+    const rows = rs.map(r => `
+      <div class="cf-risk-row">
+        <div class="cf-risk-cell cf-risk-cell-name">${r.name}</div>
+        <div class="cf-risk-cell cf-risk-cell-status"><span class="cf-status-dot"></span>${r.status}</div>
+        <div class="cf-risk-cell cf-risk-cell-impact">${r.impact}</div>
+      </div>`).join('');
+    $('riskList').innerHTML = `
+      <div class="cf-risk-table">
+        <div class="cf-risk-hd">
+          <div class="cf-risk-hd-cell">权益项</div>
+          <div class="cf-risk-hd-cell">回收前</div>
+          <div class="cf-risk-hd-cell">回收后影响</div>
+        </div>
+        ${rows}
+      </div>`;
+    $('cfTitle').textContent = D.cfTitle[S.type] || '确认暂不续费？';
+    $('cfSubtitle').innerHTML = `确认后将进入<span class="cf-buffer-hl">${FALLBACK.bufferDays}天缓冲期</span>倒计时，届时以下权益将被回收：`;
+    $('cfCta').innerHTML = buildRenewBtnHTML({ id: 'cfBtn', action: '不放弃，我要续费' });
+    $('abBtn').textContent = '确认放弃，进入缓冲期';
+    const ck = $('abCheck');
+    if (ck) { ck.checked = false; togAbandon(); }
+  }
 }
 
 function render() {
+  applyDevice();
   step = 1;
   const { type, days, theme, role } = S;
   const isBanner = isSoon() && days === '60';
@@ -1602,6 +2169,7 @@ function render() {
   $('flow').className = (isAdminExp()) ? 'flow show' : 'flow';
   $('fs1').className = 'flow-step current'; $('fs2').className = 'flow-step';
   $('cfWrap').classList.remove('show');
+  $('cfWrap').classList.remove('cf-wrap--fallback');
   $('cmpWrap').classList.remove('show');
   document.body.style.overflow = '';
 
@@ -1618,11 +2186,12 @@ function render() {
 
   // modal content
   const modal = $('modal');
+  const fbCls = isFallback() ? ' modal-fallback' : '';
   if (isAdminSoon()) {
-    modal.className = `modal ${thCls}`;
+    modal.className = `modal ${thCls}${fbCls}`;
     modal.innerHTML = buildAdminSoonHTML();
   } else if (isAdminExp()) {
-    modal.className = `modal ${thCls} expired`;
+    modal.className = `modal ${thCls}${fbCls} expired`;
     modal.innerHTML = buildAdminExpHTML();
   } else {
     modal.innerHTML = buildStandardHTML();
@@ -1723,6 +2292,25 @@ function cellHtml(v) {
 }
 
 function renderCmpPage() {
+  if (isFallback()) {
+    const rows = FALLBACK.risks.map(r => `
+      <div class="cmp-fallback-row">
+        <span class="cmp-fallback-name">${r.name}<span class="cmp-fallback-tag">观测权益</span></span>
+        <span class="cmp-fallback-status"><span class="cf-status-dot"></span>${r.status}</span>
+        <span class="cmp-fallback-impact">${r.impact}</span>
+      </div>`).join('');
+    $('cmpBody').innerHTML = `
+      <div class="cmp-fallback-table">
+        <div class="cmp-fallback-hd">
+          <span>权益信息</span>
+          <span>当前状态</span>
+          <span>${isExp() ? '到期影响' : '到期后影响'}</span>
+        </div>
+        ${rows}
+      </div>`;
+    return;
+  }
+
   $('cmpBody').innerHTML = CMP_TABLE.map(cat => {
     const [cPaid,cFree,cAdv,cFlag] = cat.counts;
     const catRow = `<div class="cmp-cat">
@@ -1763,6 +2351,19 @@ function renderCmpNotice() {
   const notice = $('cmpNotice');
   const ico = $('cmpNoticeIco');
   const text = $('cmpNoticeText');
+  if (isFallback()) {
+    if (isExp()) {
+      notice.className = 'cmp-notice cmp-notice-exp';
+      ico.innerHTML = CMP_NOTICE_ICO.exp;
+      text.innerHTML = FALLBACK.cmpNotice.exp;
+    } else {
+      const days = S.days || '14';
+      notice.className = 'cmp-notice cmp-notice-soon';
+      ico.innerHTML = CMP_NOTICE_ICO.soon;
+      text.innerHTML = FALLBACK.cmpNotice.soon(days);
+    }
+    return;
+  }
   if (isExp()) {
     notice.className = 'cmp-notice cmp-notice-exp';
     ico.innerHTML = CMP_NOTICE_ICO.exp;
@@ -1778,6 +2379,12 @@ function renderCmpNotice() {
 function showCmpPage() {
   $('cmpWrap').classList.add('show');
   document.body.style.overflow = 'hidden';
+  $('cmpHead').style.display = isFallback() ? 'none' : '';
+  if (isFallback()) {
+    renderCmpNotice();
+    renderCmpPage();
+    return;
+  }
   if (isExp()) {
     $('cmpHeadFn').textContent = '权益信息';
     $('cmpPlanCol1').classList.add('cmp-plan-col-label-only');
