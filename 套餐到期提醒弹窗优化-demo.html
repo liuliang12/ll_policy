@@ -237,12 +237,20 @@
 
   .device-mobile .as-more {
     font-size: 11px;
-    padding: 2px var(--modal-px) 6px;
+    padding: 2px 0 6px;
+  }
+  .device-mobile .impact-box .as-more {
+    margin: 0 -10px -2px;
+    padding: 8px 0 7px;
   }
   .device-mobile .as-cta {
     padding: 0 var(--modal-px) 8px;
   }
   .device-mobile .as-cta .renew-btn-wrap { padding-top: 0; }
+  .device-mobile .as-cta .renew-btn-wrap--plain {
+    padding-top: 8px;
+    padding-bottom: 2px;
+  }
   .device-mobile .renew-btn {
     padding: 12px 12px 8px;
     border-radius: 8px;
@@ -637,12 +645,18 @@
   /* More link */
   .as-more {
     display: flex; align-items: center; justify-content: center;
-    gap: 4px; padding: 4px var(--modal-px) 10px;
-    font-size: 12px; font-weight: 500; color: var(--c-text-3);
-    cursor: pointer; transition: color var(--transition);
+    gap: 3px; padding: 8px 0 7px;
+    font-size: 11px; font-weight: 400; color: var(--c-text-3);
+    cursor: pointer; transition: color var(--transition), opacity var(--transition);
+    opacity: .92;
   }
-  .as-more:hover { color: var(--c-brand); }
-  .as-more svg { flex-shrink: 0; }
+  .impact-box .as-more {
+    margin: 0 -14px -2px;
+    border-top: 1px solid var(--c-border-light);
+    background: transparent;
+  }
+  .as-more:hover { color: var(--c-text-3); opacity: 1; }
+  .as-more svg { flex-shrink: 0; opacity: .75; }
 
   /* ─── Compare Page (bottom sheet) ─── */
   .cmp-wrap {
@@ -1001,7 +1015,10 @@
     border-radius: 999px;
     box-shadow: 0 2px 8px rgba(232, 78, 27, .32);
   }
-  .renew-btn-wrap--plain { padding-top: 0; }
+  .renew-btn-wrap--plain {
+    padding-top: 10px;
+    padding-bottom: 4px;
+  }
   .renew-btn {
     width: 100%;
     padding: 16px 16px 9px;
@@ -1870,10 +1887,7 @@ function buildRenewBtnHTML({ id = 'btnMain', action = '立即续费', forcePlain
 }
 
 function buildFallbackLinksHTML(qrText) {
-  return `
-    <div class="as-links">
-      <button type="button" class="btn-secondary" id="notRenewLink">暂不续费</button>
-    </div>`;
+  return '';
 }
 
 function buildFallbackAdminHTML(title, subtitle, qrText = '微信扫码联系专属顾问') {
@@ -1909,11 +1923,12 @@ function buildAdminExpHTML() {
     <div class="as-title">${c.title}</div>
     <div class="as-subtitle">${c.subtitle}</div>
 
-    <div class="impact-box">${impactsHtml}</div>
-
-    <div class="as-more">
-      查看全部权益变化
-      <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div class="impact-box">
+      ${impactsHtml}
+      <div class="as-more">
+        查看全部权益变化
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
     </div>
 
     <div class="as-cta">
@@ -1944,11 +1959,12 @@ function buildAdminSoonHTML() {
     <div class="as-title">${c.titleFn(days)}</div>
     <div class="as-subtitle">${c.subtitle}</div>
 
-    <div class="impact-box">${impactsHtml}</div>
-
-    <div class="as-more">
-      查看全部权益变化
-      <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div class="impact-box">
+      ${impactsHtml}
+      <div class="as-more">
+        查看全部权益变化
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
     </div>
 
     <div class="as-cta">
@@ -2039,8 +2055,7 @@ function populateStandard() {
   const btn = $('btnMain');
   if (isFallback()) {
     $('m-cta').innerHTML = `
-      <div class="fallback-cta">${buildRenewBtnHTML({ forcePlain: true })}</div>
-      ${buildFallbackLinksHTML('微信扫码联系专属顾问')}`;
+      <div class="fallback-cta">${buildRenewBtnHTML({ forcePlain: true })}</div>`;
   } else {
     btn.className = role === 'member' ? 'btn-main outline' : 'btn-main';
     btn.innerHTML = `<span>${ctaTxt}</span>`;
@@ -2186,11 +2201,6 @@ document.addEventListener('click', e => {
   // Remind / snooze → step 2 (expired only)
   const remindLink = e.target.closest('#remindLink');
   if (remindLink && isExp() && S.role === 'admin') {
-    e.preventDefault();
-    goStep(2);
-  }
-  const notRenewLink = e.target.closest('#notRenewLink');
-  if (notRenewLink) {
     e.preventDefault();
     goStep(2);
   }
