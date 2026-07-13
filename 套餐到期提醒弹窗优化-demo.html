@@ -461,6 +461,11 @@
     padding: 0 var(--modal-px); margin-bottom: 14px;
     font-size: 13px; color: var(--c-text-3); line-height: 1.5;
   }
+  .as-subtitle .hl { font-weight: 700; }
+  .t-default .as-subtitle .hl { color: var(--c-warn); }
+  .t-ai .as-subtitle .hl { color: var(--c-ai); }
+  .t-sec .as-subtitle .hl { color: var(--c-sec); }
+  .t-mem .as-subtitle .hl { color: var(--c-orange); }
 
   /* Fallback modal — centered layout */
   .modal-fallback { text-align: center; }
@@ -1395,10 +1400,8 @@
       <div class="ctrl">
         <span class="ctrl-label">弹窗类型</span>
         <div class="seg" data-k="type">
-          <button class="on" data-v="pkg-soon">临期弹窗</button>
-          <button data-v="pkg-expired">过期弹窗</button>
-          <button data-v="ben-soon" style="display:none;">权益包临期</button>
-          <button data-v="ben-expired" style="display:none;">权益包到期</button>
+          <button class="on" data-v="soon">临期弹窗</button>
+          <button data-v="expired">过期弹窗</button>
         </div>
       </div>
       <div class="ctrl">
@@ -1430,6 +1433,13 @@
         <div class="seg" data-k="mode">
           <button class="on" data-v="normal">正常态</button>
           <button data-v="fallback">兜底态</button>
+        </div>
+      </div>
+      <div class="ctrl">
+        <span class="ctrl-label">商品类型</span>
+        <div class="seg" data-k="productType">
+          <button class="on" data-v="pkg">套餐商品</button>
+          <button data-v="ben">权益包商品</button>
         </div>
       </div>
       <div class="ctrl">
@@ -1642,39 +1652,75 @@ const EXP = {
   },
 };
 
-/* ── 兜底态：观测权益不在当前商品内，但商品到期仍会影响企业权益 ── */
-const FALLBACK = {
-  skuName: 'PDF企业权益包',
-  benefitCount: 3,
-  bufferDays: 14,
-  copy: {
-    soon: {
-      titleFn: (sku, days) => `您订阅的${sku} <span class="hl">${days}天后到期</span>`,
-      desc: count => `${count}项权益即将到期，为保证企业高级功能的使用，请及时续费`,
+/* ── 兜底态：套餐商品 / 权益包商品分别预览 ── */
+const FALLBACKS = {
+  pkg: {
+    skuName: 'WPS 365商业协作版',
+    benefitCount: 35,
+    bufferDays: 14,
+    copy: {
+      soon: {
+        titleFn: (sku, days) => `您订阅的${sku} <span class="hl">${days}天后到期</span>`,
+        desc: count => `${count}项企业权益即将到期，为保证核心协作能力，请及时续费`,
+      },
+      exp: {
+        titleFn: sku => `您订阅的${sku} <span class="hl">已过期</span>`,
+        desc: count => `${count}项企业权益已过期，为保证核心协作能力，请及时续费`,
+      },
+      confirm: {
+        title: '确认不续费？',
+        subtitleFn: days => `确认后将开启<span class="cf-buffer-hl">${days}天缓冲期</span>倒计时，届时部分权益将被回收：`,
+        items: [
+          '部分配置数据可能失效或重置为默认值',
+          '超出基础额度的内容可能被锁定',
+        ],
+        primaryBtn: '我要续费，避免回收',
+        secondaryBtn: '确认不续费，进入缓冲期',
+      },
     },
-    exp: {
-      titleFn: sku => `您订阅的${sku} <span class="hl">已过期</span>`,
-      desc: count => `${count}项权益已过期，为保证企业高级功能的使用，请及时续费`,
-    },
-    confirm: {
-      title: '确认不续费？',
-      subtitleFn: days => `确认后将开启<span class="cf-buffer-hl">${days}天缓冲期</span>倒计时，届时部分权益将被回收：`,
-      items: [
-        '部分配置数据可能失效或重置为默认值',
-        '超出基础额度的内容可能被锁定',
-      ],
-      primaryBtn: '我要续费，避免回收',
-      secondaryBtn: '确认不续费，进入缓冲期',
+    risks: [
+      { name: '企业文档水印', status: '开启中', impact: '到期后水印失效，重要资料可能被外泄' },
+      { name: '禁止文档外发', status: '管控中', impact: '到期后管控失效，无法限制文档分享范围' },
+      { name: '自定义角色', status: '生效中', impact: '到期后配置失效，无法实现分级管理' },
+    ],
+    cmpNotice: {
+      soon: days => `35项权益将在 <span class="hl">${days}天后</span>随套餐到期而失效，续期可完整保留。`,
+      exp: `35项权益已因套餐到期受到影响，续费可立即恢复。`,
     },
   },
-  risks: [
-    { name: '企业文档水印', status: '开启中', impact: '到期后水印失效，重要资料可能被外泄' },
-    { name: '禁止文档外发', status: '管控中', impact: '到期后管控失效，无法限制文档分享范围' },
-    { name: '自定义角色', status: '生效中', impact: '到期后配置失效，无法实现分级管理' },
-  ],
-  cmpNotice: {
-    soon: days => `3项观测权益将在 <span class="hl">${days}天后</span>随商品到期而失效，续期可完整保留。`,
-    exp: `3项观测权益已因商品到期受到影响，续费可立即恢复。`,
+  ben: {
+    skuName: '企业超级会员',
+    benefitCount: 3,
+    bufferDays: 14,
+    copy: {
+      soon: {
+        titleFn: (sku, days) => `您订阅的${sku} <span class="hl">${days}天后到期</span>`,
+        desc: () => `3项权益即将过期，为保证企业正常使用，请及时续费`,
+      },
+      exp: {
+        titleFn: sku => `您订阅的${sku} <span class="hl">已过期</span>`,
+        desc: () => `1项权益已过期，为保证权益包能力，请及时续费`,
+      },
+      confirm: {
+        title: '确认不续费？',
+        subtitleFn: days => `确认后将开启<span class="cf-buffer-hl">${days}天缓冲期</span>倒计时，届时部分权益将被回收：`,
+        items: [
+          '部分配置数据可能失效或重置为默认值',
+          '超出基础额度的内容可能被锁定',
+        ],
+        primaryBtn: '我要续费，避免回收',
+        secondaryBtn: '确认不续费，进入缓冲期',
+      },
+    },
+    risks: [
+      { name: 'PDF协作水印', status: '开启中', impact: '到期后水印失效，重要资料可能被外泄' },
+      { name: 'PDF权限管控', status: '管控中', impact: '到期后权限失效，无法限制下载和转发' },
+      { name: 'PDF模板能力', status: '生效中', impact: '到期后模板失效，企业模板将无法套用' },
+    ],
+    cmpNotice: {
+      soon: days => `3项观测权益将在 <span class="hl">${days}天后</span>随权益包到期而失效，续期可完整保留。`,
+      exp: `3项观测权益已因权益包到期受到影响，续费可立即恢复。`,
+    },
   },
 };
 
@@ -1772,19 +1818,19 @@ const D = {
       mem: () => `团队专属权益 <span class="hl">已到期</span>`,
     },
     'ben-soon': {
-      default: d => `PDF 企业权益包 <span class="hl">${d}天后到期</span>`,
-      ai: d => `AI 增值权益包 <span class="hl">${d}天后到期</span>`,
-      sec: d => `安全管控权益包 <span class="hl">${d}天后到期</span>`,
-      mem: d => `会员增值权益包 <span class="hl">${d}天后到期</span>`,
+      default: d => `企业超级会员 <span class="hl">${d}天后到期</span>`,
+      ai: d => `企业超级会员 <span class="hl">${d}天后到期</span>`,
+      sec: d => `企业超级会员 <span class="hl">${d}天后到期</span>`,
+      mem: d => `企业超级会员 <span class="hl">${d}天后到期</span>`,
     },
     'ben-expired': {
-      default: () => `PDF 企业权益包 <span class="hl">已到期</span>`,
-      ai: () => `AI 增值权益包 <span class="hl">已到期</span>`,
-      sec: () => `安全管控权益包 <span class="hl">已到期</span>`,
-      mem: () => `会员增值权益包 <span class="hl">已到期</span>`,
+      default: () => `企业超级会员 <span class="hl">已到期</span>`,
+      ai: () => `企业超级会员 <span class="hl">已到期</span>`,
+      sec: () => `企业超级会员 <span class="hl">已到期</span>`,
+      mem: () => `企业超级会员 <span class="hl">已到期</span>`,
     },
   },
-  plans: { 'pkg-soon':'商业协作版','pkg-expired':'商业协作版','ben-soon':'PDF企业权益包','ben-expired':'PDF企业权益包' },
+  plans: { 'pkg-soon':'商业协作版','pkg-expired':'商业协作版','ben-soon':'企业超级会员','ben-expired':'企业超级会员' },
   cta: {
     admin: {
       soon: { default:'去续费', ai:'续费保留 AI 能力', sec:'续费保障企业安全', mem:'续费保留专属权益' },
@@ -1804,13 +1850,17 @@ const D = {
   cfTitle: { 'pkg-expired':'确认放弃以下企业权益？', 'ben-expired':'确认暂不续费权益包？' },
 };
 
-let S = { type:'pkg-soon', days:'14', theme:'default', role:'admin', promo:'yes', mode:'normal', device:'pc' };
+let S = { type:'soon', days:'14', theme:'default', role:'admin', promo:'yes', mode:'normal', productType:'pkg', device:'pc' };
 let step = 1;
-const isSoon = () => S.type.includes('soon');
-const isExp  = () => S.type.includes('expired');
+const fullType = () => `${S.productType}-${S.type}`;
+const isSoon = () => S.type === 'soon';
+const isExp  = () => S.type === 'expired';
 const isFallback = () => S.mode === 'fallback';
+const getFallbackConfig = () => FALLBACKS[S.productType] || FALLBACKS.pkg;
+const showMoreBtn = () => S.productType === 'pkg';
 const isMobile = () => S.device === 'mobile';
 const hasPromo = () => S.promo === 'yes';
+const isBenProduct = () => S.productType === 'ben';
 const tc = t => `t-${t}`;
 const isAdminSoon = () => S.role === 'admin' && isSoon();
 const isAdminExp  = () => S.role === 'admin' && isExp();
@@ -1857,6 +1907,12 @@ const RENEW = {
   save: '30%',
   promoDays: 3,
 };
+
+const BEN_PRODUCT_IMPACTS = [
+  { icon: 'folder-blue', t: 'PDF合并拆分', d: '功能不可用' },
+  { icon: 'upload-green', t: 'PDF编辑', d: '功能不可用' },
+  { icon: 'ai-purple', t: '图片转表格', d: '功能不可用' },
+];
 
 function formatRenewPrice(num, unit, numCls = 'renew-price-num', unitCls = 'renew-price-unit') {
   return `<span class="${numCls}">${num}</span><span class="${unitCls}">${unit}</span>`;
@@ -1907,28 +1963,35 @@ function buildFallbackAdminHTML(title, subtitle, qrText = '微信扫码联系专
 function buildAdminExpHTML() {
   const { theme } = S;
   if (isFallback()) {
-    const sku = FALLBACK.skuName;
+    const fallback = getFallbackConfig();
+    const sku = fallback.skuName;
     return buildFallbackAdminHTML(
-      FALLBACK.copy.exp.titleFn(sku),
-      FALLBACK.copy.exp.desc(FALLBACK.benefitCount)
+      fallback.copy.exp.titleFn(sku),
+      fallback.copy.exp.desc(fallback.benefitCount)
     );
   }
 
   const c = EXP[theme];
-  const impactsHtml = c.impacts.map(i => buildImpactRow(i)).join('');
+  const impactCount = 56;
+  const impacts = isBenProduct() ? BEN_PRODUCT_IMPACTS : c.impacts;
+  const impactsHtml = impacts.map(i => buildImpactRow(i)).join('');
+  const titleHtml = isBenProduct()
+    ? `您订阅的企业超级会员 <span class="hl">已到期</span>`
+    : c.title;
 
   return `
     <button class="m-close">&times;</button>
 
-    <div class="as-title">${c.title}</div>
-    <div class="as-subtitle">${c.subtitle}</div>
+    <div class="as-title">${titleHtml}</div>
+    <div class="as-subtitle"><span class="hl">${impactCount}项</span> 企业权益已失去，可能造成以下影响：</div>
 
     <div class="impact-box">
       ${impactsHtml}
+      ${showMoreBtn() ? `
       <div class="as-more">
         查看全部权益变化
         <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
+      </div>` : ''}
     </div>
 
     <div class="as-cta">
@@ -1942,29 +2005,36 @@ function buildAdminExpHTML() {
 function buildAdminSoonHTML() {
   const { days, theme } = S;
   if (isFallback()) {
-    const sku = FALLBACK.skuName;
+    const fallback = getFallbackConfig();
+    const sku = fallback.skuName;
     return buildFallbackAdminHTML(
-      FALLBACK.copy.soon.titleFn(sku, days),
-      FALLBACK.copy.soon.desc(FALLBACK.benefitCount),
+      fallback.copy.soon.titleFn(sku, days),
+      fallback.copy.soon.desc(fallback.benefitCount),
       '微信扫码联系专属销售'
     );
   }
 
   const c = CMP[theme];
-  const impactsHtml = c.impacts.map(i => buildImpactRow(i)).join('');
+  const impactCount = 56;
+  const impacts = isBenProduct() ? BEN_PRODUCT_IMPACTS : c.impacts;
+  const impactsHtml = impacts.map(i => buildImpactRow(i)).join('');
+  const titleHtml = isBenProduct()
+    ? `您订阅的企业超级会员 <span class="hl">${days}天后到期</span>`
+    : c.titleFn(days);
 
   return `
     <button class="m-close">&times;</button>
 
-    <div class="as-title">${c.titleFn(days)}</div>
-    <div class="as-subtitle">${c.subtitle}</div>
+    <div class="as-title">${titleHtml}</div>
+    <div class="as-subtitle"><span class="hl">${impactCount}项</span> 企业权益即将到期，可能造成以下影响：</div>
 
     <div class="impact-box">
       ${impactsHtml}
+      ${showMoreBtn() ? `
       <div class="as-more">
         查看全部权益变化
         <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
+      </div>` : ''}
     </div>
 
     <div class="as-cta">
@@ -1999,7 +2069,7 @@ function buildStandardHTML() {
 
 /* ── Populate standard layout fields ── */
 function populateStandard() {
-  const { type, days, theme, role } = S;
+  const { days, theme, role } = S;
   const exp = isExp();
   const thCls = tc(theme);
 
@@ -2007,13 +2077,14 @@ function populateStandard() {
 
   const titleEl = $('mTitle');
   if (isFallback()) {
-    const sku = FALLBACK.skuName;
+    const fallback = getFallbackConfig();
+    const sku = fallback.skuName;
     titleEl.innerHTML = isSoon()
-      ? FALLBACK.copy.soon.titleFn(sku, days)
-      : FALLBACK.copy.exp.titleFn(sku);
+      ? fallback.copy.soon.titleFn(sku, days)
+      : fallback.copy.exp.titleFn(sku);
     titleEl.className = 'fallback-title';
   } else {
-    const titleFn = D.titles[type]?.[theme];
+    const titleFn = D.titles[fullType()]?.[theme];
     titleEl.innerHTML = titleFn ? `您订阅的${titleFn(days)}` : '';
     titleEl.className = exp ? 'm-title expired' : 'm-title';
   }
@@ -2021,9 +2092,10 @@ function populateStandard() {
   const subtitleEl = $('mSubtitle');
   if (subtitleEl) {
     if (isFallback()) {
+      const fallback = getFallbackConfig();
       subtitleEl.textContent = isSoon()
-        ? FALLBACK.copy.soon.desc(FALLBACK.benefitCount)
-        : FALLBACK.copy.exp.desc(FALLBACK.benefitCount);
+        ? fallback.copy.soon.desc(fallback.benefitCount)
+        : fallback.copy.exp.desc(fallback.benefitCount);
       subtitleEl.className = 'fallback-body';
     } else {
       subtitleEl.textContent = ({
@@ -2038,7 +2110,8 @@ function populateStandard() {
 
   if (!isFallback()) {
     const ik = isSoon() ? 'soon' : 'exp';
-    $('mImpacts').innerHTML = D.impacts[theme][ik].map(i =>
+    const impacts = isBenProduct() ? BEN_PRODUCT_IMPACTS : D.impacts[theme][ik];
+    $('mImpacts').innerHTML = impacts.map(i =>
       `<div class="as-impact">
         <div class="as-impact-left">
           <div class="as-impact-desc">${i.t}</div>
@@ -2088,9 +2161,10 @@ function goStep(n) {
 function renderCf() {
   $('cfWrap').classList.toggle('cf-wrap--fallback', isFallback());
   if (isFallback()) {
-    const { confirm } = FALLBACK.copy;
+    const fallback = getFallbackConfig();
+    const { confirm } = fallback.copy;
     $('cfTitle').textContent = confirm.title;
-    $('cfSubtitle').innerHTML = confirm.subtitleFn(FALLBACK.bufferDays);
+    $('cfSubtitle').innerHTML = confirm.subtitleFn(fallback.bufferDays);
     $('riskList').innerHTML = `
       <ul class="cf-fallback-list">
         ${confirm.items.map(item => `<li class="cf-fallback-item">${item}</li>`).join('')}
@@ -2116,8 +2190,8 @@ function renderCf() {
         </div>
         ${rows}
       </div>`;
-    $('cfTitle').textContent = D.cfTitle[S.type] || '确认暂不续费？';
-    $('cfSubtitle').innerHTML = `确认后将进入<span class="cf-buffer-hl">${FALLBACK.bufferDays}天缓冲期</span>倒计时，届时以下权益将被回收：`;
+    $('cfTitle').textContent = D.cfTitle[fullType()] || '确认暂不续费？';
+    $('cfSubtitle').innerHTML = `确认后将进入<span class="cf-buffer-hl">${getFallbackConfig().bufferDays}天缓冲期</span>倒计时，届时以下权益将被回收：`;
     $('cfCta').innerHTML = buildRenewBtnHTML({ id: 'cfBtn', action: '不放弃，我要续费' });
     $('abBtn').textContent = '确认放弃，进入缓冲期';
     const ck = $('abCheck');
@@ -2141,7 +2215,7 @@ function togAbandon() {
 function render() {
   applyDevice();
   step = 1;
-  const { type, days, theme, role } = S;
+  const { days, theme, role } = S;
   const isBanner = isSoon() && days === '60';
   const exp = isExp();
   const thCls = tc(theme);
@@ -2161,7 +2235,9 @@ function render() {
   // banner content (always update)
   const bnr = $('banner');
   bnr.className = `banner ${thCls}`;
-  $('bannerBody').innerHTML = D.banner[theme](days);
+  $('bannerBody').innerHTML = isBenProduct()
+    ? `<strong>企业超级会员</strong> 将于 <span class="hl">${days}天后</span> 到期，续费后权益不中断`
+    : D.banner[theme](days);
   $('bannerCta').textContent = role === 'admin' ? '查看续费方案' : '通知管理员';
 
   // modal content
@@ -2259,7 +2335,8 @@ function cellHtml(v) {
 
 function renderCmpPage() {
   if (isFallback()) {
-    const rows = FALLBACK.risks.map(r => `
+    const fallback = getFallbackConfig();
+    const rows = fallback.risks.map(r => `
       <div class="cmp-fallback-row">
         <span class="cmp-fallback-name">${r.name}<span class="cmp-fallback-tag">观测权益</span></span>
         <span class="cmp-fallback-status"><span class="cf-status-dot"></span>${r.status}</span>
@@ -2313,20 +2390,21 @@ const CMP_NOTICE_ICO = {
 };
 
 function renderCmpNotice() {
-  const plan = CMP_PLAN[S.theme] || CMP_PLAN.default;
+  const plan = isBenProduct() ? '企业超级会员' : (CMP_PLAN[S.theme] || CMP_PLAN.default);
   const notice = $('cmpNotice');
   const ico = $('cmpNoticeIco');
   const text = $('cmpNoticeText');
   if (isFallback()) {
+    const fallback = getFallbackConfig();
     if (isExp()) {
       notice.className = 'cmp-notice cmp-notice-exp';
       ico.innerHTML = CMP_NOTICE_ICO.exp;
-      text.innerHTML = FALLBACK.cmpNotice.exp;
+      text.innerHTML = fallback.cmpNotice.exp;
     } else {
       const days = S.days || '14';
       notice.className = 'cmp-notice cmp-notice-soon';
       ico.innerHTML = CMP_NOTICE_ICO.soon;
-      text.innerHTML = FALLBACK.cmpNotice.soon(days);
+      text.innerHTML = fallback.cmpNotice.soon(days);
     }
     return;
   }
