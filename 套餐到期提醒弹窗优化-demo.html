@@ -294,6 +294,11 @@
     padding: 0 var(--modal-px) 12px;
   }
   .device-mobile .cf-check-row { padding: 0 var(--modal-px); }
+  .device-mobile .cf-links {
+    margin: 0;
+    padding-bottom: 8px;
+  }
+  .device-mobile .cf-links .as-popover-trigger { font-size: 11px; }
   .device-mobile .abandon-check {
     font-size: 12px;
     gap: 6px;
@@ -1389,6 +1394,26 @@
   }
   .btn-abandon.ok:hover { background: var(--c-warn-light); border-color: var(--c-warn); }
   .btn-abandon.ok:active { transform: scale(.98); }
+  .cf-links {
+    display: flex;
+    justify-content: center;
+    padding: 0 var(--modal-px) 10px;
+    margin: 0;
+  }
+  .cf-links .as-popover-trigger {
+    font-size: 12px;
+    color: var(--c-text-3);
+    font-weight: 500;
+    opacity: .95;
+  }
+  .cf-links .as-popover-trigger:hover { color: var(--c-text-3); opacity: 1; }
+  .cf-links .as-popover-card {
+    bottom: calc(100% + 6px);
+    top: auto;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
 </style>
 </head>
 <body class="device-pc">
@@ -1550,6 +1575,7 @@
       <div class="abandon">
         <button class="btn-abandon" id="abBtn" disabled>确认放弃，进入缓冲期</button>
       </div>
+      <div class="cf-links" id="cfLinks"></div>
     </div>
   </div>
 
@@ -1857,10 +1883,11 @@ const isSoon = () => S.type === 'soon';
 const isExp  = () => S.type === 'expired';
 const isFallback = () => S.mode === 'fallback';
 const getFallbackConfig = () => FALLBACKS[S.productType] || FALLBACKS.pkg;
-const showMoreBtn = () => S.productType === 'pkg';
+const showMoreBtn = () => true;
 const isMobile = () => S.device === 'mobile';
 const hasPromo = () => S.promo === 'yes';
 const isBenProduct = () => S.productType === 'ben';
+const BEN_MORE_URL = 'https://www.kdocs.cn/I/cukP9uRsyvQz';
 const tc = t => `t-${t}`;
 const isAdminSoon = () => S.role === 'admin' && isSoon();
 const isAdminExp  = () => S.role === 'admin' && isExp();
@@ -1944,6 +1971,19 @@ function buildRenewBtnHTML({ id = 'btnMain', action = '立即续费', forcePlain
 
 function buildFallbackLinksHTML(qrText) {
   return '';
+}
+
+function buildSalesPopoverHTML(qrText = '微信扫码联系专属销售') {
+  return `
+    <div class="as-popover">
+      <a class="as-popover-trigger">联系销售</a>
+      <div class="as-popover-card">
+        <div class="as-qr-placeholder">
+          <svg width="48" height="48" viewBox="0 0 64 64" fill="none"><rect x="8" y="8" width="20" height="20" rx="2" stroke="var(--c-text-4)" stroke-width="2"/><rect x="36" y="8" width="20" height="20" rx="2" stroke="var(--c-text-4)" stroke-width="2"/><rect x="8" y="36" width="20" height="20" rx="2" stroke="var(--c-text-4)" stroke-width="2"/><rect x="12" y="12" width="12" height="12" rx="1" fill="var(--c-text-4)"/><rect x="40" y="12" width="12" height="12" rx="1" fill="var(--c-text-4)"/><rect x="12" y="40" width="12" height="12" rx="1" fill="var(--c-text-4)"/><rect x="38" y="38" width="6" height="6" fill="var(--c-text-4)"/><rect x="50" y="38" width="6" height="6" fill="var(--c-text-4)"/><rect x="38" y="50" width="6" height="6" fill="var(--c-text-4)"/><rect x="50" y="50" width="6" height="6" fill="var(--c-text-4)"/><rect x="44" y="44" width="6" height="6" fill="var(--c-text-4)"/></svg>
+        </div>
+        <div class="as-qr-text">${qrText}</div>
+      </div>
+    </div>`;
 }
 
 function buildFallbackAdminHTML(title, subtitle, qrText = '微信扫码联系专属顾问') {
@@ -2159,44 +2199,30 @@ function goStep(n) {
 }
 
 function renderCf() {
-  $('cfWrap').classList.toggle('cf-wrap--fallback', isFallback());
-  if (isFallback()) {
-    const fallback = getFallbackConfig();
-    const { confirm } = fallback.copy;
-    $('cfTitle').textContent = confirm.title;
-    $('cfSubtitle').innerHTML = confirm.subtitleFn(fallback.bufferDays);
-    $('riskList').innerHTML = `
-      <ul class="cf-fallback-list">
-        ${confirm.items.map(item => `<li class="cf-fallback-item">${item}</li>`).join('')}
-      </ul>`;
-    $('cfCta').innerHTML = buildRenewBtnHTML({ id: 'cfBtn', action: confirm.primaryBtn });
-    $('abBtn').textContent = confirm.secondaryBtn;
-    const ck = $('abCheck');
-    if (ck) { ck.checked = false; togAbandon(); }
-  } else {
-    const rs = D.risks[S.theme];
-    const rows = rs.map(r => `
-      <div class="cf-risk-row">
-        <div class="cf-risk-cell cf-risk-cell-name">${r.name}</div>
-        <div class="cf-risk-cell cf-risk-cell-status"><span class="cf-status-dot"></span>${r.status}</div>
-        <div class="cf-risk-cell cf-risk-cell-impact">${r.impact}</div>
-      </div>`).join('');
-    $('riskList').innerHTML = `
-      <div class="cf-risk-table">
-        <div class="cf-risk-hd">
-          <div class="cf-risk-hd-cell">权益项</div>
-          <div class="cf-risk-hd-cell">回收前</div>
-          <div class="cf-risk-hd-cell">回收后影响</div>
-        </div>
-        ${rows}
-      </div>`;
-    $('cfTitle').textContent = D.cfTitle[fullType()] || '确认暂不续费？';
-    $('cfSubtitle').innerHTML = `确认后将进入<span class="cf-buffer-hl">${getFallbackConfig().bufferDays}天缓冲期</span>倒计时，届时以下权益将被回收：`;
-    $('cfCta').innerHTML = buildRenewBtnHTML({ id: 'cfBtn', action: '不放弃，我要续费' });
-    $('abBtn').textContent = '确认放弃，进入缓冲期';
-    const ck = $('abCheck');
-    if (ck) { ck.checked = false; togAbandon(); }
-  }
+  $('cfWrap').classList.remove('cf-wrap--fallback');
+  const rs = D.risks[S.theme];
+  const rows = rs.map(r => `
+    <div class="cf-risk-row">
+      <div class="cf-risk-cell cf-risk-cell-name">${r.name}</div>
+      <div class="cf-risk-cell cf-risk-cell-status"><span class="cf-status-dot"></span>${r.status}</div>
+      <div class="cf-risk-cell cf-risk-cell-impact">${r.impact}</div>
+    </div>`).join('');
+  $('riskList').innerHTML = `
+    <div class="cf-risk-table">
+      <div class="cf-risk-hd">
+        <div class="cf-risk-hd-cell">权益项</div>
+        <div class="cf-risk-hd-cell">回收前</div>
+        <div class="cf-risk-hd-cell">回收后影响</div>
+      </div>
+      ${rows}
+    </div>`;
+  $('cfTitle').textContent = D.cfTitle[fullType()] || '确认暂不续费？';
+  $('cfSubtitle').innerHTML = `确认后将进入<span class="cf-buffer-hl">${getFallbackConfig().bufferDays}天缓冲期</span>倒计时，届时以下权益将被回收：`;
+  $('cfCta').innerHTML = buildRenewBtnHTML({ id: 'cfBtn', action: '不放弃，我要续费' });
+  $('abBtn').textContent = '确认放弃，进入缓冲期';
+  $('cfLinks').innerHTML = buildSalesPopoverHTML('微信扫码联系专属销售');
+  const ck = $('abCheck');
+  if (ck) { ck.checked = false; togAbandon(); }
 }
 
 function togAbandon() {
@@ -2466,6 +2492,10 @@ $('cmpMask').addEventListener('click', hideCmpPage);
 
 document.addEventListener('click', e => {
   if (e.target.closest('.as-more')) {
+    if (isBenProduct()) {
+      window.open(BEN_MORE_URL, '_blank', 'noopener');
+      return;
+    }
     showCmpPage();
   }
 });
