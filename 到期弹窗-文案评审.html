@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WPS 365 到期弹窗文案评审</title>
+  <style>
+    :root {
+      --blue: #2f71dc; --blue-dark: #2163cd; --red: #ed3535; --orange: #ff682d;
+      --ink: #181d27; --sub: #687083; --muted: #9aa3b1; --line: #e8edf4;
+      --canvas: #eef4fb; --panel: #ffffff; --soft: #f7faff; --danger-bg: #fff1f1;
+      font-family: "PingFang SC", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: var(--ink); background: #f5f7fb; }
+    .topbar {
+      height: 64px; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px; background: #fff; border-bottom: 1px solid var(--line);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 700; }
+    .brand-mark { width: 28px; height: 28px; border-radius: 8px; background: var(--blue); color: #fff; display: grid; place-items: center; font-size: 15px; }
+    .tag { padding: 4px 10px; border-radius: 999px; color: #52709a; background: #eef5ff; font-size: 12px; font-weight: 600; }
+    .top-actions { display: flex; align-items: center; gap: 10px; }
+    .edit-toggle { padding: 8px 13px; border: 1px solid #bed4f3; border-radius: 7px; background: #fff; color: #2469c9; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .edit-toggle:hover, .edit-toggle.on { border-color: var(--blue); background: var(--blue); color: #fff; }
+    .edit-tip { display: none; position: absolute; z-index: 2; top: 75px; left: 50%; transform: translateX(-50%); padding: 6px 11px; border-radius: 6px; background: #263a58; color: #fff; font-size: 12px; white-space: nowrap; }
+    body.editing .preview-wrap { position: relative; }
+    body.editing .edit-tip { display: block; }
+    [contenteditable="true"] { position: relative; outline: 2px dashed #8db7ef; outline-offset: 3px; border-radius: 3px; cursor: text; }
+    [contenteditable="true"]:focus { outline-color: var(--blue); background: #f1f7ff; }
+    main { max-width: 1420px; margin: 0 auto; padding: 28px 32px 42px; }
+    .intro { display: flex; justify-content: space-between; gap: 24px; margin-bottom: 22px; }
+    h1 { margin: 0 0 8px; font-size: 26px; line-height: 1.3; }
+    .intro p { margin: 0; color: var(--sub); font-size: 14px; }
+    .rule { min-width: 310px; padding: 12px 16px; border-radius: 10px; background: #fffbef; color: #8a641b; font-size: 12px; line-height: 1.7; }
+    .rule b { color: #6f4d0d; }
+    .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+    .tab { border: 1px solid #dce5f1; background: #fff; color: #53627a; padding: 9px 18px; border-radius: 8px; cursor: pointer; font: inherit; font-size: 14px; }
+    .tab.active { border-color: var(--blue); background: var(--blue); color: #fff; font-weight: 600; }
+    .review-grid { display: grid; grid-template-columns: minmax(560px, 1.35fr) minmax(340px, .65fr); gap: 24px; align-items: start; }
+    .preview-wrap { border-radius: 18px; padding: 24px; min-height: 700px; background: radial-gradient(circle at 15% 10%, #dcecff, transparent 30%), var(--canvas); }
+    .device { margin: 0 auto; width: min(100%, 760px); min-height: 650px; padding: 20px; border-radius: 20px; background: rgba(255,255,255,.46); border: 1px solid rgba(255,255,255,.9); }
+    .modal { display: flex; flex-direction: column; height: min(584px, calc(100vh - 96px)); overflow: hidden; border-radius: 18px; background: var(--panel); box-shadow: 0 18px 44px rgba(55, 83, 122, .16); }
+    .hero { position: relative; flex: 0 0 auto; min-height: 154px; padding: 34px 60px 24px 128px; background: linear-gradient(118deg, #dcecff 0%, #f2f8ff 70%, #d9e9ff 100%); }
+    .bell { position: absolute; top: 35px; left: 42px; width: 60px; height: 60px; border-radius: 30px 30px 16px 16px; background: linear-gradient(135deg, #0e89ff, #005cd6); }
+    .bell:after { content: ""; position: absolute; left: 15px; bottom: -10px; width: 30px; height: 10px; border-radius: 50%; background: #005cd6; }
+    .bell-dot { position: absolute; top: -5px; right: -4px; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: #f34444; border: 2px solid white; color: white; font-weight: 800; font-size: 18px; }
+    .close { position: absolute; top: 22px; right: 24px; color: #2b3544; font-size: 34px; line-height: 1; font-weight: 300; }
+    .hero-title { font-size: 28px; font-weight: 750; letter-spacing: -.5px; line-height: 1.4; }
+    .hero-title .urgent { color: var(--red); }
+    .body-card { position: relative; display: flex; flex: 1 1 auto; flex-direction: column; min-height: 0; margin-top: -12px; padding: 28px 40px 28px; border-radius: 30px 30px 0 0; background: #f6f9fe; border-top: 2px solid #fff; }
+    .subtitle { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 3px 0 26px; font-size: 18px; }
+    .subtitle .count { color: var(--red); font-size: 25px; font-weight: 750; }
+    .subtitle:before, .subtitle:after { content: ""; width: 74px; height: 3px; border-radius: 3px; background: #dceaff; }
+    .benefits { overflow: hidden; border-radius: 12px; background: #fff; }
+    .benefits.review-expanded { flex: 0 0 222px; min-height: 0; overflow-y: auto; border: 1px solid #e5ebf3; }
+    .benefits.review-expanded::-webkit-scrollbar, .risk-scroll::-webkit-scrollbar { width: 7px; }
+    .benefits.review-expanded::-webkit-scrollbar-thumb, .risk-scroll::-webkit-scrollbar-thumb { border-radius: 8px; background: #cbd5e3; }
+    .benefit { display: grid; grid-template-columns: 46px minmax(0, 1fr) minmax(170px, .85fr); align-items: center; gap: 14px; min-height: 74px; padding: 12px 28px; }
+    .benefit + .benefit { border-top: 1px solid #edf0f4; }
+    .icon { width: 36px; height: 36px; border-radius: 9px; display: grid; place-items: center; font-size: 21px; font-weight: 700; }
+    .i-blue { background: #e1eeff; color: #2e79e6; } .i-green { background: #def7ef; color: #1aa873; } .i-orange { background: #fff0e8; color: #e26932; }
+    .benefit-title { font-size: 18px; font-weight: 600; }
+    .benefit-note { color: #707786; font-size: 15px; line-height: 1.45; text-align: right; }
+    .more { padding: 12px; text-align: center; color: #9098a5; font-size: 15px; border-top: 1px solid #edf0f4; }
+    .cta-wrap { position: relative; flex: 0 0 auto; margin-top: 28px; }
+    .promo { position: absolute; right: 0; top: -20px; z-index: 1; padding: 9px 14px; border-radius: 12px 12px 0 12px; background: linear-gradient(100deg, #ff3970, #ff651b); color: #fff; font-size: 16px; }
+    .cta { width: 100%; min-height: 76px; border: 0; border-radius: 12px; background: var(--blue); color: #fff; font: inherit; cursor: pointer; }
+    .cta:hover { background: var(--blue-dark); }
+    .cta-main { font-size: 21px; font-weight: 650; }
+    .divider { display: inline-block; width: 1px; height: 18px; margin: 0 10px -3px; background: rgba(255,255,255,.55); }
+    .price { font-size: 25px; font-weight: 750; }
+    .origin { margin-top: 3px; color: rgba(255,255,255,.62); font-size: 14px; text-decoration: line-through; }
+    .side { display: grid; gap: 16px; }
+    .side-card { padding: 20px; border: 1px solid var(--line); border-radius: 14px; background: #fff; }
+    .side-card h2 { margin: 0 0 12px; font-size: 16px; }
+    .side-card p { margin: 0; color: var(--sub); font-size: 13px; line-height: 1.7; }
+    .copy-list { display: grid; gap: 12px; }
+    .copy { padding: 12px; border-radius: 9px; background: #f7f9fc; }
+    .copy .label { margin-bottom: 5px; color: #7b8799; font-size: 11px; font-weight: 650; letter-spacing: .4px; }
+    .copy .text { color: #263247; font-size: 14px; line-height: 1.55; }
+    .copy.red { background: #fff4f4; }
+    .copy.red .text { color: #b92c2c; }
+    .review-points { margin: 0; padding-left: 18px; color: var(--sub); font-size: 13px; line-height: 1.8; }
+    .status { display: inline-block; margin-left: 8px; padding: 2px 7px; border-radius: 4px; background: #ebf4ff; color: #3577d8; font-size: 11px; }
+    .recycle .hero { min-height: 166px; padding-left: 40px; }
+    .modal.recycle { height: min(680px, calc(100vh - 96px)); }
+    .recycle .hero-title { font-size: 28px; }
+    .recycle .hero-sub { margin-top: 10px; font-size: 17px; }
+    .recycle .hero-sub b { color: var(--red); }
+    .recycle .body-card { padding-top: 28px; }
+    .risk-table { overflow: hidden; border: 1px solid #e5eaf1; border-radius: 12px; background: #fff; }
+    .risk-scroll { flex: 0 0 240px; min-height: 0; overflow-y: auto; border-radius: 12px; }
+    .risk-row { display: grid; grid-template-columns: 1.05fr .55fr 1.9fr; }
+    .risk-row > div { min-height: 62px; padding: 14px 14px; display: flex; align-items: center; font-size: 15px; }
+    .risk-row + .risk-row > div { border-top: 1px solid #edf0f4; }
+    .risk-head > div { min-height: 54px; justify-content: center; font-weight: 700; background: #eef6ff; }
+    .risk-head > div:nth-child(2) { color: #181d27; background: #f45e5e; }
+    .risk-head > div:nth-child(3) { color: #fff; background: #df3032; }
+    .risk-row > div:nth-child(2) { justify-content: center; background: #fff8f8; }
+    .risk-row:not(.risk-head) > div:nth-child(2) { color: #159565; font-weight: 600; }
+    .risk-row > div:nth-child(3) { background: #fff1f1; color: #612424; line-height: 1.5; }
+    .ack { display: flex; align-items: center; gap: 10px; margin: 22px 0 16px; color: #727b89; font-size: 15px; }
+    .ack input { width: 22px; height: 22px; accent-color: var(--blue); }
+    .secondary { width: 100%; margin-top: 14px; min-height: 54px; border: 1px solid #dfe5ed; border-radius: 10px; background: #f7f8fa; color: #a2aab6; font: inherit; font-size: 18px; }
+    .secondary.enabled { color: #c03939; background: #fff; border-color: #f1b2b2; cursor: pointer; }
+    @media (max-width: 980px) { .review-grid { grid-template-columns: 1fr; } .intro { display: block; } .rule { margin-top: 16px; } }
+    @media (max-width: 640px) { main { padding: 18px 12px; } .topbar { padding: 0 18px; } .topbar > :last-child { display: none; } .preview-wrap { padding: 12px; } .device { padding: 8px; } .hero { padding: 92px 24px 22px; } .bell { left: 24px; top: 22px; } .hero-title { font-size: 22px; } .body-card { padding: 22px 16px 28px; } .subtitle { font-size: 14px; } .subtitle .count { font-size: 20px; } .benefit { grid-template-columns: 38px 1fr; padding: 12px 14px; gap: 9px; } .benefit-title { font-size: 15px; } .benefit-note { grid-column: 2; text-align: left; font-size: 13px; } .risk-row { grid-template-columns: 1fr .72fr 1.65fr; } .risk-row > div { padding: 10px 7px; font-size: 12px; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">W</span> 到期弹窗文案评审 <span class="tag">老板审核版</span></div>
+    <div class="top-actions"><span class="tag">基于《到期弹窗内容定义》</span><button class="edit-toggle" id="editToggle" type="button">进入编辑状态</button></div>
+  </header>
+  <main>
+    <section class="intro">
+      <div>
+        <h1>把“权益变化”讲清楚，让续费决策更有感知</h1>
+        <p>以下为模拟企业：当前订阅 WPS 365 商业高级版；以“评审展开态”直接展示全部权益文案在主弹窗中的效果。</p>
+      </div>
+      <div class="rule"><b>评审展开态：</b>为便于逐条审核，主弹窗直接展示全部 29 项权益，并保留滚动区域。<br>线上实际规则仍为：按命中顺序最多展示 3 项；不足 2 项时使用兜底文案。</div>
+    </section>
+    <nav class="tabs" aria-label="弹窗场景">
+      <button class="tab active" data-scene="soon">临期提醒（14 天）</button>
+      <button class="tab" data-scene="expired">已过期提醒</button>
+      <button class="tab" data-scene="recycle">放弃续费 · 二次确认</button>
+    </nav>
+    <section class="review-grid">
+      <div class="preview-wrap">
+        <span class="edit-tip">编辑状态：点击蓝色虚线区域直接修改文案</span>
+        <div class="device" id="device"></div>
+      </div>
+      <aside class="side">
+        <div class="side-card">
+          <h2 id="sideTitle">本场景文案说明</h2>
+          <div class="copy-list" id="copyList"></div>
+        </div>
+        <div class="side-card">
+          <h2>评审重点</h2>
+          <ul class="review-points" id="reviewPoints"></ul>
+        </div>
+      </aside>
+    </section>
+  </main>
+  <script>
+    const scenes = {
+      soon: {
+        title: '您订阅的【WPS 365 商业高级版】<br>将于<span class="urgent">14天后过期</span>',
+        intro: '<span class="count">56项</span> 企业权益即将到期，以下展开 29 项可观测权益：',
+        benefits: [
+          ['i-blue', '▣', '150GB 企业云空间即将到期', '98 个云文档可能无法更新'],
+          ['i-green', '↥', '大文件上传能力即将降级', '单文件上传大小将降至 10MB'],
+          ['i-orange', '!', '离职员工文档转让功能即将到期', '成员离职后历史文档无法转让']
+        ],
+        copies: [
+          ['主标题', '清晰传达“订阅对象 + 剩余时间”，14 天用红色突出。'],
+          ['说明文案', '以“权益数量 + 业务后果”建立紧迫感，不只罗列功能名。'],
+          ['权益项', '每项均由命中条件决定；展示空间、上传、离职交接等当前企业实际受影响内容。']
+        ],
+        points: ['“14 天后过期”是否为合适的提醒时机与表达？', '“可能无法更新”相比“更新受限”是否更准确易懂？', '权益数量 56 项是否应保留，还是突出关键 3 项即可？']
+      },
+      expired: {
+        title: '您订阅的【WPS 365 商业高级版】<br><span class="urgent">已过期</span>',
+        intro: '<span class="count">56项</span> 企业权益已过期，以下展开 29 项可观测权益：',
+        benefits: [
+          ['i-blue', '▣', '150GB 企业云空间已到期', '98 个云文档可能无法更新'],
+          ['i-green', '↥', '大文件上传能力已降级', '单文件上传大小已降至 10MB'],
+          ['i-orange', '!', '离职员工文档转让功能已过期', '成员离职后历史文档无法转让']
+        ],
+        copies: [
+          ['主标题', '将“将于 14 天后过期”改为“已过期”，避免用户误解当前服务状态。'],
+          ['说明文案', '从“即将到期”切换为“已过期”，强调权益已发生变化。'],
+          ['按钮', '“立即续费”与状态一致；优惠提示仍可作为促转化信息展示。']
+        ],
+        points: ['“已过期”是否需要增加具体过期日期？', '“已到期 / 已过期 / 已降级”三种状态词是否统一？', '实际被限制的文件是否需要提供“查看文件”入口？']
+      },
+      recycle: {
+        copies: [
+          ['确认标题', '明确询问是否放弃，而不是弱化为“暂不续费”。'],
+          ['缓冲期说明', '告知确认后进入 14 天缓冲期，避免用户认为点击即刻回收。'],
+          ['风险表格', '同时说明当前状态与回收后影响；只展示待回收且满足使用条件的权益。'],
+          ['兜底规则', '不在观测清单中的待回收权益，统一说明“权益无法继续使用，相关配置将不再生效”。']
+        ],
+        points: ['“确认放弃”是否会让用户感到压迫？是否改为“暂不续费”？', '缓冲期 14 天是否足够明确，是否需要补充截止时间？', '风险表中是否还需展示全部待回收权益而非 3 项？']
+      }
+    };
+    const benefitCopies = [
+      ['企业文档水印（明水印）', '企业专属水印将过期\n无法追溯文件外泄源头', '企业专属水印已过期\n无法追溯文件外泄源头', '回收前：保护中\n回收后影响：无法追溯文件外泄源头'],
+      ['AI 排版', 'AI排版功能即将不可用\n文档格式需手动调整', 'AI排版功能已不可用\n文档格式需手动调整'],
+      ['企业空间', 'Y GB 企业云空间即将到期\nX 个云文档可能无法更新', 'Y GB 企业云空间已到期\nX 个云文档可能无法更新'],
+      ['禁止文档分享到企业外', '禁止文档外发管控将不可用\n无法限制企业文档分享范围', '禁止文档外发管控已不可用\n无法限制企业文档分享范围', '回收前：生效中\n回收后影响：管控配置关闭，企业文档分享范围恢复为不限制'],
+      ['PDF 文本编辑', 'PDF编辑功能即将过期\nPDF处理效率受影响', 'PDF编辑功能已过期\nPDF处理效率受影响'],
+      ['行为预警', '成员行为预警功能将不可用\n无法及时收到成员异常行为通知', '成员行为预警功能已不可用\n无法及时收到成员异常行为通知', '回收前：管控中\n回收后影响：预警策略停止生效，无法及时收到成员异常行为通知'],
+      ['截屏管控', '截屏管控功能即将过期\n成员可截屏保存企业文档', '截屏管控功能已过期\n成员可截屏保存企业文档', '回收前：启用中\n回收后影响：管控策略停止生效，成员可截屏保存企业文档'],
+      ['空间自定义分配', '空间自定义分配功能将不可用\n无法限制成员的空间使用上限', '空间自定义分配功能已不可用\n无法限制成员的使用上限', '回收前：生效中\n回收后影响：分配规则将失效，无法限制成员的空间使用上限'],
+      ['AI 生成 PPT', '即将暂停提供AI生成PPT服务\n无法智能生成PPT', '已暂停提供AI生成PPT服务\n无法智能生成PPT'],
+      ['单文件上传大小', '大文件上传能力即将降级\n到期后文件上传大小降至 W MB', '大文件上传能力已降级\n文件上传大小已降至 W MB'],
+      ['默认以阅读模式打开云文档', '默认只读模式打开文档即将失效\n文件打开后不再默认只读', '默认只读模式打开文档已失效\n文件打开后不再默认只读', '回收前：保护中\n回收后影响：配置关闭，文件打开后不再默认只读'],
+      ['敏感成员名片字段可见性', '敏感成员名片字段配置将过期\n成员字段将按默认可见范围展示', '敏感成员名片字段配置已过期\n成员字段将按默认可见范围展示', '回收前：生效中\n回收后影响：退回默认配置，无法灵活定义名片字段可见性'],
+      ['自定义管理员角色', '自定义角色功能将不可用\nX个自定义角色的权限将停止生效', '自定义角色功能已不可用\nX个自定义角色的权限已停止生效', '回收前：生效中\n回收后影响：已添加的自定义角色失效，管理员将失去角色对应的权限'],
+      ['离职员工文档转让', '离职员工文档转让功能即将到期\n成员离职后历史文档无法转让', '离职员工文档转让功能已过期\n成员离职后历史文档无法转让'],
+      ['文件批量下载', '批量下载功能即将到期\n多文件场景需逐个手动下载', '批量下载功能已过期\n多文件场景需逐个手动下载'],
+      ['恢复近期删除的账号', '恢复近期删除的账号功能将失效\n删除账号无法通过此功能恢复', '恢复近期删除的账号功能已失效\n删除账号无法通过此功能恢复'],
+      ['通讯录可见性', '通讯录可见性功能即将过期\n组织架构将按系统默认范围展示', '通讯录可见性功能已过期\n组织架构将按系统默认范围展示', '回收前：可使用\n回收后影响：已有的可见性配置将失效，组织架构将按系统默认范围展示'],
+      ['自定义企业通讯录字段', '自定义企业通讯录字段功能即将过期\n无法自定义配置成员信息', '自定义企业通讯录字段功能已经过期\n无法自定义配置成员信息', '回收前：可使用\n回收后影响：已添加自定义字段失效，无法自定义配置成员信息'],
+      ['允许非团队成员分享文件', '允许非团队成员分享文件功能将不可用\n团队外用户无法管理文件协作者', '允许非团队成员分享文件功能已不可用\n团队外用户无法管理文件协作者', '回收前：可使用\n回收后影响：配置关闭，团队外用户无法管理文件协作者'],
+      ['团队文档加密', '团队文档加密服务即将到期\n到期后将恢复普通文档权限', '团队文档加密服务已过期\n将恢复为普通文档权限', '回收前：可配置\n回收后影响：加密配置关闭，团队文档恢复为普通文档权限'],
+      ['团队分享范围管控', '即将无法管控团队分享范围\n分享范围将恢复为不限制', '已无法管控团队分享范围\n分享范围将恢复为不限制', '回收前：可管控\n回收后影响：管控配置关闭，分享范围将恢复为不限制'],
+      ['团队文档水印', '团队文档水印即将过期\n无法追溯文件外泄源头', '团队水印已过期\n无法追溯文件外泄源头', '回收前：可使用\n回收后影响：水印关闭，无法追溯文件外泄源头'],
+      ['图片压缩', '图片压缩功能将不可用\n无法快速压缩大图片', '图片压缩功能已不可用\n无法快速压缩大图片'],
+      ['AI 合同审查', 'AI合同审查将无法使用\n无法智能审核合同', 'AI合同审查已无法使用\n无法智能审核合同'],
+      ['AI 写公式', 'AI写公式功能即将到期\n表格公式需手动编写', 'AI写公式功能已过期\n表格公式需手动编写'],
+      ['AI 全文总结', 'AI全文总结功能将不可用\n逐页阅读影响工作效率', 'AI全文总结功能已不可用\n逐页阅读影响工作效率'],
+      ['截屏工具', '截屏工具将不可用\n无法快速灵活截屏', '截屏工具已不可用\n无法快速灵活截屏'],
+      ['PDF 转 PPT', 'PDF转PPT功能即将过期\n无法进行PDF转换操作', 'PDF转PPT功能已过期\n无法进行PDF转换操作'],
+      ['批量打印', '将无法使用批量打印功能\n打印仅支持手动分批处理', '已无法使用批量打印功能\n打印仅支持手动分批处理']
+    ];
+    let editMode = false;
+    let currentScene = 'soon';
+    function editAttrs(index, part, scene) {
+      return editMode ? `contenteditable="true" data-copy-index="${index}" data-copy-part="${part}" data-copy-scene="${scene}"` : '';
+    }
+    function normalModal(data, scene) {
+      const copyIndex = scene === 'soon' ? 1 : 2;
+      const styles = [['i-blue', '▣'], ['i-green', '↥'], ['i-orange', '!']];
+      const rows = benefitCopies.map(([name, soon, expired], index) => {
+        const [title, ...note] = [soon, expired][copyIndex - 1].split('\n');
+        const [cls, icon] = styles[index % styles.length];
+        return `<div class="benefit"><div class="icon ${cls}">${icon}</div><div class="benefit-title" ${editAttrs(index, 'title', scene)}>${title}</div><div class="benefit-note" ${editAttrs(index, 'note', scene)}>${note.join(' ')}</div></div>`;
+      }).join('');
+      return `<article class="modal">
+        <section class="hero"><div class="bell"><span class="bell-dot">!</span></div><span class="close">×</span><div class="hero-title">${data.title}</div></section>
+        <section class="body-card"><div class="subtitle">${data.intro}</div><div class="benefits review-expanded">${rows}</div>
+          <div class="cta-wrap"><span class="promo">优惠剩余${scene === 'expired' ? '3' : '14'}天</span><button class="cta"><div class="cta-main">立即续费 <span class="divider"></span><span class="price">¥339</span>/人/年</div><div class="origin">原价 ¥399/人/年</div></button></div>
+        </section></article>`;
+    }
+    function recycleModal() {
+      const riskRows = benefitCopies.filter(([, , , recycle]) => recycle).map(([name, , , recycle]) => {
+        const [before, after] = recycle.split('\n');
+        return `<div class="risk-row"><div>${name}</div><div ${editAttrs(benefitCopies.indexOf(benefitCopies.find(x => x[0] === name)), 'before', 'recycle')}>${before.replace('回收前：', '')}</div><div ${editAttrs(benefitCopies.indexOf(benefitCopies.find(x => x[0] === name)), 'after', 'recycle')}>${after.replace('回收后影响：', '')}</div></div>`;
+      }).join('');
+      return `<article class="modal recycle">
+        <section class="hero"><span class="close">×</span><div class="hero-title">确认放弃以下企业权益？</div><div class="hero-sub">确认后将进入 <b>14天缓冲期</b> 倒计时，届时以下权益将被回收</div></section>
+        <section class="body-card">
+          <div class="risk-table risk-scroll">
+            <div class="risk-row risk-head"><div>权益项</div><div>回收前</div><div>⚠ 回收后风险</div></div>
+            ${riskRows}
+          </div>
+          <label class="ack"><input id="ack" type="checkbox">我已了解回收风险并确认不续费</label>
+          <div class="cta-wrap"><span class="promo">优惠剩余3天</span><button class="cta"><div class="cta-main">不放弃，我要续费 <span class="divider"></span><span class="price">¥139</span>/人/年</div><div class="origin">原价 ¥199/人/年</div></button></div>
+          <button class="secondary" id="giveUp" disabled>确认放弃，进入缓冲期</button>
+        </section></article>`;
+    }
+    function render(scene) {
+      currentScene = scene;
+      const data = scenes[scene];
+      document.getElementById('device').innerHTML = scene === 'recycle' ? recycleModal() : normalModal(data, scene);
+      document.getElementById('sideTitle').textContent = scene === 'recycle' ? '二次确认文案说明' : '本场景文案说明';
+      document.getElementById('copyList').innerHTML = data.copies.map(([label, text], i) => `<div class="copy ${scene === 'recycle' && i === 1 ? 'red' : ''}"><div class="label">${label}</div><div class="text">${text}</div></div>`).join('');
+      document.getElementById('reviewPoints').innerHTML = data.points.map(x => `<li>${x}</li>`).join('');
+      if (scene === 'recycle') {
+        const ack = document.getElementById('ack'), btn = document.getElementById('giveUp');
+        ack.addEventListener('change', () => { btn.disabled = !ack.checked; btn.classList.toggle('enabled', ack.checked); });
+      }
+      document.querySelectorAll('[contenteditable="true"]').forEach(el => el.addEventListener('input', () => {
+        const index = Number(el.dataset.copyIndex);
+        const scene = el.dataset.copyScene;
+        const part = el.dataset.copyPart;
+        const column = scene === 'soon' ? 1 : scene === 'expired' ? 2 : 3;
+        const lines = benefitCopies[index][column].split('\n');
+        if (part === 'title') lines[0] = el.textContent;
+        else if (part === 'note') lines.splice(1, lines.length - 1, el.textContent);
+        else if (part === 'before') lines[0] = `回收前：${el.textContent}`;
+        else if (part === 'after') lines[1] = `回收后影响：${el.textContent}`;
+        benefitCopies[index][column] = lines.join('\n');
+      }));
+    }
+    document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', () => {
+      document.querySelector('.tab.active').classList.remove('active'); tab.classList.add('active'); render(tab.dataset.scene);
+    }));
+    render('soon');
+    document.getElementById('editToggle').addEventListener('click', () => {
+      editMode = !editMode;
+      const button = document.getElementById('editToggle');
+      button.textContent = editMode ? '退出编辑状态' : '进入编辑状态';
+      button.classList.toggle('on', editMode);
+      document.body.classList.toggle('editing', editMode);
+      render(currentScene);
+    });
+  </script>
+</body>
+</html>
