@@ -23,6 +23,9 @@
     .top-actions { display: flex; align-items: center; gap: 10px; }
     .edit-toggle { padding: 8px 13px; border: 1px solid #bed4f3; border-radius: 7px; background: #fff; color: #2469c9; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
     .edit-toggle:hover, .edit-toggle.on { border-color: var(--blue); background: var(--blue); color: #fff; }
+    .copy-button { padding: 8px 12px; border: 1px solid #d7dfeb; border-radius: 7px; background: #fff; color: #53627a; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .copy-button:hover { border-color: #8db7ef; color: #2469c9; }
+    .save-status { color: #18875d; font-size: 12px; white-space: nowrap; }
     .edit-tip { display: none; position: absolute; z-index: 2; top: 75px; left: 50%; transform: translateX(-50%); padding: 6px 11px; border-radius: 6px; background: #263a58; color: #fff; font-size: 12px; white-space: nowrap; }
     body.editing .preview-wrap { position: relative; }
     body.editing .edit-tip { display: block; }
@@ -32,15 +35,13 @@
     .intro { display: flex; justify-content: space-between; gap: 24px; margin-bottom: 22px; }
     h1 { margin: 0 0 8px; font-size: 26px; line-height: 1.3; }
     .intro p { margin: 0; color: var(--sub); font-size: 14px; }
-    .rule { min-width: 310px; padding: 12px 16px; border-radius: 10px; background: #fffbef; color: #8a641b; font-size: 12px; line-height: 1.7; }
-    .rule b { color: #6f4d0d; }
     .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
     .tab { border: 1px solid #dce5f1; background: #fff; color: #53627a; padding: 9px 18px; border-radius: 8px; cursor: pointer; font: inherit; font-size: 14px; }
     .tab.active { border-color: var(--blue); background: var(--blue); color: #fff; font-weight: 600; }
     .review-grid { display: grid; grid-template-columns: minmax(560px, 1.35fr) minmax(340px, .65fr); gap: 24px; align-items: start; }
     .preview-wrap { border-radius: 18px; padding: 24px; min-height: 700px; background: radial-gradient(circle at 15% 10%, #dcecff, transparent 30%), var(--canvas); }
     .device { margin: 0 auto; width: min(100%, 760px); min-height: 650px; padding: 20px; border-radius: 20px; background: rgba(255,255,255,.46); border: 1px solid rgba(255,255,255,.9); }
-    .modal { display: flex; flex-direction: column; height: min(584px, calc(100vh - 96px)); overflow: hidden; border-radius: 18px; background: var(--panel); box-shadow: 0 18px 44px rgba(55, 83, 122, .16); }
+    .modal { display: flex; flex-direction: column; height: min(628px, calc(100vh - 96px)); overflow: hidden; border-radius: 18px; background: var(--panel); box-shadow: 0 18px 44px rgba(55, 83, 122, .16); }
     .hero { position: relative; flex: 0 0 auto; min-height: 154px; padding: 34px 60px 24px 128px; background: linear-gradient(118deg, #dcecff 0%, #f2f8ff 70%, #d9e9ff 100%); }
     .bell { position: absolute; top: 35px; left: 42px; width: 60px; height: 60px; border-radius: 30px 30px 16px 16px; background: linear-gradient(135deg, #0e89ff, #005cd6); }
     .bell:after { content: ""; position: absolute; left: 15px; bottom: -10px; width: 30px; height: 10px; border-radius: 50%; background: #005cd6; }
@@ -50,20 +51,24 @@
     .hero-title .urgent { color: var(--red); }
     .body-card { position: relative; display: flex; flex: 1 1 auto; flex-direction: column; min-height: 0; margin-top: -12px; padding: 28px 40px 28px; border-radius: 30px 30px 0 0; background: #f6f9fe; border-top: 2px solid #fff; }
     .subtitle { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 3px 0 26px; font-size: 18px; }
-    .subtitle .count { color: var(--red); font-size: 25px; font-weight: 750; }
+    .subtitle .count { color: var(--red); font-size: inherit; font-weight: 600; }
     .subtitle:before, .subtitle:after { content: ""; width: 74px; height: 3px; border-radius: 3px; background: #dceaff; }
     .benefits { overflow: hidden; border-radius: 12px; background: #fff; }
-    .benefits.review-expanded { flex: 0 0 222px; min-height: 0; overflow-y: auto; border: 1px solid #e5ebf3; }
-    .benefits.review-expanded::-webkit-scrollbar, .risk-scroll::-webkit-scrollbar { width: 7px; }
-    .benefits.review-expanded::-webkit-scrollbar-thumb, .risk-scroll::-webkit-scrollbar-thumb { border-radius: 8px; background: #cbd5e3; }
+    .benefits.review-expanded, .benefits.online-preview { flex: 0 0 260px; overflow: hidden; border: 1px solid #e5ebf3; }
+    .benefit-scroll { height: 222px; }
+    .benefits.review-expanded .benefit-scroll { overflow-y: auto; }
+    .benefits.online-preview .benefit-scroll { overflow: hidden; }
+    .benefit-scroll::-webkit-scrollbar, .risk-scroll::-webkit-scrollbar { width: 7px; }
+    .benefit-scroll::-webkit-scrollbar-thumb, .risk-scroll::-webkit-scrollbar-thumb { border-radius: 8px; background: #cbd5e3; }
     .benefit { display: grid; grid-template-columns: 46px minmax(0, 1fr) minmax(170px, .85fr); align-items: center; gap: 14px; min-height: 74px; padding: 12px 28px; }
     .benefit + .benefit { border-top: 1px solid #edf0f4; }
     .icon { width: 36px; height: 36px; border-radius: 9px; display: grid; place-items: center; font-size: 21px; font-weight: 700; }
     .i-blue { background: #e1eeff; color: #2e79e6; } .i-green { background: #def7ef; color: #1aa873; } .i-orange { background: #fff0e8; color: #e26932; }
-    .benefit-title { font-size: 18px; font-weight: 600; }
+    .benefit-title { font-size: 18px; font-weight: 500; }
     .benefit-note { color: #707786; font-size: 15px; line-height: 1.45; text-align: right; }
-    .more { padding: 12px; text-align: center; color: #9098a5; font-size: 15px; border-top: 1px solid #edf0f4; }
-    .cta-wrap { position: relative; flex: 0 0 auto; margin-top: 28px; }
+    .view-all { width: 100%; height: 38px; flex: 0 0 auto; border: 0; border-top: 1px solid #edf0f4; background: #fff; color: #7f8998; font: inherit; font-size: 14px; cursor: pointer; }
+    .view-all:hover { color: var(--blue); }
+    .cta-wrap { position: relative; flex: 0 0 auto; margin-top: 16px; }
     .promo { position: absolute; right: 0; top: -20px; z-index: 1; padding: 9px 14px; border-radius: 12px 12px 0 12px; background: linear-gradient(100deg, #ff3970, #ff651b); color: #fff; font-size: 16px; }
     .cta { width: 100%; min-height: 76px; border: 0; border-radius: 12px; background: var(--blue); color: #fff; font: inherit; cursor: pointer; }
     .cta:hover { background: var(--blue-dark); }
@@ -81,6 +86,10 @@
     .copy .text { color: #263247; font-size: 14px; line-height: 1.55; }
     .copy.red { background: #fff4f4; }
     .copy.red .text { color: #b92c2c; }
+    .mode-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+    .mode-button { min-height: 34px; padding: 6px 8px; border: 1px solid #d8e0eb; border-radius: 7px; background: #fff; color: #687589; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+    .mode-button.active { border-color: var(--blue); background: #edf5ff; color: #2469c9; }
+    .mode-desc { margin: 0; color: #637188; font-size: 13px; line-height: 1.65; }
     .review-points { margin: 0; padding-left: 18px; color: var(--sub); font-size: 13px; line-height: 1.8; }
     .status { display: inline-block; margin-left: 8px; padding: 2px 7px; border-radius: 4px; background: #ebf4ff; color: #3577d8; font-size: 11px; }
     .recycle .hero { min-height: 166px; padding-left: 40px; }
@@ -111,7 +120,13 @@
 <body>
   <header class="topbar">
     <div class="brand"><span class="brand-mark">W</span> 到期弹窗文案评审 <span class="tag">老板审核版</span></div>
-    <div class="top-actions"><span class="tag">基于《到期弹窗内容定义》</span><button class="edit-toggle" id="editToggle" type="button">进入编辑状态</button></div>
+    <div class="top-actions">
+      <span class="tag">基于《到期弹窗内容定义》</span>
+      <span class="save-status" id="saveStatus"></span>
+      <button class="copy-button" id="copyCopies" type="button">复制全部文案</button>
+      <button class="copy-button" id="exportCopies" type="button">导出文案</button>
+      <button class="edit-toggle" id="editToggle" type="button">进入编辑状态</button>
+    </div>
   </header>
   <main>
     <section class="intro">
@@ -119,7 +134,6 @@
         <h1>把“权益变化”讲清楚，让续费决策更有感知</h1>
         <p>以下为模拟企业：当前订阅 WPS 365 商业高级版；以“评审展开态”直接展示全部权益文案在主弹窗中的效果。</p>
       </div>
-      <div class="rule"><b>评审展开态：</b>为便于逐条审核，主弹窗直接展示全部 29 项权益，并保留滚动区域。<br>线上实际规则仍为：按命中顺序最多展示 3 项；不足 2 项时使用兜底文案。</div>
     </section>
     <nav class="tabs" aria-label="弹窗场景">
       <button class="tab active" data-scene="soon">临期提醒（14 天）</button>
@@ -133,12 +147,16 @@
       </div>
       <aside class="side">
         <div class="side-card">
-          <h2 id="sideTitle">本场景文案说明</h2>
-          <div class="copy-list" id="copyList"></div>
+          <h2>展示模式</h2>
+          <div class="mode-options">
+            <button class="mode-button active" data-mode="review" type="button">评审展开态</button>
+            <button class="mode-button" data-mode="online" type="button">真实线上态</button>
+          </div>
+          <p class="mode-desc" id="modeDesc">评审展开态：为便于逐条审核，主弹窗直接展示全部 29 项权益，权益区域可滚动。</p>
         </div>
         <div class="side-card">
-          <h2>评审重点</h2>
-          <ul class="review-points" id="reviewPoints"></ul>
+          <h2 id="sideTitle">本场景文案说明</h2>
+          <div class="copy-list" id="copyList"></div>
         </div>
       </aside>
     </section>
@@ -147,7 +165,7 @@
     const scenes = {
       soon: {
         title: '您订阅的【WPS 365 商业高级版】<br>将于<span class="urgent">14天后过期</span>',
-        intro: '<span class="count">56项</span> 企业权益即将到期，以下展开 29 项可观测权益：',
+        intro: '<span class="count">56项</span> 企业权益即将到期，可能造成以下影响：',
         benefits: [
           ['i-blue', '▣', '150GB 企业云空间即将到期', '98 个云文档可能无法更新'],
           ['i-green', '↥', '大文件上传能力即将降级', '单文件上传大小将降至 10MB'],
@@ -162,7 +180,7 @@
       },
       expired: {
         title: '您订阅的【WPS 365 商业高级版】<br><span class="urgent">已过期</span>',
-        intro: '<span class="count">56项</span> 企业权益已过期，以下展开 29 项可观测权益：',
+        intro: '<span class="count">56项</span> 企业权益已过期，可能造成以下影响：',
         benefits: [
           ['i-blue', '▣', '150GB 企业云空间已到期', '98 个云文档可能无法更新'],
           ['i-green', '↥', '大文件上传能力已降级', '单文件上传大小已降至 10MB'],
@@ -216,27 +234,89 @@
       ['PDF 转 PPT', 'PDF转PPT功能即将过期\n无法进行PDF转换操作', 'PDF转PPT功能已过期\n无法进行PDF转换操作'],
       ['批量打印', '将无法使用批量打印功能\n打印仅支持手动分批处理', '已无法使用批量打印功能\n打印仅支持手动分批处理']
     ];
+    const STORAGE_KEY = 'wps365-expiry-popup-review-copies-v1';
+    function exportText() {
+      return benefitCopies.map(([name, soon, expired, recycle], index) => {
+        const recycleText = recycle ? `\n【二次回收确认】\n${recycle}` : '';
+        return `${index + 1}. ${name}\n【临期弹窗】\n${soon}\n【过期弹窗】\n${expired}${recycleText}`;
+      }).join('\n\n');
+    }
+    function setSaveStatus(text) {
+      const status = document.getElementById('saveStatus');
+      status.textContent = text;
+      window.clearTimeout(setSaveStatus.timer);
+      setSaveStatus.timer = window.setTimeout(() => { status.textContent = ''; }, 2600);
+    }
+    function saveCopies() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(benefitCopies));
+        setSaveStatus('已保存');
+      } catch (error) {
+        setSaveStatus('保存失败');
+      }
+    }
+    function restoreCopies() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (Array.isArray(saved) && saved.length === benefitCopies.length) {
+          saved.forEach((copy, index) => {
+            if (Array.isArray(copy) && copy.length >= 3) benefitCopies[index].splice(1, 3, ...copy.slice(1, 4));
+          });
+          setSaveStatus('已恢复上次修改');
+        }
+      } catch (error) {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    }
+    function copyText(text) {
+      const area = document.createElement('textarea');
+      area.value = text;
+      area.style.position = 'fixed';
+      area.style.opacity = '0';
+      document.body.appendChild(area);
+      area.select();
+      const copied = document.execCommand('copy');
+      area.remove();
+      setSaveStatus(copied ? '文案已复制' : '复制失败，请使用导出');
+    }
+    function downloadCopies() {
+      const blob = new Blob([exportText()], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = '到期弹窗权益文案-评审修改稿.txt';
+      link.click();
+      URL.revokeObjectURL(url);
+      setSaveStatus('已导出文案');
+    }
+    restoreCopies();
     let editMode = false;
     let currentScene = 'soon';
+    let displayMode = 'review';
     function editAttrs(index, part, scene) {
       return editMode ? `contenteditable="true" data-copy-index="${index}" data-copy-part="${part}" data-copy-scene="${scene}"` : '';
     }
     function normalModal(data, scene) {
       const copyIndex = scene === 'soon' ? 1 : 2;
       const styles = [['i-blue', '▣'], ['i-green', '↥'], ['i-orange', '!']];
-      const rows = benefitCopies.map(([name, soon, expired], index) => {
+      const copiesToShow = displayMode === 'online' ? benefitCopies.slice(0, 3) : benefitCopies;
+      const rows = copiesToShow.map(([name, soon, expired], index) => {
         const [title, ...note] = [soon, expired][copyIndex - 1].split('\n');
         const [cls, icon] = styles[index % styles.length];
-        return `<div class="benefit"><div class="icon ${cls}">${icon}</div><div class="benefit-title" ${editAttrs(index, 'title', scene)}>${title}</div><div class="benefit-note" ${editAttrs(index, 'note', scene)}>${note.join(' ')}</div></div>`;
+        const originalIndex = benefitCopies.indexOf(copiesToShow[index]);
+        return `<div class="benefit"><div class="icon ${cls}">${icon}</div><div class="benefit-title" ${editAttrs(originalIndex, 'title', scene)}>${title}</div><div class="benefit-note" ${editAttrs(originalIndex, 'note', scene)}>${note.join(' ')}</div></div>`;
       }).join('');
       return `<article class="modal">
         <section class="hero"><div class="bell"><span class="bell-dot">!</span></div><span class="close">×</span><div class="hero-title">${data.title}</div></section>
-        <section class="body-card"><div class="subtitle">${data.intro}</div><div class="benefits review-expanded">${rows}</div>
+        <section class="body-card"><div class="subtitle">${data.intro}</div><div class="benefits ${displayMode === 'review' ? 'review-expanded' : 'online-preview'}"><div class="benefit-scroll">${rows}</div>
+          <button class="view-all" id="viewAllBenefits" type="button">查看全部权益　›</button></div>
           <div class="cta-wrap"><span class="promo">优惠剩余${scene === 'expired' ? '3' : '14'}天</span><button class="cta"><div class="cta-main">立即续费 <span class="divider"></span><span class="price">¥339</span>/人/年</div><div class="origin">原价 ¥399/人/年</div></button></div>
         </section></article>`;
     }
     function recycleModal() {
-      const riskRows = benefitCopies.filter(([, , , recycle]) => recycle).map(([name, , , recycle]) => {
+      const riskCopies = benefitCopies.filter(([, , , recycle]) => recycle);
+      const copiesToShow = displayMode === 'online' ? riskCopies.slice(0, 3) : riskCopies;
+      const riskRows = copiesToShow.map(([name, , , recycle]) => {
         const [before, after] = recycle.split('\n');
         return `<div class="risk-row"><div>${name}</div><div ${editAttrs(benefitCopies.indexOf(benefitCopies.find(x => x[0] === name)), 'before', 'recycle')}>${before.replace('回收前：', '')}</div><div ${editAttrs(benefitCopies.indexOf(benefitCopies.find(x => x[0] === name)), 'after', 'recycle')}>${after.replace('回收后影响：', '')}</div></div>`;
       }).join('');
@@ -258,11 +338,16 @@
       document.getElementById('device').innerHTML = scene === 'recycle' ? recycleModal() : normalModal(data, scene);
       document.getElementById('sideTitle').textContent = scene === 'recycle' ? '二次确认文案说明' : '本场景文案说明';
       document.getElementById('copyList').innerHTML = data.copies.map(([label, text], i) => `<div class="copy ${scene === 'recycle' && i === 1 ? 'red' : ''}"><div class="label">${label}</div><div class="text">${text}</div></div>`).join('');
-      document.getElementById('reviewPoints').innerHTML = data.points.map(x => `<li>${x}</li>`).join('');
       if (scene === 'recycle') {
         const ack = document.getElementById('ack'), btn = document.getElementById('giveUp');
         ack.addEventListener('change', () => { btn.disabled = !ack.checked; btn.classList.toggle('enabled', ack.checked); });
       }
+      const viewAll = document.getElementById('viewAllBenefits');
+      if (viewAll) viewAll.addEventListener('click', () => {
+        displayMode = 'review';
+        updateModeUI();
+        render(currentScene);
+      });
       document.querySelectorAll('[contenteditable="true"]').forEach(el => el.addEventListener('input', () => {
         const index = Number(el.dataset.copyIndex);
         const scene = el.dataset.copyScene;
@@ -274,12 +359,26 @@
         else if (part === 'before') lines[0] = `回收前：${el.textContent}`;
         else if (part === 'after') lines[1] = `回收后影响：${el.textContent}`;
         benefitCopies[index][column] = lines.join('\n');
+        saveCopies();
       }));
     }
     document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', () => {
       document.querySelector('.tab.active').classList.remove('active'); tab.classList.add('active'); render(tab.dataset.scene);
     }));
+    function updateModeUI() {
+      document.querySelectorAll('.mode-button').forEach(button => button.classList.toggle('active', button.dataset.mode === displayMode));
+      document.getElementById('modeDesc').textContent = displayMode === 'review'
+        ? '评审展开态：为便于逐条审核，主弹窗直接展示全部 29 项权益，权益区域可滚动。'
+        : '真实线上态：严格按照线上首屏效果，仅展示 3 个权益点，不支持滚动。';
+    }
+    document.querySelectorAll('.mode-button').forEach(button => button.addEventListener('click', () => {
+      displayMode = button.dataset.mode;
+      updateModeUI();
+      render(currentScene);
+    }));
     render('soon');
+    document.getElementById('copyCopies').addEventListener('click', () => copyText(exportText()));
+    document.getElementById('exportCopies').addEventListener('click', downloadCopies);
     document.getElementById('editToggle').addEventListener('click', () => {
       editMode = !editMode;
       const button = document.getElementById('editToggle');
