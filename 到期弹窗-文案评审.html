@@ -219,9 +219,9 @@
       ['自定义管理员角色', '自定义角色功能将不可用\nX个自定义角色的权限将停止生效', '自定义角色功能已不可用\nX个自定义角色的权限已停止生效', '回收前：生效中\n回收后影响：已添加的自定义角色失效，管理员将失去角色对应的权限'],
       ['离职员工文档转让', '离职员工文档转让功能即将到期\n成员离职后历史文档无法转让', '离职员工文档转让功能已过期\n成员离职后历史文档无法转让'],
       ['文件批量下载', '批量下载功能即将到期\n多文件场景需逐个手动下载', '批量下载功能已过期\n多文件场景需逐个手动下载'],
-      ['恢复近期删除的账号', '恢复近期删除的账号功能将失效\n删除账号无法通过此功能恢复', '恢复近期删除的账号功能已失效\n删除账号无法通过此功能恢复'],
+      ['恢复近期删除的账号', '恢复删除账号功能将不可用\n删除账号无法通过此功能恢复', '恢复近期删除的账号功能已失效\n删除账号无法通过此功能恢复'],
       ['通讯录可见性', '通讯录可见性功能即将过期\n组织架构将按系统默认范围展示', '通讯录可见性功能已过期\n组织架构将按系统默认范围展示', '回收前：可使用\n回收后影响：已有的可见性配置将失效，组织架构将按系统默认范围展示'],
-      ['自定义企业通讯录字段', '自定义企业通讯录字段功能即将过期\n无法自定义配置成员信息', '自定义企业通讯录字段功能已经过期\n无法自定义配置成员信息', '回收前：可使用\n回收后影响：已添加自定义字段失效，无法自定义配置成员信息'],
+      ['自定义企业通讯录字段', '自定义通讯录字段功能即将过期\n无法自定义配置成员信息', '自定义企业通讯录字段功能已经过期\n无法自定义配置成员信息', '回收前：可使用\n回收后影响：已添加自定义字段失效，无法自定义配置成员信息'],
       ['允许非团队成员分享文件', '允许非团队成员分享文件功能将不可用\n团队外用户无法管理文件协作者', '允许非团队成员分享文件功能已不可用\n团队外用户无法管理文件协作者', '回收前：可使用\n回收后影响：配置关闭，团队外用户无法管理文件协作者'],
       ['团队文档加密', '团队文档加密服务即将到期\n到期后将恢复普通文档权限', '团队文档加密服务已过期\n将恢复为普通文档权限', '回收前：可配置\n回收后影响：加密配置关闭，团队文档恢复为普通文档权限'],
       ['团队分享范围管控', '即将无法管控团队分享范围\n分享范围将恢复为不限制', '已无法管控团队分享范围\n分享范围将恢复为不限制', '回收前：可管控\n回收后影响：管控配置关闭，分享范围将恢复为不限制'],
@@ -234,7 +234,58 @@
       ['PDF 转 PPT', 'PDF转PPT功能即将过期\n无法进行PDF转换操作', 'PDF转PPT功能已过期\n无法进行PDF转换操作'],
       ['批量打印', '将无法使用批量打印功能\n打印仅支持手动分批处理', '已无法使用批量打印功能\n打印仅支持手动分批处理']
     ];
-    const STORAGE_KEY = 'wps365-expiry-popup-review-copies-v1';
+    const STORAGE_KEY = 'wps365-expiry-popup-review-copies-v2';
+    const LEGACY_STORAGE_KEY = 'wps365-expiry-popup-review-copies-v1';
+    const COPY_RULE_VERSION = 'near-expiry-copy-v4';
+    const COPY_RULE_VERSION_KEY = 'wps365-expiry-popup-copy-rule-version';
+    const NEAR_COPY_OVERRIDES = {
+      '企业文档水印（明水印）': '企业专属水印即将过期\n无法追溯文件外泄源头',
+      'AI 排版': 'AI排版功能即将过期\n文档格式需手动调整',
+      '企业空间': 'Y GB 企业云空间即将过期\nX 个云文档可能无法更新',
+      '禁止文档分享到企业外': '禁止文档外发功能即将过期\n无法限制企业文档分享范围',
+      'PDF 文本编辑': 'PDF编辑功能即将过期\nPDF处理效率受影响',
+      '行为预警': '成员行为预警功能即将过期\n无法及时收到成员异常行为通知',
+      '截屏管控': '截屏管控功能即将过期\n成员可截屏保存企业文档',
+      '空间自定义分配': '空间自定义分配功能即将过期\n无法限制成员的空间使用上限',
+      'AI 生成 PPT': 'AI生成PPT功能即将过期\n无法智能生成PPT',
+      '单文件上传大小': '单文件上传大小将降至 W\n大小超过W的文件将无法上传',
+      '默认以阅读模式打开云文档': '只读模式打开文档功能即将过期\n文件打开后不再默认只读',
+      '敏感成员名片字段可见性': '成员名片字段可见性配置即将过期\n成员字段将按默认可见范围展示',
+      '自定义管理员角色': '自定义角色功能即将过期\nX个自定义角色的权限将停止生效',
+      '离职员工文档转让': '离职员工文档转让功能即将过期\n成员离职后历史文档无法转让',
+      '文件批量下载': '批量下载功能即将过期\n多文件场景需逐个手动下载',
+      '恢复近期删除的账号': '恢复删除账号功能即将过期\n删除账号无法通过此功能恢复',
+      '通讯录可见性': '通讯录可见性功能即将过期\n组织架构将按系统默认范围展示',
+      '自定义企业通讯录字段': '自定义通讯录字段功能即将过期\n无法自定义配置成员信息',
+      '允许非团队成员分享文件': '允许非团队成员分享文件功能即将过期\n团队外用户无法管理文件协作者',
+      '团队文档加密': '支持文档加密的团队数将降至X个\n超量团队的文档加密保护将关闭',
+      '团队分享范围管控': '支持分享管控的团队数将降至X个\n超量团队的分享范围将变为不限制',
+      '团队文档水印': '支持文档水印的团队数将降至X个\n超量团队的文档水印将自动关闭',
+      '图片压缩': '图片压缩功能即将过期\n无法快速压缩大图片',
+      'AI 合同审查': 'AI合同审查功能即将过期\n无法智能审核合同',
+      'AI 写公式': 'AI写公式功能即将到期\n表格公式需手动编写',
+      'AI 全文总结': 'AI全文总结功能即将过期\n逐页阅读影响工作效率',
+      '截屏工具': '截屏工具即将过期\n无法快速灵活截屏',
+      'PDF 转 PPT': 'PDF转PPT功能即将过期\n无法进行PDF转换操作',
+      '批量打印': '批量打印功能即将过期\n打印仅支持手动分批处理'
+    };
+    function expiredCopyFromNear(nearCopy) {
+      const [title, ...impacts] = nearCopy.split('\n');
+      const expiredTitle = title
+        .replace('即将过期', '已过期')
+        .replace('即将到期', '已到期')
+        .replace('即将降级', '已降级')
+        .replace('将降至', '已降至');
+      return [expiredTitle, ...impacts].join('\n');
+    }
+    function applyRequiredCopyUpdates() {
+      benefitCopies.forEach(copy => {
+        const nearCopy = NEAR_COPY_OVERRIDES[copy[0]];
+        if (!nearCopy) return;
+        copy[1] = nearCopy;
+        copy[2] = expiredCopyFromNear(nearCopy);
+      });
+    }
     function exportText() {
       return benefitCopies.map(([name, soon, expired, recycle], index) => {
         const recycleText = recycle ? `\n【二次回收确认】\n${recycle}` : '';
@@ -257,11 +308,12 @@
     }
     function restoreCopies() {
       try {
-        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY));
         if (Array.isArray(saved) && saved.length === benefitCopies.length) {
           saved.forEach((copy, index) => {
             if (Array.isArray(copy) && copy.length >= 3) benefitCopies[index].splice(1, 3, ...copy.slice(1, 4));
           });
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(benefitCopies));
           setSaveStatus('已恢复上次修改');
         }
       } catch (error) {
@@ -290,6 +342,11 @@
       setSaveStatus('已导出文案');
     }
     restoreCopies();
+    if (localStorage.getItem(COPY_RULE_VERSION_KEY) !== COPY_RULE_VERSION) {
+      applyRequiredCopyUpdates();
+      localStorage.setItem(COPY_RULE_VERSION_KEY, COPY_RULE_VERSION);
+      saveCopies();
+    }
     let editMode = false;
     let currentScene = 'soon';
     let displayMode = 'review';
