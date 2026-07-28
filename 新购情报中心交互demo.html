@@ -35,17 +35,17 @@
         <div id="conditionRow" style="display:none;margin-top:13px;gap:8px;align-items:center"><select class="field" id="statusFilter"><option value="">处理状态</option><option value="待处理">待处理</option><option value="已处理">已处理</option></select><select class="field" id="priorityFilter"><option value="">优先级</option><option value="高">高</option><option value="中">中</option><option value="低">低</option></select><input class="field search" id="keyword" placeholder="搜索企业名称 / 企业 ID"><button onclick="clearCondition()" style="color:#9ba7b3;font-size:18px">×</button></div>
         <div style="position:absolute;right:16px;bottom:13px;display:flex;gap:9px"><button class="primary" onclick="renderList()">查询</button><button class="secondary" onclick="resetFilters()">重置</button></div>
       </div>
-      <div class="tabs" style="background:#fff;border:1px solid var(--line);border-radius:3px 3px 0 0;margin-top:13px"><button class="tab active" data-biz="new">新购高优 <span class="tab-count">(12)</span></button><button class="tab" data-biz="renew">续费高优 <span class="tab-count">(8)</span></button></div>
+      <div class="tabs" style="background:#fff;border:1px solid var(--line);border-radius:3px 3px 0 0;margin-top:13px"><button class="tab active" data-biz="new">新购高优 <span class="tab-count">(12)</span></button><button class="tab" data-biz="renew">续费高优 <span class="tab-count">(8)</span></button><button class="tab" data-biz="unassigned">无归属企业 <span class="tab-count">(6)</span></button><button class="tab" data-biz="attention">持续关注企业 <span class="tab-count">(3)</span></button></div>
       <div class="stats" style="margin-top:13px;grid-template-columns:repeat(3,1fr)"><div class="stat"><div class="stat-label">今日待处理高优客户</div><div class="stat-value" id="pending">12</div><div class="stat-icon i-orange">◷</div></div><div class="stat"><div class="stat-label">已处理</div><div class="stat-value" id="completed">4</div><div class="stat-icon i-green">✓</div></div><div class="stat"><div class="stat-label">处理进度</div><div class="stat-value" id="progress">25%</div><div class="stat-icon i-blue">⌁</div></div></div>
       <div class="panel"><div class="list-head"><b id="listTitle">新购高优客户</b><span id="listDesc">按总分降序排列，命中 P0 特征客户置顶</span><button class="secondary assign-btn" onclick="openAssign()">分配客户</button></div><div class="table-wrap"><table class="data-table"><thead id="tableHead"></thead><tbody id="customerRows"></tbody></table></div></div>
     </section>
     <section id="features" class="page">
       <div class="crumb">CRM / 特征配置中心</div><div class="title-row"><h1>特征配置中心</h1></div>
       <div class="panel">
-        <div class="tabs"><button class="tab active config-tab" data-config="new">新购配置</button><button class="tab config-tab" data-config="renew">续费配置</button></div>
+        <div class="tabs"><button class="tab active config-tab" data-config="new">新购配置</button><button class="tab config-tab" data-config="renew">续费配置</button><button class="tab config-tab" data-config="unassigned">无归属企业</button><button class="tab config-tab" data-config="attention">持续关注企业</button></div>
         <div class="feature-top"><div><b id="configScope">新购情报排序配置</b><div class="subline" id="scopeHint">设置参与新购评分的特征及权重，配置变更仅影响新购场景。</div></div><span style="margin-left:auto;color:#98a3ad;font-size:12px" id="configVersion">当前版本：新购 V1.0</span><button class="primary" style="margin-left:14px" onclick="saveBusinessConfig()">保存并发布</button></div>
       </div>
-      <div class="panel" style="margin-top:13px">
+      <div class="panel" id="priorityMappingPanel" style="margin-top:13px">
         <div class="list-head"><b>分值区间与优先级映射</b><span style="margin-left:auto">□ 包含（Inclusive） / 不包含（Exclusive）</span></div>
         <div class="table-wrap"><table class="data-table feature-table"><thead><tr><th style="width:135px">优先级</th><th>分值区间配置</th><th style="width:135px">标签颜色</th></tr></thead><tbody id="priorityMappingRows">
           <tr><td style="color:#ee5d5d;font-weight:600">紧急</td><td><span class="empty-note">[</span>　<input class="config-input range-start" style="width:145px;text-align:center" value="90" type="number">　,　<input class="config-input range-end" style="width:180px;text-align:center;background:#f5f7fa" value="+∞" disabled>　<span class="empty-note">)</span></td><td style="color:#ec5b5b">● <span style="color:#64717e">Red</span></td></tr>
@@ -55,9 +55,10 @@
         </tbody></table></div>
         <div style="padding:12px 16px;color:#4e5c69;font-size:12px">当前最大分值：<b>100</b> 分 <span style="float:right;color:#98a3ad;font-style:italic">提示：点击区间符号 [) 可在“包含”与“不包含”之间切换</span></div>
       </div>
-      <div class="panel" style="margin-top:13px">
-        <div class="list-head"><b>参与评分的特征</b><span>启用的特征会参与总分计算；单个客户命中多个特征时累计加分。</span></div>
-        <div class="table-wrap"><table class="data-table feature-table"><thead><tr><th style="min-width:160px">特征名称</th><th style="min-width:225px">特征判定逻辑说明</th><th style="min-width:80px">特征归属主体</th><th style="min-width:285px">智能话术</th><th style="min-width:145px">权重分值（支持公式）</th><th style="min-width:84px">是否 P0 特征</th><th style="min-width:76px">是否启用</th></tr></thead><tbody id="businessFeatureRows"></tbody></table></div>
+      <div class="panel" id="featureConfigPanel" style="margin-top:13px">
+        <div class="list-head"><b>参与评分的特征</b><span id="featureCountHint">共 0 个特征，已启用 0 个</span></div>
+        <div class="filters" style="border-bottom:1px solid var(--line)"><span class="filter-label">筛选特征</span><input class="field search" id="featureNameFilter" placeholder="输入特征名称" onkeydown="if(event.key==='Enter')renderBusinessConfig()"><select class="field" id="featureEnableFilter"><option value="">是否启用：全部</option><option value="enabled">已启用</option><option value="disabled">未启用</option></select><button class="primary" onclick="renderBusinessConfig()">查询</button><button class="secondary" onclick="resetFeatureFilters()">重置</button></div>
+        <div class="table-wrap" style="max-height:430px;overflow:auto"><table class="data-table feature-table"><thead><tr><th style="min-width:160px">特征名称</th><th style="min-width:225px">特征判定逻辑说明</th><th style="min-width:80px">特征归属主体</th><th style="min-width:285px">智能话术</th><th style="min-width:145px">权重分值（支持公式）</th><th style="min-width:84px">是否 P0 特征</th><th style="min-width:76px">是否启用</th></tr></thead><tbody id="businessFeatureRows"></tbody></table></div>
         <div class="config-footer"><span style="color:#98a3ad;font-size:12px">修改后需点击上方“保存并发布”，才会应用于打分引擎</span></div>
       </div>
     </section>
@@ -77,6 +78,13 @@ const customers={new:[
  {id:'602101514',name:'佛山市顺德区易发物流有限公司',score:88,p0:true,priority:'高',owner:'刘亮',status:'待处理',active:'2026-07-23 10:51',amount:'12,400',days:'2 天',features:['存在未支付订单','套餐即将到期'],details:[['存在未支付订单','存在未支付订单，待支付金额 ¥12,400','+15 分',true],['套餐即将到期','套餐剩余 2 天到期','+10 分']]},
  {id:'65124687',name:'厦门紫峰园林科技有限公司',score:76,p0:false,priority:'高',owner:'张敏',status:'待处理',active:'2026-07-22 11:23',amount:'8,800',days:'6 天',features:['高频浏览购买页','商机即将成交'],details:[['高频浏览购买页','近 7 天浏览购买页 9 次','+10 分'],['商机即将成交','商机预计本月成交','+12 分']]},
  {id:'6731903644',name:'广州市卫康家居服务管理有限公司',score:64,p0:false,priority:'中',owner:'陈晨',status:'待处理',active:'2026-07-21 09:36',amount:'6,500',days:'12 天',features:['有效沟通客户','套餐即将到期'],details:[['有效沟通客户','近期已进行有效沟通，存在明确续费意向','+10 分'],['套餐即将到期','套餐 12 天后到期','+8 分']]}
+],unassigned:[
+ {id:'801290155',name:'广州博瀚数字科技有限公司',score:78,p0:true,priority:'高',owner:'未分配',status:'待处理',active:'2026-07-23 13:20',features:['高频浏览购买页','进入收银台'],details:[['高频浏览购买页','近 7 天浏览购买页 6 次','+12 分',true],['进入收银台','近 7 天进入 4 次','+8 分']]},
+ {id:'801290156',name:'深圳锐思信息技术有限公司',score:61,p0:false,priority:'中',owner:'未分配',status:'待处理',active:'2026-07-22 16:42',features:['激活人数 ≥ 3'],details:[['激活人数 ≥ 3','已激活用户数达到 8 人','+10 分']]},
+ {id:'801290157',name:'东莞市越海供应链有限公司',score:52,p0:false,priority:'中',owner:'张璐丹',status:'已处理',active:'2026-07-21 10:30',features:['查看折扣活动'],details:[['查看折扣活动','近 3 天查看活动页 3 次','+8 分']]}
+],attention:[
+ {id:'901330101',name:'上海知行企业服务有限公司',score:92,p0:true,priority:'高',owner:'刘亮',status:'待处理',active:'2026-07-23 15:08',features:['持续关注标签','高频浏览购买页'],details:[['持续关注标签','命中运营维护的持续关注企业标签','+15 分',true],['高频浏览购买页','近 7 天浏览购买页 8 次','+10 分']]},
+ {id:'901330102',name:'北京远航教育科技有限公司',score:68,p0:false,priority:'中',owner:'张敏',status:'待处理',active:'2026-07-22 14:50',features:['持续关注标签','空间使用率'],details:[['持续关注标签','命中运营维护的持续关注企业标签','+12 分'],['空间使用率','空间使用率达到 88%','+8 分']]}
 ]};
 const businessFeatures={
  new:[
@@ -95,24 +103,52 @@ const businessFeatures={
   ['有效沟通客户','客户','状态','近 30 天存在有效沟通记录',true,8,false],
   ['商机即将成交','企业','状态','商机阶段为即将成交',true,10,false],
   ['历史愿意续费客户','客户','状态','存在历史续费意愿标签',false,6,false]
+ ],
+ unassigned:[
+  ['高频浏览购买页','客户','行为','近 7 天浏览购买页达到阈值',true,12,true],
+  ['进入收银台','客户','行为','近 7 天进入 ≥3 次，平均停留 ≥1min',true,10,false],
+  ['激活人数 ≥ 3','企业','状态','企业已激活用户数达到 3 人',true,10,false],
+  ['查看折扣活动','客户','行为','购买页有指定折扣策略展示',false,8,false]
+ ],
+ attention:[
+  ['持续关注标签','企业','状态','命中运营维护的企业 ID 标签清单',true,15,true],
+  ['高频浏览购买页','客户','行为','近 7 天浏览购买页达到阈值',true,10,false],
+  ['空间使用率','企业','状态','空间使用大小 / 空间上限，阈值 90%',true,8,false]
  ]};
+const scopeMeta={
+ new:{name:'新购',version:'V1.0',rule:'未购买付费套餐的企业，且客户归属组 = SMB 电销（待定）'},
+ renew:{name:'续费',version:'V2.7',rule:'已有付费套餐且即将到期，且客户归属组 = 客户增长组（待定）'},
+ unassigned:{name:'无归属企业',version:'V1.0',rule:'企业未关联客户，或关联客户无归属人，或客户归属人为张璐丹'},
+ attention:{name:'持续关注企业',version:'V1.0',rule:'命中运营维护的持续关注企业标签（自定义企业 ID 清单）'}
+};
 let biz='new', current=null, configBiz='new';
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function priorityContent(x){
+ const feature=x.features[0], level=x.p0?'紧急':x.priority+'优';
+ let detail=[];
+ if(feature==='存在未支付订单') detail=['待支付金额 ¥ '+(x.amount||'1,194.00'),'下单时间：'+(x.days||'2 天前')];
+ else if(feature==='高频浏览购买页'||feature==='查看折扣活动') detail=['近 7 天浏览 '+(x.p0?'4':'1')+' 次','最近一次浏览：3 天前'];
+ else if(feature==='空间使用率') detail=['当前空间使用率 96%','近 7 天使用量持续增长'];
+ else if(feature==='试用权益到期 / 临期') detail=['试用权益剩余 3 天到期','近 7 天持续活跃'];
+ else if(feature==='激活人数 ≥ 3') detail=['当前已激活 12 人','近 7 天新增激活 5 人'];
+ else detail=['已命中特征判定规则','最近命中：2 天前'];
+ return `<span class="priority high" style="${x.p0?'':'background:#fff6e8;color:#e49224'}"><i class="dot"></i>${level}</span><div style="font-weight:600;color:#4a5562;margin-top:4px">${feature}</div><div class="subline" style="font-size:12px">${detail[0]}</div><div class="subline" style="font-size:12px">${detail[1]}</div>`;
+}
 function renderList(){
  const term=document.querySelector('#keyword')?.value.trim()||'', status=document.querySelector('#statusFilter')?.value||'', pr=document.querySelector('#priorityFilter')?.value||'';
  let arr=customers[biz].filter(x=>(!term||x.name.includes(term)||x.id.includes(term))&&(!status||x.status===status)&&(!pr||x.priority===pr)).sort((a,b)=>b.p0-a.p0||b.score-a.score);
- document.querySelector('#listTitle').textContent=biz==='new'?'新购高优客户':'续费高优客户';
- document.querySelector('#listDesc').textContent=biz==='new'?'按新购总分降序排列，命中 P0 特征客户置顶':'按续费总分降序排列，命中 P0 特征客户置顶';
+ document.querySelector('#listTitle').textContent=scopeMeta[biz].name+'高优客户';
+ document.querySelector('#listDesc').textContent=scopeMeta[biz].rule+'；命中 P0 特征客户置顶';
  document.querySelector('#tableHead').innerHTML='<tr><th style="width:35px"><input class="check" type="checkbox" onchange="toggleAll(this)"></th><th>客户信息</th><th>注册企业信息</th><th>优先级</th><th>客户状态</th><th>今日跟进状态</th><th>最后跟进时间</th><th>操作</th></tr>';
- document.querySelector('#customerRows').innerHTML=arr.map((x,index)=>`<tr><td><input class="check customer-check" type="checkbox" data-id="${x.id}" onchange="updateSelected()"></td><td><span class="company" onclick="openDetail('${x.id}')">${esc(x.name)}</span><div class="subline">ID：${x.id}</div></td><td><span class="company" onclick="openDetail('${x.id}')">${esc(x.name)}</span><div class="subline">ID：${x.id.slice(-8)}</div></td><td><span class="priority ${x.priority==='高'?'high':x.priority==='中'?'mid':'low'}"><i class="dot"></i>${x.priority}优</span>${x.p0?'<span class="p0" style="margin-left:4px">P0</span>':''}<div class="subline">${x.features.slice(0,2).join('、')}</div></td><td>${x.p0?'需求判断':index%2?'需求判断':'无触达'}</td><td>${x.status==='待处理'?'<span style="color:#f38b24">● 未跟进</span>':'<span style="color:#42b98a">● 已跟进</span>'}</td><td>${x.status==='待处理'?x.active:'—'}</td><td><button class="link" onclick="openDetail('${x.id}')">编辑</button>${x.status==='待处理'?`<button class="link" onclick="markDone('${x.id}')">跟进</button>`:'<button class="link" onclick="openDetail(\''+x.id+'\')">查看</button>'}</td></tr>`).join('')||'<tr><td colspan="8" style="text-align:center;padding:45px;color:#99a5b1">暂无符合条件的客户</td></tr>';
+ document.querySelector('#customerRows').innerHTML=arr.map((x,index)=>`<tr><td><input class="check customer-check" type="checkbox" data-id="${x.id}" onchange="updateSelected()"></td><td><span class="company" onclick="openDetail('${x.id}')">${esc(x.name)}</span><div class="subline">ID：${x.id}</div></td><td><span class="company" onclick="openDetail('${x.id}')">${esc(x.name)}</span><div class="subline">ID：${x.id.slice(-8)}</div></td><td>${priorityContent(x)}</td><td>${x.p0?'需求判断':index%2?'需求判断':'无触达'}</td><td>${x.status==='待处理'?'<span style="color:#f38b24">● 未跟进</span>':'<span style="color:#42b98a">● 已跟进</span>'}</td><td>${x.status==='待处理'?x.active:'—'}</td><td><button class="link" onclick="openDetail('${x.id}')">编辑</button>${x.status==='待处理'?`<button class="link" onclick="markDone('${x.id}')">跟进</button>`:'<button class="link" onclick="openDetail(\''+x.id+'\')">查看</button>'}</td></tr>`).join('')||'<tr><td colspan="8" style="text-align:center;padding:45px;color:#99a5b1">暂无符合条件的客户</td></tr>';
  updateStats();
 }
 function updateStats(){let all=customers[biz], done=all.filter(x=>x.status==='已处理').length, pending=all.length-done;document.querySelector('#pending').textContent=pending;document.querySelector('#completed').textContent=done;document.querySelector('#progress').textContent=Math.round(done/all.length*100)+'%';}
 function resetFilters(){let key=document.querySelector('#keyword'),status=document.querySelector('#statusFilter'),priority=document.querySelector('#priorityFilter');if(key)key.value='';if(status)status.value='';if(priority)priority.value='';renderList()}
 function addCondition(){document.querySelector('#conditionRow').style.display='flex'}
 function clearCondition(){document.querySelector('#conditionRow').style.display='none';resetFilters()}
-function getCustomer(id){return customers[biz].find(x=>x.id===id)||customers.new.concat(customers.renew).find(x=>x.id===id)}
-function openDetail(id){current=getCustomer(id);document.querySelector('#detailName').textContent=current.name;document.querySelector('#detailId').textContent='企业 ID：'+current.id;document.querySelector('#detailBiz').textContent=biz==='new'?'新购':'续费';document.querySelector('#detailScore').textContent=current.score+' 分';document.querySelector('#detailOwner').textContent=current.owner;document.querySelector('#intelList').innerHTML=current.details.map((d,i)=>`<div class="intel-item ${d[3]?'p0item':''}"><div class="intel-title">${d[3]?'<span class="p0">P0</span> ':''}${d[0]} <span class="intel-score">${d[2]}</span></div><div class="intel-desc">${d[1]}</div><div class="intel-time">命中时间：2026-07-${23-i} ${10+i}:2${i}</div>${i===0?'<div class="talk">推荐话术：看到贵司当前使用情况，建议为团队配置更适合的企业版套餐。</div>':''}</div>`).join('');document.querySelector('#drawer').classList.add('show')}
+function getCustomer(id){return customers[biz].find(x=>x.id===id)||Object.values(customers).flat().find(x=>x.id===id)}
+function openDetail(id){current=getCustomer(id);document.querySelector('#detailName').textContent=current.name;document.querySelector('#detailId').textContent='企业 ID：'+current.id;document.querySelector('#detailBiz').textContent=scopeMeta[biz].name;document.querySelector('#detailScore').textContent=current.score+' 分';document.querySelector('#detailOwner').textContent=current.owner;document.querySelector('#intelList').innerHTML=current.details.map((d,i)=>`<div class="intel-item ${d[3]?'p0item':''}"><div class="intel-title">${d[3]?'<span class="p0">P0</span> ':''}${d[0]} <span class="intel-score">${d[2]}</span></div><div class="intel-desc">${d[1]}</div><div class="intel-time">命中时间：2026-07-${23-i} ${10+i}:2${i}</div>${i===0?'<div class="talk">推荐话术：看到贵司当前使用情况，建议为团队配置更适合的企业版套餐。</div>':''}</div>`).join('');document.querySelector('#drawer').classList.add('show')}
 function closeDrawer(){document.querySelector('#drawer').classList.remove('show')}
 function markDone(id){let x=getCustomer(id);x.status='已处理';showToast('已标记为处理完成');renderList()}
 function toggleAll(el){document.querySelectorAll('.customer-check').forEach(x=>x.checked=el.checked);updateSelected()}
@@ -126,20 +162,26 @@ document.querySelectorAll('.tab[data-biz]').forEach(t=>t.onclick=()=>{biz=t.data
 document.querySelectorAll('[data-page]').forEach(n=>n.onclick=()=>{let p=n.dataset.page;document.querySelectorAll('.nav-item[data-page]').forEach(x=>x.classList.toggle('active',x===n));document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===p));if(p==='priority')renderList()});
 document.querySelectorAll('.config-tab').forEach(t=>t.onclick=()=>{configBiz=t.dataset.config;document.querySelectorAll('.config-tab').forEach(x=>x.classList.toggle('active',x===t));renderBusinessConfig()});
 function renderBusinessConfig(){
- const isNew=configBiz==='new', scope=isNew?'新购':'续费';
+ const isNew=configBiz==='new', scope=scopeMeta[configBiz].name;
  document.querySelector('#configScope').textContent=scope+'情报排序配置';
- document.querySelector('#scopeHint').textContent='设置参与'+scope+'评分的特征及权重，配置变更仅影响'+scope+'场景。';
- document.querySelector('#configVersion').textContent='当前版本：'+(isNew?'新购 V1.0':'续费 V2.7');
- document.querySelector('#businessFeatureRows').innerHTML=businessFeatures[configBiz].map((f,i)=>`<tr><td><span class="config-input" style="display:inline-block;width:100%;background:#fff">${f[0]}</span></td><td class="empty-note">${f[3]}</td><td>${f[1]==='企业'?'企业':'客户'}</td><td><div class="talk-preview" style="max-width:255px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#778594;font-size:11px"><b style="color:#9aa6b2">H</b> 看到贵司${f[0]}表现突出　<b style="color:#9aa6b2">V</b> 企业版可提供更完整能力　<b style="color:#9aa6b2">C</b> 方便进一步了解吗？</div><button class="link" style="margin:3px 0 0;font-size:11px" onclick="editTalk(this,'${f[0]}')">编辑话术</button></td><td><input class="config-input" style="width:106px" type="text" value="${f[5]}"> <span class="empty-note">分</span></td><td><label class="switch"><input type="checkbox" ${f[6]?'checked':''}><span class="slider"></span></label></td><td><label class="switch"><input type="checkbox" ${f[4]?'checked':''}><span class="slider"></span></label></td></tr>`).join('');
+ document.querySelector('#scopeHint').textContent=scopeMeta[configBiz].rule+'。配置独立生效，后续可在同一业务范围下按策略拆分不同特征与打分规则。';
+ document.querySelector('#configVersion').textContent='当前版本：'+scopeMeta[configBiz].version;
+ const featureKeyword=document.querySelector('#featureNameFilter')?.value.trim()||'', enableFilter=document.querySelector('#featureEnableFilter')?.value||'';
+ const filteredFeatures=businessFeatures[configBiz].filter(f=>(!featureKeyword||f[0].includes(featureKeyword))&&(!enableFilter||(enableFilter==='enabled'?f[4]:!f[4])));
+ document.querySelector('#featureCountHint').textContent='共 '+businessFeatures[configBiz].length+' 个特征，已启用 '+businessFeatures[configBiz].filter(f=>f[4]).length+' 个';
+ document.querySelector('#businessFeatureRows').innerHTML=filteredFeatures.map((f,i)=>`<tr><td><span class="config-input" style="display:inline-block;width:100%;background:#fff">${f[0]}</span></td><td class="empty-note">${f[3]}</td><td>${f[1]==='企业'?'企业':'客户'}</td><td><div class="talk-preview" style="max-width:255px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#778594;font-size:11px"><b style="color:#9aa6b2">H</b> 看到贵司${f[0]}表现突出　<b style="color:#9aa6b2">V</b> 企业版可提供更完整能力　<b style="color:#9aa6b2">C</b> 方便进一步了解吗？</div><button class="link" style="margin:3px 0 0;font-size:11px" onclick="editTalk(this,'${f[0]}')">编辑话术</button></td><td><input class="config-input" style="width:106px" type="text" value="${f[5]}"> <span class="empty-note">分</span></td><td><label class="switch"><input type="checkbox" ${f[6]?'checked':''}><span class="slider"></span></label></td><td><label class="switch"><input type="checkbox" ${f[4]?'checked':''}><span class="slider"></span></label></td></tr>`).join('')||'<tr><td colspan="7" style="text-align:center;padding:36px;color:#99a5b1">暂无符合条件的特征</td></tr>';
+ document.querySelectorAll('#businessFeatureRows tr').forEach((row,index)=>{let enabledInput=row.querySelector('td:last-child input');if(enabledInput)enabledInput.onchange=event=>{filteredFeatures[index][4]=event.target.checked;renderBusinessConfig()}});
  const ranges=isNew?[[90,'+∞'],[60,90],[40,60],[0,40]]:[[85,'+∞'],[55,85],[35,55],[0,35]];
  document.querySelectorAll('#priorityMappingRows tr').forEach((row,i)=>{let inputs=row.querySelectorAll('input');inputs[0].value=ranges[i][0];inputs[1].value=ranges[i][1]});
 }
-function saveBusinessConfig(){showToast((configBiz==='new'?'新购':'续费')+'配置已保存并发布，打分引擎将在下一次计算时加载')}
+function saveBusinessConfig(){showToast(scopeMeta[configBiz].name+'配置已保存并发布，打分引擎将在下一次计算时加载')}
+function resetFeatureFilters(){document.querySelector('#featureNameFilter').value='';document.querySelector('#featureEnableFilter').value='';renderBusinessConfig()}
 let speechTarget=null;
 function editTalk(button,feature){speechTarget=button;document.querySelector('#speechFeature').textContent=feature;document.querySelector('#speechHook').value='看到贵司'+feature+'表现突出';document.querySelector('#speechValue').value='企业版可提供更完整能力';document.querySelector('#speechCta').value='方便进一步了解吗？';document.querySelector('#speechOverlay').classList.add('show')}
 function closeSpeechEditor(){document.querySelector('#speechOverlay').classList.remove('show');speechTarget=null}
 function saveSpeech(){if(!speechTarget)return;let hook=document.querySelector('#speechHook').value.trim(),value=document.querySelector('#speechValue').value.trim(),cta=document.querySelector('#speechCta').value.trim();speechTarget.previousElementSibling.innerHTML='<b style="color:#9aa6b2">H</b> '+esc(hook)+'　<b style="color:#9aa6b2">V</b> '+esc(value)+'　<b style="color:#9aa6b2">C</b> '+esc(cta);closeSpeechEditor();showToast('智能话术已更新')}
 renderBusinessConfig();
 renderList();
+document.querySelector('#priorityMappingPanel').parentNode.insertBefore(document.querySelector('#featureConfigPanel'),document.querySelector('#priorityMappingPanel'));
 </script>
 </body></html>
