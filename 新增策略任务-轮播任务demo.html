@@ -1421,7 +1421,7 @@
       if (strategy.deliveryMode === "timeRange" && periodicValidation.messages.length) {
         const warning = document.createElement("div");
         warning.className = "periodic-warning";
-        warning.textContent = `投放周期存在重叠：${periodicValidation.messages.join("；")}。重叠时按内容顺序优先投放靠前内容。`;
+        warning.textContent = "提示：检测到不同内容的投放周期重叠。在重叠时段内，按内容排序确定投放优先级，排序靠前的内容优先投放";
         listEl.appendChild(warning);
       }
       return row;
