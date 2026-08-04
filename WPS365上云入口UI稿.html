@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WPS 365 企业首页｜上云入口优化稿</title>
+  <style>
+    :root { --blue:#2f6bff; --blue2:#eaf1ff; --text:#20242b; --muted:#8a919d; --line:#ebeef4; --bg:#f6f7f9; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-width:1100px; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif; }
+    .topbar { height:52px; padding:0 34px; display:flex; align-items:center; justify-content:space-between; background:#fff; border-bottom:1px solid var(--line); }
+    .brand { display:flex; align-items:center; gap:9px; font-weight:650; font-size:15px; }
+    .brand i { display:grid; place-items:center; width:25px; height:25px; border-radius:6px; background:#3474f5; color:#fff; font-style:normal; font-size:12px; font-weight:800; }
+    .top-right { display:flex; align-items:center; gap:16px; color:#6f7784; font-size:12px; }
+    .role-switch { display:flex; padding:3px; border-radius:6px; background:#f2f4f7; }
+    .role-switch button { padding:5px 9px; border:0; border-radius:4px; background:transparent; color:#7d8591; font-size:11px; cursor:pointer; }
+    .role-switch button.active { background:#fff; color:#3f6fff; font-weight:600; }
+    .preview-toolbar { border-bottom:1px solid var(--line); background:#fbfcfe; }
+    .preview-controls { display:flex; align-items:center; gap:16px; width:1060px; min-height:42px; margin:0 auto; color:#7a8390; font-size:11px; }
+    .preview-label { color:#555e6b; font-weight:600; }
+    .preview-group { display:flex; align-items:center; gap:5px; }
+    .preview-group > span { margin-right:2px; color:#87909c; }
+    .preview-group button { padding:4px 7px; border:1px solid #e1e5eb; border-radius:4px; background:#fff; color:#717b88; font-size:10px; cursor:pointer; }
+    .preview-group button.active { border-color:#a9c1ff; background:#edf3ff; color:#3f6fff; font-weight:600; }
+    .preview-group[hidden] { display:none; }
+    .avatar { width:28px; height:28px; display:grid; place-items:center; border-radius:50%; background:#e2ebff; color:var(--blue); font-size:12px; font-weight:700; }
+    .shell { width:1060px; margin:24px auto; display:grid; grid-template-columns:280px minmax(0, 1fr); gap:18px; }
+    aside { container-type:inline-size; }
+    .card { background:#fff; border:1px solid var(--line); border-radius:9px; }
+    .profile { padding:16px 13px 10px; }
+    .profile-head { display:flex; align-items:center; gap:10px; padding:0 5px 15px; }
+    .profile .avatar { width:42px; height:42px; font-size:15px; }
+    .name { font-size:14px; font-weight:600; }.company { margin-top:4px; color:var(--muted); font-size:11px; }
+    .grid-menu { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding-top:10px; }
+    .menu { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; min-height:88px; padding:12px 5px; text-align:center; border:1px solid #eceef3; border-radius:6px; color:#3f4752; font-size:12px; }
+    .menu-label { display:flex; align-items:center; gap:6px; white-space:nowrap; }
+    .menu-icon { display:block; width:17px; height:17px; margin:0; border:1.5px solid #4c5562; border-radius:5px; }
+    .menu b { display:block; margin:0; color:#202833; font-size:16px; font-weight:500; }
+    .combined-entry { margin:0 0 10px; overflow:hidden; border:1px solid #e4e8ee; border-radius:10px; background:#fff; }
+    .storage-section { padding:14px 15px 13px; }
+    .storage-head { display:flex; align-items:center; justify-content:space-between; }
+    .storage-title { color:#303846; font-size:13px; font-weight:600; }
+    .storage-expand { padding:4px 7px; border:1px solid #cbd9ff; border-radius:4px; background:#f5f8ff; color:#3f6fff; font-size:11px; font-weight:600; line-height:1; cursor:pointer; }
+    .storage-expand[hidden] { display:none; }
+    .storage-expand:hover { border-color:#94b0ff; background:#edf3ff; }
+    .storage-meter { display:flex; align-items:center; gap:9px; margin-top:9px; }
+    .storage-track { flex:1; height:5px; overflow:hidden; border-radius:4px; background:#edf0f4; }
+    .storage-track i { display:block; width:10%; height:100%; border-radius:4px; background:#6d94f7; }
+    .storage-track.is-warning i { background:#f5a524; }
+    .storage-track.is-danger i { background:#e5484d; }
+    .storage-usage { color:#7e8794; font-size:10px; white-space:nowrap; }
+    .cloud-entry { padding:13px 15px 14px; border-top:1px solid #edf0f4; text-align:left; cursor:pointer; transition:.15s ease; }
+    .cloud-entry:hover { background:#fcfcfd; }
+    .sync-row { display:flex; align-items:flex-start; gap:9px; }
+    .sync-icon { display:flex; flex:0 0 28px; align-items:center; justify-content:center; width:28px; height:28px; border-radius:8px; background:#eef3ff; }
+    .sync-icon svg { width:18px; height:18px; fill:none; stroke:#4b75f2; stroke-linecap:round; stroke-linejoin:round; stroke-width:1.8; }
+    .sync-main { flex:1; min-width:0; }.sync-heading { display:flex; align-items:center; }.sync-title { color:#303846; font-size:14px; font-weight:600; }
+    .sync-desc { margin-top:5px; color:#7c8591; font-size:10px; line-height:1.55; }
+    .entry-footer { padding:10px 15px 13px; }
+    .entry-action { width:100%; padding:8px 10px; border:1px solid #3f6fff; border-radius:6px; background:#3f6fff; color:#fff; font-size:13px; font-weight:600; line-height:1; cursor:pointer; }
+    .entry-action:hover { background:#3364eb; }
+    .entry-action.is-secondary { border-color:#d9dee7; background:#fff; color:#4c5665; }
+    .sync-inline-action { display:inline; margin-left:6px; padding:0; border:0; background:transparent; color:#4b75f2; font-size:10px; font-weight:500; line-height:inherit; cursor:pointer; }
+    .sync-inline-action[hidden] { display:none; }
+    .sync-inline-action:hover { color:#2f62e8; }
+    .entry-footer.is-hidden { display:none; }
+    .combined-entry.enabled .sync-icon { position:relative; background:#ecfbf3; }.combined-entry.enabled .sync-icon svg { stroke:#20a65a; }.combined-entry.enabled .sync-icon:after { position:absolute; right:-3px; bottom:-3px; width:11px; height:11px; border:1px solid #fff; border-radius:50%; background:#20a65a; color:#fff; content:"✓"; font-size:8px; font-weight:700; line-height:11px; text-align:center; }
+    .qr { margin-top:14px; padding:13px; display:flex; gap:12px; align-items:center; }.qr-code { width:58px; height:58px; background:repeating-conic-gradient(#29313e 0 25%,#fff 0 50%) 50% / 10px 10px; }.qr strong{font-size:12px}.qr p{margin:5px 0 0;color:var(--muted);font-size:10px;line-height:1.5}
+    .main { min-width:0; }.title-row { display:flex; align-items:center; justify-content:space-between; margin:4px 3px 13px; }.title-row h1{margin:0;font-size:17px}.title-row span{color:var(--muted);font-size:11px}
+    .plans { display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:14px; }.plan { min-height:133px; padding:13px 16px; border:1px solid var(--line); border-radius:7px; }.plan.blue { color:#fff; border:0; background:#4779ed; }.plan h2{margin:0 0 13px;font-size:15px}.plan-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; }.plan-grid b{display:block;font-size:14px}.plan-grid small{display:block;margin-top:5px;font-size:10px;opacity:.74}.plan button{width:100%;margin-top:16px;padding:7px;border:1px solid #dce1ec;border-radius:5px;background:#fff;color:#556070;font-size:11px}.blue button{border:0;color:#3465d9}
+    .apps { margin-top:16px; padding:17px 20px 20px; }.tabs { display:flex; gap:20px; margin:14px 0 18px; color:#6f7784; font-size:12px; }.tabs .current{position:relative;color:var(--blue);font-weight:600}.tabs .current:after{content:"";position:absolute;bottom:-7px;left:0;width:26px;height:2px;background:var(--blue)}
+    .app-list { display:grid; grid-template-columns:repeat(7,1fr); gap:14px; }.app { text-align:center; color:#5e6774; font-size:10px; }.app i { display:grid; place-items:center; width:30px; height:30px; margin:0 auto 7px; border-radius:6px; background:#f0b733; color:#fff; font-style:normal; font-size:13px; font-weight:700; }.app:nth-child(2) i,.app:nth-child(5) i{background:#6b68e9}.app:nth-child(3) i{background:#ef6b65}.app:nth-child(4) i{background:#4e83ea}.app:nth-child(6) i{background:#40a7dc}.app:nth-child(7) i{background:#4bbd88}
+    .toast{display:none;position:fixed;z-index:8;top:18px;left:50%;transform:translateX(-50%);padding:10px 15px;border:1px solid #bee6cf;border-radius:6px;background:#effbf4;color:#248558;font-size:13px}.toast.show{display:block}
+    @container (max-width: 340px) {
+      .profile { padding:14px 11px 9px; }
+      .profile .avatar { width:38px; height:38px; font-size:14px; }
+      .cloud-entry { padding:14px 13px 12px; }
+      .entry-line { gap:11px; }
+      .entry-icon { flex-basis:38px; width:38px; height:38px; border-radius:10px; }
+      .entry-icon svg { width:23px; height:23px; }
+      .entry-heading { gap:7px; }
+      .entry-title { font-size:14px; }
+      .entry-desc { font-size:10px; }
+      .entry-meta, .device-summary { font-size:10px; }
+      .entry-action { font-size:13px; }
+      .menu { min-height:84px; padding-top:13px; font-size:11px; }
+      .menu-icon { width:16px; height:16px; margin-bottom:0; }
+      .menu b { margin-top:5px; font-size:15px; }
+    }
+    @container (max-width: 300px) {
+      .profile { padding-left:8px; padding-right:8px; }
+      .cloud-entry { padding:12px 7px 10px; }
+      .entry-line { gap:7px; }
+      .entry-icon { flex-basis:30px; width:30px; height:30px; border-radius:8px; }
+      .entry-icon svg { width:19px; height:19px; }
+      .entry-title { font-size:14px; }
+      .entry-desc { font-size:11px; letter-spacing:0; }
+      .entry-meta, .device-summary { font-size:11px; }
+      .entry-action { font-size:13px; }
+      .device-summary { margin-right:7px; }
+      .entry-footer { padding:9px 18px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><i>W</i>企业订阅</div>
+    <div class="top-right">
+      <div class="role-switch" aria-label="视角切换"><button class="active" data-role="member">成员视角</button><button data-role="admin">超管视角</button></div>
+      <span>企业管理</span><div class="avatar">刘</div>
+    </div>
+  </header>
+  <div class="preview-toolbar">
+    <div class="preview-controls">
+      <span class="preview-label">状态预览</span>
+      <div class="preview-group"><span>同步</span><button class="active" data-opened="false">未开启</button><button data-opened="true">已开启</button></div>
+      <div class="preview-group" id="memberUsageControl"><span>成员空间</span><button class="active" data-member-usage="low">≤70%</button><button data-member-usage="warning">70–90%</button><button data-member-usage="danger">&gt;90%</button></div>
+      <div class="preview-group"><span>企业空间</span><button class="active" data-enterprise-usage="low">≤70%</button><button data-enterprise-usage="warning">70–90%</button><button data-enterprise-usage="danger">&gt;90%</button></div>
+    </div>
+  </div>
+  <main class="shell">
+    <aside>
+      <section class="card profile">
+        <div class="profile-head"><div class="avatar">刘</div><div><div class="name">刘晨</div><div class="company">星云科技有限公司</div></div></div>
+        <div class="combined-entry">
+          <div class="storage-section">
+            <div class="storage-head"><span class="storage-title">企业空间</span><button class="storage-expand" id="storageExpand" hidden>申请扩容</button></div>
+            <div class="storage-meter"><div class="storage-track"><i id="storageFill"></i></div><span class="storage-usage" id="storageUsage">1.00GB / 10.00GB</span></div>
+          </div>
+          <div class="cloud-entry" id="cloudEntry">
+            <div class="sync-row"><span class="sync-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.4 18h10.2a4.2 4.2 0 0 0 .5-8.37A5.8 5.8 0 0 0 6.2 11.1 3.5 3.5 0 0 0 6.4 18Z"/></svg></span><div class="sync-main"><div class="sync-heading"><span class="sync-title" id="syncTitle">开启云文档同步</span></div><div class="sync-desc"><span id="syncDesc">文档打开时将自动上传到 WPS 云盘，保留历史版本，防止资料丢失</span><button class="sync-inline-action" id="syncLink" hidden>云文档服务 ›</button></div></div></div>
+          </div>
+          <div class="entry-footer"><button class="entry-action" id="entryAction">立即开启</button></div>
+        </div>
+        <div class="grid-menu">
+          <div class="menu"><div class="menu-label"><i class="menu-icon"></i>账号安全</div><b>0分</b></div>
+          <div class="menu"><div class="menu-label"><i class="menu-icon"></i>消息通知</div><b>1条</b></div>
+          <div class="menu"><div class="menu-label"><i class="menu-icon"></i>KOS认证</div><b>查看详情</b></div>
+          <div class="menu"><div class="menu-label"><i class="menu-icon"></i>个人会员</div><b>立即开通</b></div>
+          <div class="menu"><div class="menu-label"><i class="menu-icon"></i>账号管理</div><b>查看与管理</b></div>
+          <div class="menu"><div class="menu-label"><i class="menu-icon"></i>最近使用应用</div><b>1个</b></div>
+        </div>
+      </section>
+      <section class="card qr"><div class="qr-code"></div><div><strong>扫码下载客户端</strong><p>随时随地查看与编辑工作文件</p></div></section>
+    </aside>
+    <section class="main">
+      <div class="title-row"><h1>企业订阅</h1><span>更多权益对比 ›</span></div>
+      <section class="card plans">
+        <article class="plan"><h2>WPS 365 旗舰版</h2><div class="plan-grid"><div><b>2GB/人</b><small>企业云空间</small></div><div><b>10MB</b><small>单文件上传</small></div><div><b>无</b><small>协作成员数</small></div></div><button>仅需订阅 ›</button></article>
+        <article class="plan blue"><h2>WPS 365 商业高级版</h2><div class="plan-grid"><div><b>365GB/人</b><small>企业云空间</small></div><div><b>6GB</b><small>单文件上传</small></div><div><b>不限</b><small>协作成员数</small></div></div><button>每日仅需 ¥1.90/人 ｜ 申请购买</button></article>
+      </section>
+      <section class="card apps">
+        <div class="title-row"><h1>企业应用</h1><span>向右 ›</span></div>
+        <div class="tabs"><span class="current">企业常用</span><span>精选推荐</span></div>
+        <div class="app-list">
+          <div class="app"><i>文</i>企业文档</div><div class="app"><i>表</i>在线表格</div><div class="app"><i>会</i>会议纪要</div><div class="app"><i>盘</i>企业云盘</div><div class="app"><i>协</i>协作空间</div><div class="app"><i>OK</i>OKR管理</div><div class="app"><i>人</i>人事管理</div>
+        </div>
+      </section>
+    </section>
+  </main>
+  <div class="toast" id="toast">已开启我的云上办公</div>
+  <script>
+    const $ = id => document.getElementById(id);
+    let role = "member";
+    let opened = false;
+    const data = {
+      member:{
+        inactiveTitle:"开启云文档同步",
+        openedTitle:"云文档同步已开启",
+        desc:"文档打开时将自动上传到 WPS 云盘，保留历史版本，防止资料丢失",
+        openedDesc:"文档实时同步并保留历史版本，跨设备随时继续编辑",
+        openedAction:"更多云文档服务 ›",
+        openedMode:"is-link",
+        toast:"已开启文档云同步"
+      },
+      admin:{
+        inactiveTitle:"开启企业云同步",
+        openedTitle:"企业云同步已开启",
+        desc:"开启后所有文档跨设备同步更新，保留历史版本，成员外发文档可管控",
+        openedDesc:"同步已开启，企业文档统一管理，成员外发文档可管控",
+        openedAction:"管理企业空间",
+        openedMode:"is-secondary",
+        toast:"已为全员开启企业云同步"
+      }
+    };
+    // 由接口返回：成员可用空间使用率、企业整体空间使用率。
+    const spaceUsage = { memberAvailablePercent: 10, enterprisePercent: 10 };
+    function usageLevel(percent) {
+      return percent > 90 ? "danger" : percent > 70 ? "warning" : "low";
+    }
+    function updateStorageVisual() {
+      const percent=role === "member" ? spaceUsage.memberAvailablePercent : spaceUsage.enterprisePercent;
+      $("storageFill").style.width=`${percent}%`;
+      $("storageUsage").textContent=`${(percent / 10).toFixed(2)}GB / 10.00GB`;
+      $("storageFill").parentElement.className=`storage-track is-${usageLevel(percent)}`;
+    }
+    function updatePreviewControls() {
+      document.querySelectorAll("[data-opened]").forEach(button=>button.classList.toggle("active", String(opened) === button.dataset.opened));
+      document.querySelectorAll("[data-member-usage]").forEach(button=>button.classList.toggle("active", usageLevel(spaceUsage.memberAvailablePercent) === button.dataset.memberUsage));
+      document.querySelectorAll("[data-enterprise-usage]").forEach(button=>button.classList.toggle("active", usageLevel(spaceUsage.enterprisePercent) === button.dataset.enterpriseUsage));
+      $("memberUsageControl").hidden=role === "admin";
+    }
+    function updateStorageAction(opened) {
+      const button=$("storageExpand");
+      let action;
+      if (role === "admin") {
+        action=opened || spaceUsage.enterprisePercent > 70 ? "expand" : "manage";
+      } else if (spaceUsage.memberAvailablePercent > 70 && spaceUsage.enterprisePercent > 70) {
+        action="apply";
+      }
+      button.hidden=!action;
+      button.dataset.action=action || "";
+      button.textContent={ apply:"申请扩容", expand:"扩容", manage:"管理" }[action] || "";
+    }
+    function setCardState(nextOpened) {
+      const d=data[role];
+      const card=$("cloudEntry").parentElement;
+      opened=nextOpened;
+      card.classList.toggle("enabled", nextOpened);
+      $("syncTitle").textContent=nextOpened ? d.openedTitle : d.inactiveTitle;
+      $("syncDesc").textContent=nextOpened ? d.openedDesc : d.desc;
+      $("entryAction").textContent=nextOpened ? d.openedAction : "立即开启";
+      $("entryAction").className=`entry-action${nextOpened ? ` ${d.openedMode}` : ""}`;
+      const useInlineLink=nextOpened && role === "member";
+      $("syncLink").hidden=!useInlineLink;
+      $("entryAction").parentElement.classList.toggle("is-hidden", useInlineLink);
+      updateStorageAction(nextOpened);
+      updateStorageVisual();
+      updatePreviewControls();
+    }
+    function render(next) {
+      role=next;
+      document.querySelectorAll("[data-role]").forEach(b=>b.classList.toggle("active",b.dataset.role===role));
+      setCardState(false);
+    }
+    document.querySelectorAll("[data-role]").forEach(b=>b.onclick=()=>render(b.dataset.role));
+    document.querySelectorAll("[data-opened]").forEach(button=>button.onclick=()=>setCardState(button.dataset.opened === "true"));
+    document.querySelectorAll("[data-member-usage]").forEach(button=>button.onclick=()=>{
+      spaceUsage.memberAvailablePercent={ low:10, warning:80, danger:95 }[button.dataset.memberUsage];
+      setCardState(opened);
+    });
+    document.querySelectorAll("[data-enterprise-usage]").forEach(button=>button.onclick=()=>{
+      spaceUsage.enterprisePercent={ low:10, warning:80, danger:95 }[button.dataset.enterpriseUsage];
+      setCardState(opened);
+    });
+    const enableCloud=()=>{
+      const entry=$("cloudEntry");
+      if(entry.parentElement.classList.contains("enabled")) {
+        $("toast").textContent=role === "admin" ? "已打开企业空间管理" : "已打开云文档服务";
+        $("toast").classList.add("show");
+        setTimeout(()=>$("toast").classList.remove("show"),2200);
+        return;
+      }
+      setCardState(true);
+      $("toast").textContent=data[role].toast;
+      $("toast").classList.add("show");
+      setTimeout(()=>$("toast").classList.remove("show"),2200);
+    };
+    $("cloudEntry").onclick=enableCloud;
+    $("entryAction").onclick=enableCloud;
+    $("syncLink").onclick=(event)=>{
+      event.stopPropagation();
+      enableCloud();
+    };
+    $("storageExpand").onclick=()=>{
+      const action=$("storageExpand").dataset.action;
+      $("toast").textContent=action === "manage" ? "已打开企业空间管理" : action === "apply" ? "已提交扩容申请" : "已打开企业空间扩容";
+      $("toast").classList.add("show");
+      setTimeout(()=>$("toast").classList.remove("show"),2200);
+    };
+    render(role);
+  </script>
+</body>
+</html>
