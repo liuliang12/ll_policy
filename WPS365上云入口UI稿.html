@@ -73,6 +73,7 @@
     .subscription-head span { color:#8a93a0; font-size:11px; }
     .subscription-notice { display:flex; align-items:center; gap:8px; margin-bottom:12px; padding:10px 12px; border-radius:6px; background:#edfafa; color:#5a7e85; font-size:11px; }
     .subscription-notice[hidden] { display:none; }
+    .diagnostics-notice-slot .subscription-notice { margin:14px 0 12px; }
     .subscription-notice i { display:grid; flex:0 0 16px; width:16px; height:16px; place-items:center; border-radius:50%; background:#5dc2c9; color:#fff; font-size:11px; font-style:normal; font-weight:700; }
     .subscription-notice a { margin-left:auto; color:#349aa4; text-decoration:none; white-space:nowrap; }
     .subscription-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
@@ -167,6 +168,7 @@
       <div class="preview-group" id="memberUsageControl"><span>成员空间</span><button class="active" data-member-usage="low">≤70%</button><button data-member-usage="warning">70–90%</button><button data-member-usage="danger">&gt;90%</button></div>
       <div class="preview-group"><span>企业空间</span><button class="active" data-enterprise-usage="low">≤70%</button><button data-enterprise-usage="warning">70–90%</button><button data-enterprise-usage="danger">&gt;90%</button></div>
       <div class="preview-group" id="noticeControl"><span>套餐提示</span><button class="active" data-notice="show">显示</button><button data-notice="hide">隐藏</button></div>
+      <div class="preview-group" id="noticePlacementControl"><span>提示位置</span><button class="active" data-notice-placement="outside">套餐下方</button><button data-notice-placement="inside">诊断卡内</button></div>
     </div>
   </div>
   <main class="shell">
@@ -197,7 +199,7 @@
     <section class="main">
       <section class="card plans">
         <div class="subscription-head"><h1>企业订阅</h1><span>更多权益对比 ›</span></div>
-        <div class="subscription-notice" id="subscriptionNotice"><i>i</i><span>近30天，5名员工在使用高级功能时被拦截，累计12次。升级商业协作版，立即解锁全部能力</span><a href="#" id="interceptDetail">查看拦截详情 ›</a></div>
+        <div id="subscriptionNoticeSlot"><div class="subscription-notice" id="subscriptionNotice"><i>i</i><span id="subscriptionNoticeText">近30天，5名员工在使用高级功能时被拦截，累计12次。升级商业协作版，立即解锁全部能力</span><a href="#" id="interceptDetail">查看拦截详情 ›</a></div></div>
         <div class="subscription-grid">
           <article class="plan"><h2>WPS 365 体验版</h2><div class="plan-divider"></div><div class="plan-grid"><div><b>2GB/人</b><small>企业空间</small></div><div><b>10MB</b><small>单文件上传大小</small></div><div><b>无</b><small>团队文档自定义权限</small></div><div><b>3个团队</b><small>团队文档水印</small></div><div><b>无</b><small>恢复已解散团队</small></div><div><b>无</b><small>指定团队拥有者</small></div></div><button>权益明细 ›</button></article>
           <article class="plan coop"><span class="plan-badge">推荐订阅</span><h2>WPS 365 商业协作版</h2><div class="plan-divider"></div><div class="plan-grid"><div><b>50GB/人</b><small>企业空间</small></div><div><b>4GB</b><small>单文件上传大小</small></div><div><b>30个团队</b><small>团队文档自定义权限</small></div><div><b>30个团队</b><small>团队文档水印</small></div><div><b>有</b><small>恢复已解散团队</small></div><div><b>有</b><small>指定团队拥有者</small></div></div><span class="plan-price">限时91折</span><button id="planPurchase">每日仅需 ¥0.54/人｜申请购买</button></article>
@@ -205,6 +207,7 @@
       </section>
       <section class="card diagnostics" id="diagnosticsCard">
         <div class="diagnostics-head"><h2>受阻数据诊断</h2></div>
+        <div class="diagnostics-notice-slot" id="diagnosticsNoticeSlot"></div>
         <div class="diagnostics-grid">
           <button class="diagnostics-item" data-space-detail="无法上传记录">无法上传文件<b>0<span>份 ›</span></b></button>
           <button class="diagnostics-item" data-space-detail="申请扩容成员">扩容申请<b>0<span>人 ›</span></b></button>
@@ -235,6 +238,7 @@
     let role = "member";
     let opened = false;
     let subscriptionNoticeVisible = true;
+    let noticePlacement = "outside";
     const data = {
       member:{
         inactiveTitle:"开启云文档同步",
@@ -271,12 +275,19 @@
       document.querySelectorAll("[data-member-usage]").forEach(button=>button.classList.toggle("active", usageLevel(spaceUsage.memberAvailablePercent) === button.dataset.memberUsage));
       document.querySelectorAll("[data-enterprise-usage]").forEach(button=>button.classList.toggle("active", usageLevel(spaceUsage.enterprisePercent) === button.dataset.enterpriseUsage));
       document.querySelectorAll("[data-notice]").forEach(button=>button.classList.toggle("active", (subscriptionNoticeVisible ? "show" : "hide") === button.dataset.notice));
+      document.querySelectorAll("[data-notice-placement]").forEach(button=>button.classList.toggle("active", noticePlacement === button.dataset.noticePlacement));
       $("memberUsageControl").hidden=role === "admin";
       const isAdmin=role === "admin";
       $("noticeControl").hidden=!isAdmin;
+      $("noticePlacementControl").hidden=!isAdmin || !subscriptionNoticeVisible;
       $("subscriptionNotice").hidden=!isAdmin || !subscriptionNoticeVisible;
       $("diagnosticsCard").hidden=!isAdmin;
       $("planPurchase").textContent=isAdmin ? "每日仅需 ¥0.54/人｜立即购买" : "每日仅需 ¥0.54/人｜申请购买";
+      const noticeTarget=noticePlacement === "inside" ? $("diagnosticsNoticeSlot") : $("subscriptionNoticeSlot");
+      noticeTarget.appendChild($("subscriptionNotice"));
+      $("subscriptionNoticeText").textContent=noticePlacement === "inside"
+        ? "近期员工使用高级功能被拦截次数较多，推荐升级商业高级版，解锁高级功能"
+        : "近30天，5名员工在使用高级功能时被拦截，累计12次。升级商业协作版，立即解锁全部能力";
     }
     function updateStorageAction(opened) {
       const button=$("storageExpand");
@@ -324,6 +335,10 @@
     document.querySelectorAll("[data-notice]").forEach(button=>button.onclick=()=>{
       subscriptionNoticeVisible=button.dataset.notice === "show";
       document.querySelector(".subscription-notice").hidden=!subscriptionNoticeVisible;
+      updatePreviewControls();
+    });
+    document.querySelectorAll("[data-notice-placement]").forEach(button=>button.onclick=()=>{
+      noticePlacement=button.dataset.noticePlacement;
       updatePreviewControls();
     });
     const enableCloud=()=>{
