@@ -1,0 +1,1920 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>WPS 365 套餐价格 - 企业版报价与权益对比｜智能版框架稿</title>
+<link rel="icon" href="https://vasvip-pub.wpscdn.cn/prod/favico/favicon.ico"/>
+<style>
+/* 设计 token：字号 12/14/16/20/24/36/48；间距 4/8/12/16/24/32/48/64 */
+:root{
+  --blue:#1f69e0;
+  --blue-hover:#2267d5;
+  --text:rgba(13,13,13,.9);
+  --sub:rgba(13,13,13,.66);
+  --tips:rgba(13,13,13,.46);
+  --line:rgba(0,0,0,.08);
+  --purple:#6b5cff;
+  --demo-h:32px;
+  --nav-h:56px;
+  --chrome-h:calc(var(--demo-h) + var(--nav-h));
+  --fs-12:12px;
+  --fs-14:14px;
+  --fs-16:16px;
+  --fs-20:20px;
+  --fs-24:24px;
+  --fs-36:36px;
+  --fs-48:48px;
+  --space-4:4px;
+  --space-8:8px;
+  --space-12:12px;
+  --space-16:16px;
+  --space-24:24px;
+  --space-32:32px;
+  --space-48:48px;
+  --space-64:64px;
+  --lh-tight:1.3;
+  --lh-base:1.5;
+  --lh-loose:1.75;
+  --radius:8px;
+  --radius-lg:16px;
+}
+*{box-sizing:border-box}
+body{margin:0;color:var(--text);font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;font-size:var(--fs-14);line-height:var(--lh-base);background:#fff;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+img{display:block}
+
+.demo-bar{position:sticky;top:0;z-index:200;display:flex;justify-content:space-between;gap:var(--space-12);align-items:center;height:var(--demo-h);padding:0 var(--space-24);background:#111827;color:#e5e7eb;font-size:var(--fs-12);box-sizing:border-box}
+.demo-bar strong{color:#fff}
+.demo-bar .hint{color:#9ca3af}
+.demo-actions{display:flex;gap:var(--space-8);align-items:center}
+.demo-actions button{border:1px solid #374151;background:#1f2937;color:#f3f4f6;border-radius:6px;padding:var(--space-4) var(--space-12);font-size:var(--fs-12)}
+.demo-actions button.active{background:var(--blue);border-color:var(--blue)}
+
+/* nav */
+.site-header{height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;padding:0 var(--space-32);border-bottom:1px solid rgba(0,0,0,.06);background:#fff;position:sticky;top:var(--demo-h);z-index:180}
+.brand{display:flex;align-items:center}
+.brand img{height:28px}
+.nav-mid{display:flex;gap:var(--space-24);font-size:var(--fs-14);color:var(--sub)}
+.nav-mid a:hover,.nav-mid a.active{color:var(--blue)}
+.nav-right{display:flex;align-items:center;gap:var(--space-16);font-size:var(--fs-14);color:var(--sub)}
+.nav-cta{display:inline-flex;align-items:center;justify-content:center;height:32px;padding:0 var(--space-16);border-radius:6px;background:var(--blue);color:#fff;border:1px solid var(--blue);font-size:var(--fs-14)}
+
+/* hero */
+.hero{
+  padding:var(--space-32) var(--space-24) var(--space-16);
+  text-align:center;
+  background:
+    url('https://qn.cache.wpscdn.cn/encs/plus/img/pkgs-bg.cecc97b.png') top center / 1400px auto no-repeat,
+    linear-gradient(180deg,#eaf2ff 0%,#f7faff 46%,#fff 100%);
+}
+.hero h1{margin:0;font-size:var(--fs-36);line-height:var(--lh-tight);font-weight:600;color:var(--text)}
+.support-row{margin:var(--space-12) auto 0;display:inline-flex;align-items:center;gap:var(--space-16);color:var(--sub);font-size:var(--fs-14);flex-wrap:wrap;justify-content:center}
+.support-row img.apps{height:28px}
+
+/* tabs */
+.plan-tabs-wrap{display:flex;justify-content:center;padding:var(--space-8) var(--space-24) var(--space-16);background:#fff}
+.plan-tabs{position:relative;display:grid;grid-template-columns:1fr 1fr;width:260px;padding:var(--space-4);border-radius:999px;background:#eef1f6}
+.plan-tabs .pill{position:absolute;top:4px;left:4px;width:calc(50% - 4px);height:calc(100% - 8px);border-radius:999px;background:#fff;box-shadow:0 4px 14px rgba(31,56,110,.12);transition:transform .28s cubic-bezier(.22,1,.36,1)}
+.plan-tabs[data-active="smart"] .pill{transform:translateX(100%)}
+.plan-tabs button{position:relative;z-index:1;height:36px;border:0;background:transparent;color:#86909c;font-size:var(--fs-14);font-weight:600}
+.plan-tabs button.active{color:var(--text)}
+.plan-tabs .badge-new{margin-left:var(--space-4);padding:1px var(--space-4);border-radius:4px;background:linear-gradient(135deg,#ff7a45,#ff4d4f);color:#fff;font-size:var(--fs-12);font-weight:700;vertical-align:2px;line-height:1.2}
+
+.panel{display:none;animation:panelIn .32s ease}
+.panel.active{display:block}
+.panel.no-anim{animation:none}
+@keyframes panelIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.pkg-wrap{width:min(1200px,100%);margin:0 auto;padding:0 0 var(--space-8)}
+.tip-line{text-align:right;color:var(--tips);font-size:var(--fs-12);margin-bottom:var(--space-8);padding-right:var(--space-4);line-height:var(--lh-base)}
+.tip-line:before{content:"*";margin-right:var(--space-4)}
+.cards-row{display:flex;justify-content:center;gap:var(--space-24);flex-wrap:nowrap}
+
+
+/* 商业版套餐卡片（对齐截图） */
+.pkg-item{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  width:282px;
+  height:485px;
+  box-sizing:border-box;
+  text-align:center;
+  background:#fff;
+  border:1px solid rgba(0,0,0,.08);
+  border-radius:8px;
+  box-shadow:0 1px 2px rgba(116,134,163,.04), 0 1px 2px rgba(116,134,163,.1);
+  overflow:visible;
+}
+.pkg-item .recommend-badge{
+  position:absolute;
+  top:14px;
+  right:-6px;
+  z-index:3;
+  width:48px;
+  height:48px;
+  pointer-events:none;
+}
+.pkg-item .recommend-badge img{width:100%;height:100%}
+.pkg-item .pkg-head{
+  padding:24px 32px 16px;
+  line-height:1.6;
+  border-radius:8px 8px 0 0;
+  background:#fff;
+}
+.pkg-item.paid .pkg-head{background:#f5f8ff}
+.pkg-item h3{
+  margin:0;
+  font-size:var(--fs-24);
+  font-weight:600;
+  line-height:1.6;
+  color:#000;
+}
+.pkg-item.paid h3{color:#1f69e0}
+.pkg-item .pkg-pricetag{
+  margin:0;
+  height:1.6em;
+  color:rgba(13,13,13,.66);
+  font-size:var(--fs-14);
+  font-weight:400;
+}
+.pkg-item .divider{
+  height:1px;
+  width:218px;
+  margin:0 auto;
+  background:rgba(0,0,0,.06);
+}
+.pkg-item .price-box{padding:var(--space-24) var(--space-32) var(--space-16)}
+.pkg-item .price-box .num{
+  margin:0 0 var(--space-8);
+  font-size:var(--fs-48);
+  font-weight:600;
+  color:#000;
+  line-height:1;
+  white-space:nowrap;
+}
+.pkg-item .price-unit{
+  margin-left:var(--space-4);
+  font-size:var(--fs-16);
+  font-weight:400;
+  color:rgba(13,13,13,.66);
+}
+.pkg-item .price-desc{
+  margin:0;
+  font-size:var(--fs-16);
+  font-weight:400;
+  color:rgba(13,13,13,.66);
+}
+.pkg-item .pkg-info{
+  flex:1;
+  padding:0 22px;
+  text-align:left;
+  overflow:hidden;
+}
+.pkg-item .privs{
+  display:flex;
+  flex-direction:column;
+  gap:var(--space-8);
+  margin:0;
+  padding:0;
+  list-style:none;
+  font-size:var(--fs-12);
+  color:rgba(13,13,13,.66);
+  line-height:20px;
+}
+.pkg-item .priv-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  white-space:nowrap;
+}
+.pkg-item .priv-item span{
+  white-space:nowrap;
+}
+.pkg-item .priv-item .icon{
+  flex:0 0 20px;
+  width:20px;
+  height:20px;
+}
+.pkg-item .pkg-buy{padding:24px 32px 28px}
+.pkg-item .pkg-buy .btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:218px;
+  height:40px;
+  margin:0 auto;
+  border-radius:4px;
+  border:1px solid rgba(0,0,0,.12);
+  background:#fff;
+  color:#0d0d0d;
+  font-size:var(--fs-16);
+  font-weight:500;
+  transition:background .15s,border-color .15s,color .15s;
+}
+.pkg-item .pkg-buy .btn:hover{background:#f5f5f5}
+.pkg-item .pkg-buy .btn.primary{
+  border-color:#1f69e0;
+  background:#1f69e0;
+  color:#fff;
+}
+.pkg-item .pkg-buy .btn.primary:hover{background:#2267d5}
+
+.tw-btn-default,.tw-btn-primary{box-sizing:border-box;display:flex;align-items:center;justify-content:center;width:218px;height:40px;border-radius:var(--radius);border:1px solid rgba(0,0,0,.12);background:#fff;text-align:center;font-size:var(--fs-16);font-weight:500;line-height:var(--lh-base);color:rgb(13,13,13);transition:all .15s}
+.tw-btn-default:hover{background:#f5f5f5}
+.tw-btn-primary{border-color:var(--blue);background:var(--blue);color:#fff}
+.tw-btn-primary:hover{background:var(--blue-hover)}
+.tw-btn-ghost{box-sizing:border-box;display:flex;align-items:center;justify-content:center;border-radius:var(--radius);border:1px solid rgba(0,0,0,.12);background:#f9f9f9;font-size:var(--fs-14);font-weight:500;color:#303030;transition:all .15s}
+.tw-btn-ghost:hover{background:#458bfa;color:#fff;border-color:#458bfa}
+
+.announcement{width:min(1200px,100%);margin:var(--space-24) auto 0;padding:0 var(--space-24)}
+.announcement-box{display:flex;align-items:center;gap:var(--space-12);padding:var(--space-12) var(--space-16);border-radius:var(--radius);background:#fff8eb;color:#8a6116;font-size:var(--fs-14)}
+.announcement-box img{width:20px;height:20px}
+.announcement-button{color:#2953c8;margin-left:var(--space-8)}
+
+/* compare */
+/* 大区块：上一段底 16 + 本段顶 48 = 段间 64，避免上下 padding 叠床架屋 */
+.compare{padding:var(--space-48) var(--space-24) var(--space-16);background:#fff;--title-height:154px;--sticky-top:var(--chrome-h);scroll-margin-top:calc(var(--chrome-h) + 12px)}
+.compare-inner{width:min(1200px,100%);margin:0 auto}
+.compare-tabs-wrap{
+  display:flex;
+  justify-content:center;
+  padding:0 0 var(--space-24);
+  margin-top:0;
+  background:transparent;
+}
+.compare h1{margin:0;text-align:center;font-size:var(--fs-36);line-height:var(--lh-tight);font-weight:600;color:var(--text);padding:var(--space-8) 0}
+.compare .sub{margin:var(--space-12) 0 var(--space-24);text-align:center;color:var(--sub);font-size:var(--fs-16)}
+
+/* 套餐名称/价格 顶栏：独立灰底圆角卡片 */
+.compare-head{
+  display:grid;
+  grid-template-columns:200px repeat(4,1fr);
+  height:var(--title-height);
+  align-items:center;
+  background:#f7f7f7;
+  border-radius:16px;
+  position:sticky;
+  top:var(--sticky-top);
+  z-index:20;
+}
+/* 智能版仅改列数，样式与商业版表头一致 */
+.compare-head.smart{
+  grid-template-columns:200px repeat(2,minmax(0,1fr));
+  box-sizing:border-box;
+  border:1px solid transparent; /* 对齐下方分组卡片边框，避免列偏移 */
+}
+.compare-head .col{
+  position:relative;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:12px 8px 16px;
+  box-sizing:border-box;
+}
+.compare-head .col:first-child{
+  align-items:flex-start;
+  justify-content:center;
+  padding-left:var(--space-32);
+  font-size:var(--fs-20);
+  font-weight:600;
+  text-align:left;
+}
+.compare-head .col:not(:first-child):not(:last-child)::after{
+  content:"";
+  position:absolute;
+  right:0; top:50%;
+  transform:translateY(-50%);
+  width:2px; height:28px;
+  background:rgba(13,13,13,.06);
+  border-radius:2px;
+}
+.compare-head .badge{
+  position:absolute;
+  top:0; left:50%;
+  transform:translateX(-50%);
+  display:inline-block;
+  line-height:20px;
+  padding:1px var(--space-16);
+  font-size:var(--fs-12);
+  font-weight:400;
+  color:rgba(13,13,13,.66);
+  background:#ededed;
+  border-radius:0 0 8px 8px;
+  white-space:nowrap;
+}
+.compare-head .name{font-size:var(--fs-16);font-weight:400;margin:var(--space-16) 0 var(--space-4);color:var(--text)}
+.compare-head .price{font-size:var(--fs-14);font-weight:400;margin-bottom:var(--space-12);color:var(--text)}
+.compare-head .price .num{font-weight:700;font-size:var(--fs-20)}
+.compare-head .mini{width:auto;min-width:120px;height:auto;padding:var(--space-4) var(--space-24);font-size:var(--fs-14);line-height:var(--lh-base)}
+.compare-head .recom{position:relative}
+.compare-head .recom .recommend-tag{
+  position:absolute; top:0; right:20px; width:20px; height:24px; z-index:2;
+}
+.compare-head .recom .recommend-tag img{width:100%;height:100%}
+
+/* 每个权益分组 = 独立圆角卡片（对齐截图，分组标题不做 sticky，避免标题粘错位） */
+.detail-table{width:100%}
+.group, .priv-tb{
+  border-radius:var(--radius-lg);
+  margin-top:var(--space-16);
+  border:1px solid rgba(13,13,13,.06);
+  font-size:var(--fs-14);
+  overflow:hidden;
+  background:#fff;
+}
+.group-h, .group-name{
+  display:flex;
+  align-items:center;
+  gap:var(--space-4);
+  line-height:72px;
+  height:72px;
+  padding:0 var(--space-32);
+  font-size:var(--fs-16);
+  font-weight:700;
+  background:#f7f7f7;
+  color:var(--text);
+  position:static; /* 禁止 sticky，否则标题会压住行内容 */
+  z-index:auto;
+}
+.group-h img, .group-name img{
+  width:24px;height:24px;
+  vertical-align:middle;
+  display:inline-block;
+  margin-right:var(--space-4);
+  flex:0 0 24px;
+}
+.group-h.ai{background:#f7f7f7;color:var(--text)}
+.group table{
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+  text-align:center;
+}
+.group col.feat-col{width:200px}
+.group col.plan-col{width:auto}
+.group tr{border:0}
+.group tr:nth-child(odd){background:#fff}
+.group tr:nth-child(even){background:#f9f9f9}
+.group tr:hover{background:#f2f2f2}
+.group th, .group .name-td{
+  text-align:left;
+  width:200px;
+  padding:var(--space-16) var(--space-12) var(--space-16) var(--space-32);
+  font-weight:400;
+  font-size:var(--fs-14);
+  color:var(--text);
+  line-height:20px;
+  vertical-align:middle;
+  white-space:nowrap;
+}
+.group th .feat, .group .name{
+  display:inline;
+  vertical-align:middle;
+}
+.group .tip{
+  display:inline-block;
+  width:16px;height:16px;
+  margin-left:6px;
+  vertical-align:middle;
+  opacity:.7;
+  cursor:help;
+}
+.group td.c{
+  text-align:center;
+  padding:var(--space-16) var(--space-8);
+  font-size:var(--fs-14);
+  color:var(--sub);
+  vertical-align:middle;
+  white-space:nowrap;
+}
+.group td.txt{
+  white-space:nowrap;
+  line-height:20px;
+  padding:var(--space-16) var(--space-8);
+}
+.group .ico{
+  width:20px;
+  height:20px;
+  margin:0 auto;
+  display:block;
+}
+.group .cell-stack{
+  display:inline-flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:var(--space-4);
+}
+.group .note{
+  margin:0;
+  font-size:var(--fs-12);
+  color:var(--tips);
+  line-height:var(--lh-tight);
+  white-space:nowrap;
+}
+.group .hidden-row{display:none}
+.group.expanded .hidden-row{display:table-row}
+.expand-btn, .see-more{
+  display:flex;
+  align-items:center;
+  line-height:56px;
+  padding:0 var(--space-32);
+  border:0;
+  background:#fff;
+  color:var(--text);
+  font-size:var(--fs-14);
+  width:100%;
+  text-align:left;
+  cursor:pointer;
+}
+.expand-btn img, .see-more img{
+  width:16px;height:16px;
+  margin-right:var(--space-8);
+  transition:transform .2s;
+}
+.group.expanded .expand-btn img{transform:rotate(180deg)}
+
+.group table.smart-table{table-layout:fixed;width:100%}
+.group table.smart-table col.feat-col{width:200px}
+.group table.smart-table col.plan-col{width:auto}
+.group table.smart-table th,
+.group table.smart-table .name-td{width:200px}
+.group table.smart-table td.c{width:auto}
+.compare-head .col:first-child span{display:block;font-size:var(--fs-12);font-weight:400;color:var(--tips);margin-top:var(--space-4);line-height:var(--lh-base)}
+
+.table-note{margin-top:var(--space-12);text-align:center;color:var(--tips);font-size:var(--fs-12)}
+
+/* ===== 智能版套餐卡片：身份 → 价格 → CTA → 一项重点 + 一句说明 ===== */
+.smart-cards{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 360px));
+  justify-content:center;
+  gap:var(--space-24);
+  padding:0 0 var(--space-8);
+}
+.smart-card{
+  --sc-ink:#0f172a;
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  padding:var(--space-24);
+  background:#fafbfd;
+  border:1px solid rgba(15,23,42,.08);
+  border-radius:var(--radius-lg);
+  box-sizing:border-box;
+  transition:border-color .2s ease, box-shadow .2s ease;
+}
+.smart-card:hover{
+  border-color:rgba(31,105,224,.28);
+  box-shadow:0 8px 28px rgba(31,56,110,.08);
+}
+.smart-card.featured{
+  background:linear-gradient(180deg,#f5f8ff 0%,#fafbfd 48%,#fafbfd 100%);
+  border-color:rgba(31,105,224,.22);
+}
+.smart-card .sc-title-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:var(--space-12);
+}
+.smart-card h3{
+  margin:0;
+  font-size:var(--fs-24);
+  font-weight:600;
+  letter-spacing:-.02em;
+  line-height:var(--lh-tight);
+  color:var(--sc-ink);
+}
+.smart-card .sc-badge{
+  flex:0 0 auto;
+  display:inline-flex;
+  align-items:center;
+  height:22px;
+  padding:0 var(--space-8);
+  border-radius:4px;
+  background:rgba(31,105,224,.1);
+  color:#1f69e0;
+  font-size:var(--fs-12);
+  font-weight:600;
+}
+.smart-card .sc-tagline{
+  margin:var(--space-8) 0 0;
+  font-size:var(--fs-14);
+  line-height:var(--lh-base);
+  color:var(--sc-ink);
+}
+.smart-card .sc-price{
+  margin-top:var(--space-16);
+}
+.smart-card .sc-price-row{
+  display:flex;
+  align-items:baseline;
+  color:var(--sc-ink);
+}
+.smart-card .sc-currency{
+  font-size:var(--fs-20);
+  font-weight:600;
+  line-height:1;
+  margin-right:2px;
+}
+.smart-card .sc-amount{
+  font-size:var(--fs-36);
+  font-weight:600;
+  letter-spacing:-.03em;
+  line-height:1;
+  font-variant-numeric:tabular-nums;
+}
+.smart-card .sc-unit{
+  margin-left:var(--space-8);
+  font-size:var(--fs-14);
+  font-weight:400;
+  color:rgba(15,23,42,.5);
+}
+.smart-card .sc-meta{
+  margin:var(--space-8) 0 0;
+  font-size:var(--fs-12);
+  line-height:var(--lh-base);
+  color:rgba(15,23,42,.46);
+}
+.smart-card .sc-cta{
+  margin-top:auto;
+  padding-top:var(--space-24);
+}
+.smart-card .sc-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  height:40px;
+  border-radius:999px;
+  font-size:var(--fs-16);
+  font-weight:600;
+  transition:background .18s, border-color .18s, color .18s, box-shadow .18s;
+}
+.smart-card .sc-btn.ghost{
+  border:1px solid rgba(15,23,42,.14);
+  background:#fff;
+  color:var(--sc-ink);
+}
+.smart-card .sc-btn.ghost:hover{
+  border-color:rgba(31,105,224,.45);
+  color:#1f69e0;
+}
+.smart-card .sc-btn.primary{
+  border:1px solid #1f69e0;
+  background:#1f69e0;
+  color:#fff;
+  box-shadow:0 6px 16px rgba(31,105,224,.2);
+}
+.smart-card .sc-btn.primary:hover{
+  background:#2267d5;
+  border-color:#2267d5;
+}
+.smart-card .sc-highlight{
+  margin-top:var(--space-24);
+}
+.smart-card .sc-key{
+  margin:0;
+  display:inline;
+  font-size:var(--fs-16);
+  font-weight:600;
+  line-height:var(--lh-base);
+  color:var(--sc-ink);
+  border-bottom:1px dashed rgba(15,23,42,.28);
+  padding-bottom:2px;
+}
+.smart-card .sc-desc{
+  margin:var(--space-12) 0 0;
+  font-size:var(--fs-14);
+  line-height:var(--lh-loose);
+  color:rgba(15,23,42,.66);
+}
+.smart-card .sc-desc a{color:var(--blue)}
+.smart-card .sc-desc a:hover{text-decoration:underline}
+.btn-purple{border-color:var(--purple)!important;background:var(--purple)!important;color:#fff!important}
+.slogan{color:var(--blue);font-size:var(--fs-14);margin:0 0 var(--space-8);text-align:center}
+
+/* 矮屏：只压缩区块外间距，不破坏字号阶梯 */
+@media (max-height:820px){
+  .hero{padding:var(--space-16) var(--space-24) var(--space-8)}
+  .plan-tabs-wrap{padding:var(--space-4) var(--space-24) var(--space-12)}
+  .tip-line{margin-bottom:var(--space-4)}
+  .pkg-item{height:460px}
+}
+@media (max-width:920px){
+  .smart-cards{grid-template-columns:1fr;max-width:420px;margin:0 auto}
+}
+
+/* ===== Hub 能力介绍 ===== */
+#panel-smart .announcement{
+  margin-top:var(--space-16);
+  margin-bottom:0;
+}
+.hub-section{
+  margin-top:0;
+  padding:var(--space-48) var(--space-24) var(--space-16);
+  background:linear-gradient(180deg, #fff 0%, #fafcff 55%, #fff 100%);
+  position:relative;
+  overflow:hidden;
+}
+.hub-section::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(ellipse 70% 40% at 50% 0%, rgba(31,105,224,.04), transparent 70%);
+  pointer-events:none;
+}
+.hub-head{position:relative;text-align:center;margin-bottom:var(--space-24)}
+.hub-head h2{margin:0;font-size:var(--fs-36);font-weight:600;letter-spacing:-.02em;line-height:var(--lh-tight);color:#0f172a}
+.hub-head p{margin:var(--space-12) 0 0;color:var(--sub);font-size:var(--fs-14);line-height:var(--lh-base)}
+
+.hub-shell{
+  position:relative;
+  width:min(1120px,100%);
+  margin:0 auto;
+  background:#fff;
+  border:1px solid rgba(15,23,42,.08);
+  border-radius:var(--radius-lg);
+  box-shadow:
+    0 1px 2px rgba(15,23,42,.04),
+    0 8px 24px rgba(15,23,42,.04);
+  overflow:hidden;
+}
+.hub-tabs{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:0;
+  border-bottom:1px solid rgba(15,23,42,.06);
+  background:linear-gradient(180deg,#f8faff 0%,#fff 100%);
+}
+.hub-tabs button{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:var(--space-4);
+  padding:var(--space-16) var(--space-24);
+  border:0;
+  background:transparent;
+  text-align:left;
+  color:rgba(15,23,42,.48);
+  transition:color .2s, background .2s;
+}
+.hub-tabs button:hover{color:rgba(15,23,42,.72);background:rgba(31,105,224,.03)}
+.hub-tabs button.active{color:#0f172a;background:#fff}
+.hub-tabs button.active::after{
+  content:"";
+  position:absolute;
+  left:var(--space-24);right:var(--space-24);bottom:0;
+  height:2px;
+  border-radius:2px 2px 0 0;
+  background:#1f69e0;
+}
+.hub-tabs .ht-name{font-size:var(--fs-14);font-weight:600;letter-spacing:-.01em}
+.hub-tabs .ht-sub{font-size:var(--fs-12);font-weight:400;color:rgba(15,23,42,.4);line-height:var(--lh-base)}
+.hub-tabs button.active .ht-sub{color:rgba(15,23,42,.52)}
+
+.hub-panels{position:relative;min-height:420px}
+.hub-panel{
+  display:none;
+  grid-template-columns:minmax(260px,.9fr) minmax(0,1.2fr);
+  gap:0;
+  min-height:420px;
+  animation:hubIn .36s cubic-bezier(.22,1,.36,1);
+}
+.hub-panel.active{display:grid}
+@keyframes hubIn{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .hub-panel{animation:none}
+}
+
+.hub-copy{
+  padding:var(--space-32);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  border-right:1px solid rgba(15,23,42,.06);
+  background:linear-gradient(180deg,#fff 0%,#fafcff 100%);
+}
+.hub-kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:var(--space-8);
+  margin:0 0 var(--space-12);
+  width:fit-content;
+  padding:var(--space-4) var(--space-12);
+  border-radius:6px;
+  background:rgba(31,105,224,.08);
+  color:#1f69e0;
+  font-size:var(--fs-12);
+  font-weight:600;
+  letter-spacing:.04em;
+}
+.hub-kicker i{
+  width:6px;height:6px;border-radius:50%;
+  background:currentColor;
+  font-style:normal;
+}
+.hub-copy h3{
+  margin:0;
+  font-size:var(--fs-20);
+  font-weight:600;
+  letter-spacing:-.02em;
+  line-height:var(--lh-tight);
+  color:#0f172a;
+  max-width:16em;
+}
+.hub-copy .desc{
+  margin:var(--space-12) 0 0;
+  color:rgba(15,23,42,.58);
+  font-size:var(--fs-14);
+  line-height:var(--lh-loose);
+  max-width:28em;
+}
+.hub-points{
+  margin:var(--space-24) 0 0;
+  padding:0;
+  list-style:none;
+  display:flex;
+  flex-direction:column;
+  gap:var(--space-12);
+}
+.hub-points li{
+  display:flex;
+  align-items:flex-start;
+  gap:var(--space-12);
+  font-size:var(--fs-14);
+  line-height:var(--lh-base);
+  color:rgba(15,23,42,.72);
+}
+.hub-points .dot{
+  flex:0 0 18px;
+  width:18px;height:18px;
+  margin-top:1px;
+  border-radius:50%;
+  background:rgba(31,105,224,.1);
+  color:#1f69e0;
+  display:grid;
+  place-items:center;
+  font-size:var(--fs-12);
+  font-weight:700;
+}
+.hub-visual{
+  padding:var(--space-24);
+  background:
+    linear-gradient(145deg, rgba(31,105,224,.04) 0%, transparent 50%),
+    #f4f7fc;
+  display:flex;
+  align-items:stretch;
+  min-width:0;
+}
+.mock{
+  flex:1;
+  min-height:0;
+  overflow:hidden;
+  border:1px solid rgba(15,23,42,.08);
+  border-radius:12px;
+  background:#fff;
+  padding:var(--space-16);
+  box-sizing:border-box;
+  display:flex;
+  flex-direction:column;
+  box-shadow:0 8px 24px rgba(15,23,42,.05);
+}
+.btn-dark{height:32px;padding:0 var(--space-16);border:0;border-radius:6px;background:#1f69e0;color:#fff;font-size:var(--fs-12);cursor:pointer;white-space:nowrap}
+.btn-dark:hover{background:#2267d5}
+
+/* AI Hub：使用统计 */
+.mock-stats{gap:var(--space-12)}
+.stats-top{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--space-12);flex:0 0 auto}
+.stats-top .lt h4{margin:0;font-size:var(--fs-16);font-weight:600;color:#0f172a}
+.stats-top .lt span{margin-left:var(--space-8);color:#86909c;font-size:var(--fs-12);font-weight:400}
+.stats-tabs{display:flex;gap:var(--space-16);margin-top:var(--space-8)}
+.stats-tabs span{font-size:var(--fs-12);color:#86909c;padding-bottom:var(--space-4);cursor:default}
+.stats-tabs .on{color:#1f69e0;font-weight:600;border-bottom:2px solid #1f69e0}
+.stats-period{color:#86909c;font-size:var(--fs-12);padding-bottom:var(--space-4);white-space:nowrap}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-8);flex:0 0 auto}
+.kpi{border:1px solid #eef0f4;border-radius:10px;padding:var(--space-12);background:linear-gradient(180deg,#fafcff,#fff);box-sizing:border-box}
+.kpi label{display:block;color:#64748b;font-size:var(--fs-12);margin-bottom:var(--space-8)}
+.kpi b{display:block;font-size:var(--fs-16);line-height:1.2;color:#0f172a;font-variant-numeric:tabular-nums}
+.chart-box{flex:1;min-height:160px;border:1px solid #eef0f4;border-radius:12px;padding:var(--space-12) var(--space-16);display:flex;flex-direction:column;background:#fff}
+.chart-box .ch-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-8);flex:0 0 auto}
+.chart-box .ch-h strong{font-size:var(--fs-14);font-weight:600;color:#0f172a}
+.chart-box .ch-h a{color:#1f69e0;font-size:var(--fs-12);text-decoration:none}
+.chart-body{flex:1;min-height:0;display:grid;grid-template-columns:1.5fr .85fr;gap:var(--space-12)}
+.line-chart{position:relative;min-height:120px;background:linear-gradient(180deg,#f5f8ff 0%,#fff 100%);border-radius:var(--radius);overflow:hidden}
+.line-chart svg{width:100%;height:100%;display:block}
+.donut-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;border-left:1px solid #eef0f4;padding-left:var(--space-12)}
+.donut{width:96px;height:96px;border-radius:50%;background:conic-gradient(#1f69e0 0 92.4%,#60a5fa 92.4% 99.4%,#93c5fd 99.4% 100%);display:grid;place-items:center;position:relative}
+.donut::after{content:"";width:56px;height:56px;border-radius:50%;background:#fff;position:absolute}
+.donut .cen{position:relative;z-index:1;text-align:center;font-size:var(--fs-12);line-height:var(--lh-tight);color:#64748b}
+.donut .cen b{display:block;color:#0f172a;font-size:var(--fs-12)}
+.donut-leg{margin-top:var(--space-8);width:100%;display:grid;grid-template-columns:1fr;gap:var(--space-4);font-size:var(--fs-12);color:#86909c}
+.donut-leg i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:var(--space-4)}
+
+/* Data Hub：数据资产 */
+.mock-data{gap:var(--space-16)}
+.data-toolbar{display:flex;justify-content:space-between;align-items:flex-start;gap:var(--space-12);flex:0 0 auto}
+.data-toolbar h4{margin:0 0 var(--space-4);font-size:var(--fs-16);font-weight:600;color:#0f172a}
+.data-toolbar p{margin:0;color:#86909c;font-size:var(--fs-12);line-height:var(--lh-base);max-width:360px}
+.data-ops{display:flex;align-items:center;gap:var(--space-8);flex:0 0 auto;padding-top:2px}
+.data-ops .search{width:140px;height:32px;border:1px solid #e8ebf0;border-radius:6px;background:#fff;color:#86909c;font-size:var(--fs-12);padding:0 var(--space-12);display:flex;align-items:center}
+.space-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-12);flex:1;align-content:start}
+.space-card{border:1px solid #e8ebf0;border-radius:12px;padding:var(--space-16);background:#fff;display:flex;flex-direction:column;box-sizing:border-box;transition:border-color .2s, box-shadow .2s}
+.space-card:hover{border-color:rgba(31,105,224,.28);box-shadow:0 6px 16px rgba(31,105,224,.08)}
+.space-card .top{display:flex;align-items:center;gap:var(--space-8);margin-bottom:var(--space-8)}
+.space-card .ico{width:28px;height:28px;border-radius:var(--radius);display:grid;place-items:center;color:#fff;font-size:var(--fs-12);font-weight:700;flex:0 0 28px}
+.space-card h5{margin:0;font-size:var(--fs-14);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#0f172a}
+.space-card .more{color:#c0c4cc;font-size:var(--fs-16);line-height:1}
+.space-card .sub{margin:0 0 var(--space-12);color:#86909c;font-size:var(--fs-12);line-height:var(--lh-base);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.space-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-8);background:#f5f8ff;border-radius:var(--radius);padding:var(--space-12);text-align:left}
+.space-stats div{min-width:0}
+.space-stats b{display:block;font-size:var(--fs-16);color:#0f172a;font-variant-numeric:tabular-nums}
+.space-stats span{display:block;font-size:var(--fs-12);color:#86909c;margin-top:2px}
+.space-foot{margin-top:var(--space-12);display:flex;justify-content:space-between;align-items:center;color:#94a3b8;font-size:var(--fs-12)}
+.space-foot .av{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:var(--fs-12);font-weight:700}
+
+/* API Hub：快速上手 */
+.mock-api{gap:var(--space-16);background:linear-gradient(180deg,#fafcff,#fff);justify-content:flex-start}
+.api-head{flex:0 0 auto}
+.api-head h4{margin:0 0 var(--space-4);font-size:var(--fs-16);font-weight:600;color:#0f172a}
+.api-head p{margin:0 0 var(--space-16);color:#86909c;font-size:var(--fs-12);line-height:var(--lh-base)}
+.api-progress{display:flex;align-items:flex-start;justify-content:space-between;position:relative;padding:0 10%;margin-bottom:var(--space-4)}
+.api-progress::before{content:"";position:absolute;left:18%;right:18%;top:13px;height:2px;background:linear-gradient(90deg,#1f69e0,#93c5fd)}
+.api-progress .node{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:var(--space-4);width:64px}
+.api-progress .node i{width:26px;height:26px;border-radius:50%;background:#1f69e0;color:#fff;display:grid;place-items:center;font-style:normal;font-size:var(--fs-12);font-weight:700;box-shadow:0 4px 10px rgba(31,105,224,.25)}
+.api-progress .node span{font-size:var(--fs-12);color:#86909c}
+.api-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-12);flex:0 0 auto}
+.api-step{background:#fff;border:1px solid #e8ebf0;border-radius:12px;padding:var(--space-16);display:flex;flex-direction:column}
+.api-step h5{margin:0 0 var(--space-8);font-size:var(--fs-14);color:#0f172a}
+.api-step p{margin:0 0 var(--space-12);color:#86909c;font-size:var(--fs-12);line-height:var(--lh-base);flex:1}
+.api-step .btn-dark{width:100%;margin-top:auto}
+.api-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-8);flex:0 0 auto}
+.api-item{background:#fff;border:1px solid #eef0f4;border-radius:10px;padding:var(--space-12) var(--space-16);display:flex;flex-direction:column}
+.api-item .ic{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font-size:var(--fs-12);margin-bottom:var(--space-8);background:#eef4ff;color:#1f69e0;font-weight:600}
+.api-item h5{margin:0 0 2px;font-size:var(--fs-14);font-weight:600;color:#0f172a}
+.api-item p{margin:0;color:#86909c;font-size:var(--fs-12);line-height:var(--lh-base)}
+
+@media (max-width:920px){
+  .hub-tabs{grid-template-columns:1fr}
+  .hub-tabs button{padding:var(--space-16)}
+  .hub-tabs button.active::after{left:0;right:auto;top:var(--space-16);bottom:var(--space-16);width:2px;height:auto;border-radius:0}
+  .hub-panel,.hub-panel.active{display:flex;flex-direction:column;min-height:0}
+  .hub-copy{border-right:0;border-bottom:1px solid rgba(15,23,42,.06);padding:var(--space-24) var(--space-16)}
+  .hub-visual{padding:var(--space-16)}
+  .kpi-row{grid-template-columns:repeat(2,1fr)}
+  .chart-body{grid-template-columns:1fr}
+  .donut-wrap{border-left:0;border-top:1px solid #eef0f4;padding:var(--space-12) 0 0;flex-direction:row;gap:var(--space-16)}
+  .donut-leg{margin-top:0;grid-template-columns:1fr}
+  .space-grid{grid-template-columns:1fr}
+  .api-steps{grid-template-columns:1fr}
+  .data-toolbar{flex-direction:column}
+  .data-ops{width:100%;justify-content:flex-end}
+}
+
+/* faq：2×2 卡片 */
+.faq-sec{
+  margin-top:0;
+  padding:var(--space-48) var(--space-24) var(--space-48);
+  background:linear-gradient(180deg,#fff 0%,#f7faff 42%,#fff 100%);
+  position:relative;
+}
+.faq-sec::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(ellipse 80% 36% at 50% 0%, rgba(31,105,224,.035), transparent 70%);
+  pointer-events:none;
+}
+.faq-inner{position:relative;width:min(1200px,100%);margin:0 auto}
+.faq-head{margin-bottom:var(--space-24)}
+.faq-sec h2{
+  margin:0;
+  text-align:left;
+  font-size:var(--fs-36);
+  line-height:var(--lh-tight);
+  font-weight:600;
+  color:var(--text);
+}
+.faq-sec .sub{
+  margin:var(--space-12) 0 0;
+  text-align:left;
+  color:var(--sub);
+  font-size:var(--fs-16);
+  line-height:var(--lh-base);
+}
+.faq-more{
+  display:inline-block;
+  margin-top:var(--space-12);
+  color:var(--blue);
+  font-size:var(--fs-14);
+  line-height:var(--lh-base);
+}
+.faq-more:hover{text-decoration:underline}
+.faq-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:var(--space-24);
+}
+.faq-card{
+  display:flex;
+  flex-direction:column;
+  min-height:280px;
+  padding:var(--space-24) var(--space-32);
+  background:#fff;
+  border:1px solid rgba(15,23,42,.06);
+  border-radius:var(--radius-lg);
+  box-shadow:
+    0 1px 2px rgba(15,23,42,.04),
+    0 4px 16px rgba(15,23,42,.03);
+  box-sizing:border-box;
+}
+.faq-card h3{
+  position:relative;
+  margin:0 0 var(--space-16);
+  padding-bottom:var(--space-12);
+  font-size:var(--fs-16);
+  font-weight:600;
+  line-height:var(--lh-base);
+  color:var(--text);
+}
+.faq-card h3::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:0;
+  width:36px;
+  height:3px;
+  border-radius:2px;
+  background:var(--blue);
+}
+.faq-card .faq-body{
+  margin:0;
+  flex:1;
+  color:rgba(13,13,13,.66);
+  font-size:var(--fs-14);
+  line-height:var(--lh-loose);
+}
+.faq-card .faq-body a{
+  color:var(--blue);
+}
+.faq-card .faq-body a:hover{text-decoration:underline}
+.faq-card .faq-note{
+  display:block;
+  margin-top:var(--space-12);
+  color:rgba(13,13,13,.46);
+  font-size:var(--fs-12);
+  line-height:var(--lh-loose);
+}
+.faq-card .faq-link{
+  display:block;
+  margin-top:var(--space-16);
+  text-align:right;
+  color:var(--blue);
+  font-size:var(--fs-14);
+  line-height:var(--lh-base);
+}
+.faq-card .faq-link:hover{text-decoration:underline}
+@media (max-width:860px){
+  .faq-sec{padding:var(--space-48) var(--space-16) var(--space-48)}
+  .faq-sec h2{font-size:var(--fs-24)}
+  .faq-grid{grid-template-columns:1fr;gap:var(--space-16)}
+  .faq-card{min-height:0;padding:var(--space-24) var(--space-16)}
+}
+.footer{padding:var(--space-24);border-top:1px solid rgba(0,0,0,.06);text-align:center;color:var(--tips);font-size:var(--fs-12)}
+
+.float-side{position:fixed;right:0;top:42%;z-index:120;display:flex;flex-direction:column;width:44px;border-radius:8px 0 0 8px;overflow:hidden;box-shadow:0 8px 24px rgba(13,13,13,.12);background:#fff}
+.float-side a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--space-4);padding:var(--space-12) var(--space-8);font-size:var(--fs-12);writing-mode:horizontal-tb;color:var(--sub);border-bottom:1px solid rgba(0,0,0,.06);text-align:center;line-height:1.25}
+.float-side a:first-child{background:var(--blue);color:#fff;border-bottom:0}
+.float-side a:last-child{border-bottom:0}
+
+@media (max-width:1100px){
+  .nav-mid{display:none}
+  .compare-head,.group table{font-size:var(--fs-12)}
+  .nav-right a:not(.nav-cta){display:none}
+}
+</style>
+</head>
+<body>
+<div class="demo-bar">
+  <div><strong>高保真框架稿</strong><span class="hint"> · 商业版文案/样式对齐 https://365.wps.cn/price 当前线上页</span></div>
+  <div class="demo-actions">
+    <button type="button" data-demo-tab="business" class="active">商业版</button>
+    <button type="button" data-demo-tab="smart">智能版</button>
+  </div>
+</div>
+
+<header class="site-header">
+  <a class="brand" href="https://365.wps.cn/"><img src="https://qn.cache.wpscdn.cn/encs/plus/img/wps_365.682dc42.svg" alt="WPS 365"/></a>
+  <nav class="nav-mid">
+    <a href="https://365.wps.cn/">产品</a>
+    <a class="active" href="https://365.wps.cn/price">定价</a>
+    <a href="https://365.wps.cn/solution">解决方案</a>
+    <a href="https://365.wps.cn/case">客户案例</a>
+    <a href="https://365.wps.cn/support">服务支持</a>
+  </nav>
+  <div class="nav-right">
+    <a href="#">技术支持</a>
+    <a href="https://365.wps.cn/download365">下载</a>
+    <a href="#">登录</a>
+    <a class="nav-cta" href="#">免费试用</a>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>选择最合适的 WPS 365 版本</h1>
+  <div class="support-row">
+    <img class="apps" src="https://qn.cache.wpscdn.cn/encs/plus/img/apps-support.4339ea4.svg" alt="所有版本均支持：WPS Office 文档、智能文档、多维表格、WPS 协作、WPS 会议、WPS 邮箱"/>
+  </div>
+</section>
+
+<div class="plan-tabs-wrap">
+  <div class="plan-tabs" id="planTabs" data-active="business">
+    <div class="pill"></div>
+    <button type="button" data-tab="business" class="active">商业版</button>
+    <button type="button" data-tab="smart">智能版<span class="badge-new">NEW</span></button>
+  </div>
+</div>
+
+
+<!-- ===== 商业版套餐卡片（对齐截图） ===== -->
+<div class="panel active" id="panel-business" data-panel="business">
+  <div class="pkg-wrap">
+    <div class="tip-line">以下版本仅适用于中国大陆地区</div>
+    <div class="cards-row">
+
+      <article class="pkg-item">
+        <div class="pkg-head">
+          <h3>体验版</h3>
+          <p class="pkg-pricetag">初创企业办公无忧</p>
+        </div>
+        <div class="divider"></div>
+        <div class="price-box">
+          <p class="num">¥0<span class="price-unit">人 / 年</span></p>
+          <p class="price-desc">支持 50 人</p>
+        </div>
+        <div class="pkg-info">
+          <ul class="privs">
+            <li class="priv-item"><img class="icon" src="https://qn.cache.wpscdn.cn/encs/plus/img/cloud.4470ee8.svg" alt=""/><span>空间 2G / 人，上限 10G</span></li>
+            <li class="priv-item"><img class="icon" src="https://qn.cache.wpscdn.cn/encs/plus/img/meeting.c0d9a7b.svg" alt=""/><span>IM、邮箱、会议基础功能</span></li>
+            <li class="priv-item"><img class="icon" src="https://qn.cache.wpscdn.cn/encs/plus/img/member.28e45ab.svg" alt=""/><span>支持 50 人加入企业</span></li>
+          </ul>
+        </div>
+        <div class="pkg-buy"><a class="btn" href="#">开始试用</a></div>
+      </article>
+
+      <article class="pkg-item paid">
+        <div class="pkg-head">
+          <h3>商业协作版</h3>
+          <p class="pkg-pricetag">全面提升团队高效协作</p>
+        </div>
+        <div class="divider"></div>
+        <div class="price-box">
+          <p class="num">¥199<span class="price-unit">人 / 年</span></p>
+          <p class="price-desc">支持 50 人</p>
+        </div>
+        <div class="pkg-info">
+          <ul class="privs">
+            <li class="priv-item"><img class="icon" src="https://qn.cache.wpscdn.cn/encs/plus/img/cloud.4470ee8.svg" alt=""/><span>空间 50G / 人，智能问答 20 次 / 人</span></li>
+            <li class="priv-item"><img class="icon" src="https://qn.cache.wpscdn.cn/encs/plus/img/meeting.c0d9a7b.svg" alt=""/><span>IM、邮箱、会议 完整功能</span></li>
+            <li class="priv-item"><img class="icon" src="https://qn.cache.wpscdn.cn/encs/plus/img/protect.a06bc98.svg" alt=""/><span>水印 / 加密保护等基础安全管控</span></li>
+          </ul>
+        </div>
+        <div class="pkg-buy"><a class="btn" href="#">立即购买</a></div>
+      </article>
+
+      <article class="pkg-item paid">
+        <div class="pkg-head">
+          <h3>商业高级版</h3>
+          <p class="pkg-pricetag">授权认证，200 + 会员权益</p>
+        </div>
+        <div class="divider"></div>
+        <div class="price-box">
+          <p class="num">¥399<span class="price-unit">人 / 年</span></p>
+          <p class="price-desc">支持 300 人</p>
+        </div>
+        <div class="pkg-info">
+          <ul class="privs">
+            <li class="priv-item"><img class="icon" src="https://qn.cache.wpscdn.cn/encs/plus/img/checked.29c31c2.svg" alt=""/><span>包含 WPS 365 商业协作版能力</span></li>
+            <li class="priv-item"><img class="icon" src="https://qn.cache.wpscdn.cn/encs/plus/img/protect.a06bc98.svg" alt=""/><span>空间 365G / 人，高级安全管控</span></li>
+            <li class="priv-item"><img class="icon" src="https://qn.cache.wpscdn.cn/encs/plus/img/checked.29c31c2.svg" alt=""/><span>AI 知识库，私域知识智能问答</span></li>
+            <li class="priv-item"><img class="icon" src="https://qn.cache.wpscdn.cn/encs/plus/img/diamond.c110342.svg" alt=""/><span>PDF / WPS 听记等 200 + 会员权益</span></li>
+          </ul>
+        </div>
+        <div class="pkg-buy"><a class="btn" href="#">立即购买</a></div>
+      </article>
+
+      <article class="pkg-item paid">
+        <div class="recommend-badge"><img src="https://qn.cache.wpscdn.cn/encs/plus/img/recommend.new.c149bc9.svg" alt="推荐"/></div>
+        <div class="pkg-head">
+          <h3>商业旗舰版</h3>
+          <p class="pkg-pricetag">全面 AI 赋能，驱动智能转型</p>
+        </div>
+        <div class="divider"></div>
+        <div class="price-box">
+          <p class="num">¥599<span class="price-unit">人 / 年</span></p>
+          <p class="price-desc">支持 300 人</p>
+        </div>
+        <div class="pkg-info">
+          <ul class="privs">
+            <li class="priv-item"><img class="icon" src="https://qn.cache.wpscdn.cn/encs/plus/img/checked.29c31c2.svg" alt=""/><span>包含 WPS 365 商业高级版能力</span></li>
+            <li class="priv-item"><img class="icon" src="https://qn.cache.wpscdn.cn/encs/plus/img/cloud.4470ee8.svg" alt=""/><span>空间 2T / 人，全面安全管控</span></li>
+            <li class="priv-item"><img class="icon" src="https://qn.cache.wpscdn.cn/encs/plus/img/ai-agent.c32e4d0.svg" alt=""/><span>完整 AI 知识库，打造智能企业大脑</span></li>
+            <li class="priv-item"><img class="icon" src="https://qn.cache.wpscdn.cn/encs/plus/img/checked.29c31c2.svg" alt=""/><span>AI 助手、专享模板库等高级权益</span></li>
+          </ul>
+        </div>
+        <div class="pkg-buy"><a class="btn primary" href="#">立即购买</a></div>
+      </article>
+
+    </div>
+  </div>
+  <div class="announcement">
+    <div class="announcement-box">
+      <img src="https://js2.epy.wpscdn.cn/security/plusPriceAnnouncementLoud.png" alt=""/>
+      <span>超过购买人数或有定制版、私有化等需求，请联系销售咨询 <a class="announcement-button" href="#">立即咨询 &gt;</a></span>
+    </div>
+  </div>
+
+<section class="compare" id="compare-business">
+    <div class="compare-inner">
+      <h1>WPS 365 套餐价格</h1>
+      <p class="sub">利用 WPS 365 帮助企业实现数字化办公转型</p>
+      <div class="plan-tabs-wrap compare-tabs-wrap">
+        <div class="plan-tabs" data-active="business">
+          <div class="pill"></div>
+          <button type="button" data-tab="business" data-anchor="compare" class="active">商业版</button>
+          <button type="button" data-tab="smart" data-anchor="compare">智能版<span class="badge-new">NEW</span></button>
+        </div>
+      </div>
+      <div class="detail-table">
+        <div class="compare-head">
+          <div class="col">套餐名称 / 价格</div>
+          <div class="col">
+            <div class="name">体验版</div>
+            <div class="price"><span class="num">0</span> 元 / 人 / 年</div>
+            <a class="tw-btn-ghost mini" href="#">开始试用</a>
+          </div>
+          <div class="col">
+            <div class="badge">尊享 30 + 项权益</div>
+            <div class="name">商业协作版</div>
+            <div class="price"><span class="num">199</span> 元 / 人 / 年</div>
+            <a class="tw-btn-ghost mini" href="#">立即购买</a>
+          </div>
+          <div class="col">
+            <div class="badge">尊享 250 + 项权益</div>
+            <div class="name">商业高级版</div>
+            <div class="price"><span class="num">399</span> 元 / 人 / 年</div>
+            <a class="tw-btn-ghost mini" href="#">立即购买</a>
+          </div>
+          <div class="col recom">
+            <div class="recommend-tag"><img src="https://qn.cache.wpscdn.cn/encs/plus/img/recom-badge.37d2bba.svg" alt="荐"/></div>
+            <div class="badge">尊享 300 + 项权益</div>
+            <div class="name">商业旗舰版</div>
+            <div class="price"><span class="num">599</span> 元 / 人 / 年</div>
+            <a class="tw-btn-primary mini" href="#">立即购买</a>
+          </div>
+        </div>
+        <!-- 商业版权益对比：对齐截图 -->
+        <div class="group" data-group="office">
+          <div class="group-h"><img src="https://ks3.wpsplus.wpscdn.cn/img/wps_2024_newwebsite.png" alt=""/><span>WPS Office 授权</span></div>
+          <table>
+            <colgroup>
+              <col class="feat-col"/><col class="plan-col"/><col class="plan-col"/><col class="plan-col"/><col class="plan-col"/>
+            </colgroup>
+            <tbody>
+              <tr>
+                <th><span class="feat">Windows 等多平台授权认证</span><img class="tip" src="https://qn.cache.wpscdn.cn/encs/plus/img/ico-tips.fc06969.svg" alt="说明"/></th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
+                <td class="c"><div class="cell-stack"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/><div class="note">Windows 版和 Linux 版授权任选其一</div></div></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+              </tr>
+              <tr>
+                <th><span class="feat">Linux 授权认证</span><img class="tip" src="https://qn.cache.wpscdn.cn/encs/plus/img/ico-tips.fc06969.svg" alt="说明"/></th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
+                <td class="c"><div class="cell-stack"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/><div class="note">Windows 版和 Linux 版授权任选其一</div></div></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="group" data-group="asset">
+          <div class="group-h"><img src="https://ks3.wpsplus.wpscdn.cn/img/%E6%95%B0%E5%AD%97%E8%B5%84%E4%BA%A7_2024_newwebsite.png" alt=""/><span>数字资产管控</span></div>
+          <table>
+            <colgroup>
+              <col class="feat-col"/><col class="plan-col"/><col class="plan-col"/><col class="plan-col"/><col class="plan-col"/>
+            </colgroup>
+            <tbody>
+              <tr>
+                <th>企业储存空间</th>
+                <td class="c txt">激活人数 * 2GB，上限 10GB</td>
+                <td class="c txt">50GB / 人</td>
+                <td class="c txt">365GB / 人</td>
+                <td class="c txt">2TB / 人</td>
+              </tr>
+              <tr>
+                <th><span class="feat">空间自定义分配</span><img class="tip" src="https://qn.cache.wpscdn.cn/encs/plus/img/ico-tips.fc06969.svg" alt="说明"/></th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+              </tr>
+              <tr>
+                <th><span class="feat">单文件上传大小</span><img class="tip" src="https://qn.cache.wpscdn.cn/encs/plus/img/ico-tips.fc06969.svg" alt="说明"/></th>
+                <td class="c txt">10MB</td>
+                <td class="c txt">4GB</td>
+                <td class="c txt">6GB</td>
+                <td class="c txt">10GB</td>
+              </tr>
+              <tr>
+                <th><span class="feat">音视频在线播放</span><img class="tip" src="https://qn.cache.wpscdn.cn/encs/plus/img/ico-tips.fc06969.svg" alt="说明"/></th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+              </tr>
+              <tr>
+                <th><span class="feat">团队文档水印</span><img class="tip" src="https://qn.cache.wpscdn.cn/encs/plus/img/ico-tips.fc06969.svg" alt="说明"/></th>
+                <td class="c txt">3 个团队 / 企业</td>
+                <td class="c txt">30 个团队 / 企业</td>
+                <td class="c txt">50 个团队 / 企业</td>
+                <td class="c txt">不限</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ===== 智能版框架 ===== -->
+<div class="panel" id="panel-smart" data-panel="smart">
+  <div class="pkg-wrap">
+    <div class="tip-line">以下版本仅适用于中国大陆地区</div>
+    <div class="smart-cards">
+      <article class="smart-card">
+        <div class="sc-title-row">
+          <h3>智能高级版</h3>
+        </div>
+        <p class="sc-tagline">组织内规模化启用 AI</p>
+        <div class="sc-price">
+          <div class="sc-price-row">
+            <span class="sc-currency">¥</span>
+            <span class="sc-amount">1199</span>
+            <span class="sc-unit">/ 人 / 年</span>
+          </div>
+          <p class="sc-meta">5 人起购 · 含商业旗舰版全部能力</p>
+        </div>
+        <div class="sc-highlight">
+          <p class="sc-key">1000 / 月 / 人 AI 额度</p>
+          <p class="sc-desc">在商业旗舰版基础上额外支持：Comate Studio、企业知识库与 AI Hub 管控等</p>
+        </div>
+        <div class="sc-cta">
+          <a class="sc-btn ghost" href="#">立即购买</a>
+        </div>
+      </article>
+
+      <article class="smart-card featured">
+        <div class="sc-title-row">
+          <h3>智能旗舰版</h3>
+          <span class="sc-badge">企业首选</span>
+        </div>
+        <p class="sc-tagline">重度使用与对外服务</p>
+        <div class="sc-price">
+          <div class="sc-price-row">
+            <span class="sc-currency">¥</span>
+            <span class="sc-amount">2399</span>
+            <span class="sc-unit">/ 人 / 年</span>
+          </div>
+          <p class="sc-meta">5 人起购 · 含智能高级版全部能力</p>
+        </div>
+        <div class="sc-highlight">
+          <p class="sc-key">3000 / 月 / 人 AI 额度</p>
+          <p class="sc-desc">在智能高级版基础上额外支持：对客公开问答、智能问答开放接口及更高配额等。<a href="#compare-smart">查看完整对比</a></p>
+        </div>
+        <div class="sc-cta">
+          <a class="sc-btn primary" href="#">立即购买</a>
+        </div>
+      </article>
+    </div>
+  </div>
+  <div class="announcement">
+    <div class="announcement-box">
+      <img src="https://js2.epy.wpscdn.cn/security/plusPriceAnnouncementLoud.png" alt=""/>
+      <span>需要更大 AI 额度、公开问答 API，或私有化部署方案，请联系销售咨询 <a class="announcement-button" href="#">立即咨询 &gt;</a></span>
+    </div>
+  </div>
+
+  <section class="hub-section" id="aiHub">
+    <div class="hub-head">
+      <h2>三大「Hub」让 AI 在组织中可信运行</h2>
+      <p>WPS 365 构建组织 AI Agent 的可信运行底座，与智能版套餐能力一脉相承</p>
+    </div>
+    <div class="hub-shell" id="hubShell">
+      <div class="hub-tabs" role="tablist" aria-label="三大 Hub">
+        <button type="button" role="tab" id="hubTab0" aria-controls="hubPanel0" aria-selected="true" class="active" data-hub="0">
+          <span class="ht-name">AI Hub</span>
+          <span class="ht-sub">额度与模型可控</span>
+        </button>
+        <button type="button" role="tab" id="hubTab1" aria-controls="hubPanel1" aria-selected="false" data-hub="1">
+          <span class="ht-name">Data Hub</span>
+          <span class="ht-sub">数据治理与语义</span>
+        </button>
+        <button type="button" role="tab" id="hubTab2" aria-controls="hubPanel2" aria-selected="false" data-hub="2">
+          <span class="ht-name">API Hub</span>
+          <span class="ht-sub">连接业务系统</span>
+        </button>
+      </div>
+      <div class="hub-panels">
+        <article class="hub-panel active" role="tabpanel" id="hubPanel0" aria-labelledby="hubTab0" data-hub-panel="0">
+          <div class="hub-copy">
+            <p class="hub-kicker"><i></i>AI Hub</p>
+            <h3>灵活管理组织 Token，按团队配置大模型</h3>
+            <p class="desc">把 AI 消耗从「看不见」变成「管得住」——额度、模型与使用趋势一目了然，让每一份算力用在业务关键处。</p>
+            <ul class="hub-points">
+              <li><span class="dot">1</span><span>按组织 / 团队查看 Token 与额度消耗</span></li>
+              <li><span class="dot">2</span><span>灵活配置可用大模型，匹配不同场景</span></li>
+              <li><span class="dot">3</span><span>使用趋势可追踪，费用与风险可预期</span></li>
+            </ul>
+          </div>
+          <div class="hub-visual">
+            <div class="mock mock-stats">
+              <div class="stats-top">
+                <div class="lt">
+                  <h4>使用统计 <span>近 30 日</span></h4>
+                  <div class="stats-tabs"><span class="on">自定义模型统计</span><span>额度统计</span></div>
+                </div>
+                <div class="stats-period">截至昨日</div>
+              </div>
+              <div class="kpi-row">
+                <div class="kpi"><label>Token 总消耗</label><b>4118.64亿</b></div>
+                <div class="kpi"><label>日均消耗</label><b>137.29亿</b></div>
+                <div class="kpi"><label>使用人数</label><b>3,921</b></div>
+                <div class="kpi"><label>人均日耗</label><b>350.14万</b></div>
+              </div>
+              <div class="chart-box">
+                <div class="ch-h"><strong>每日 Token 消耗趋势</strong><a href="#">更多</a></div>
+                <div class="chart-body">
+                  <div class="line-chart">
+                    <svg viewBox="0 0 420 140" preserveAspectRatio="none" aria-hidden="true">
+                      <defs>
+                        <linearGradient id="aiLineFill" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stop-color="#1f69e0" stop-opacity=".18"/>
+                          <stop offset="100%" stop-color="#1f69e0" stop-opacity="0"/>
+                        </linearGradient>
+                      </defs>
+                      <polygon fill="url(#aiLineFill)" points="10,140 10,90 40,70 70,78 100,55 130,48 160,62 190,40 220,52 250,45 280,58 310,50 340,60 370,42 400,48 400,140"/>
+                      <polyline fill="none" stroke="#1f69e0" stroke-width="2.5" points="10,90 40,70 70,78 100,55 130,48 160,62 190,40 220,52 250,45 280,58 310,50 340,60 370,42 400,48"/>
+                      <polyline fill="none" stroke="#60a5fa" stroke-width="2" points="10,115 40,112 70,118 100,110 130,112 160,108 190,114 220,106 250,110 280,104 310,108 340,102 370,106 400,103"/>
+                    </svg>
+                  </div>
+                  <div class="donut-wrap">
+                    <div class="donut"><div class="cen">消耗构成<b>2867.95亿</b></div></div>
+                    <div class="donut-leg">
+                      <span><i style="background:#1f69e0"></i>命中缓存 92.4%</span>
+                      <span><i style="background:#60a5fa"></i>未命中 7.0%</span>
+                      <span><i style="background:#93c5fd"></i>输出 0.6%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="hub-panel" role="tabpanel" id="hubPanel1" aria-labelledby="hubTab1" data-hub-panel="1" hidden>
+          <div class="hub-copy">
+            <p class="hub-kicker"><i></i>Data Hub</p>
+            <h3>治理组织数据，理解业务语义</h3>
+            <p class="desc">接入多源数据，按空间隔离与权限治理；让 AI 按组织自有标准产出可直接使用的结果。</p>
+            <ul class="hub-points">
+              <li><span class="dot">1</span><span>数据空间隔离，连接 / 管道 / 数据集分域管理</span></li>
+              <li><span class="dot">2</span><span>按团队或业务域划分权限，安全可控</span></li>
+              <li><span class="dot">3</span><span>沉淀业务定义，输出贴合组织语境的结果</span></li>
+            </ul>
+          </div>
+          <div class="hub-visual">
+            <div class="mock mock-data">
+              <div class="data-toolbar">
+                <div>
+                  <h4>数据资产</h4>
+                  <p>按空间隔离管理连接、管道与数据集</p>
+                </div>
+                <div class="data-ops">
+                  <div class="search">搜索数据空间...</div>
+                  <button class="btn-dark" type="button">+ 新建</button>
+                </div>
+              </div>
+              <div class="space-grid">
+                <div class="space-card">
+                  <div class="top"><div class="ico" style="background:#1f69e0">E</div><h5>ERP 业务数据</h5><span class="more">···</span></div>
+                  <p class="sub">ERP · 核心业务域</p>
+                  <div class="space-stats">
+                    <div><b>1</b><span>数据连接</span></div>
+                    <div><b>1</b><span>数据集</span></div>
+                    <div><b>0</b><span>数据管道</span></div>
+                    <div><b>2</b><span>成员</span></div>
+                  </div>
+                  <div class="space-foot"><span>更新于 06-14</span><span class="av" style="background:#60a5fa">L</span></div>
+                </div>
+                <div class="space-card">
+                  <div class="top"><div class="ico" style="background:#3b82f6">华</div><h5>华锐门控 · 考勤</h5><span class="more">···</span></div>
+                  <p class="sub">虚构企业演示数据</p>
+                  <div class="space-stats">
+                    <div><b>1</b><span>数据连接</span></div>
+                    <div><b>17</b><span>数据集</span></div>
+                    <div><b>1</b><span>数据管道</span></div>
+                    <div><b>14</b><span>成员</span></div>
+                  </div>
+                  <div class="space-foot"><span>更新于 06-30</span><span class="av" style="background:#93c5fd">华</span></div>
+                </div>
+                <div class="space-card">
+                  <div class="top"><div class="ico" style="background:#0ea5e9">考</div><h5>考勤数据 DEMO</h5><span class="more">···</span></div>
+                  <p class="sub">考勤场景快速验证</p>
+                  <div class="space-stats">
+                    <div><b>2</b><span>数据连接</span></div>
+                    <div><b>3</b><span>数据集</span></div>
+                    <div><b>0</b><span>数据管道</span></div>
+                    <div><b>15</b><span>成员</span></div>
+                  </div>
+                  <div class="space-foot"><span>更新于 06-30</span><span class="av" style="background:#38bdf8">考</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="hub-panel" role="tabpanel" id="hubPanel2" aria-labelledby="hubTab2" data-hub-panel="2" hidden>
+          <div class="hub-copy">
+            <p class="hub-kicker"><i></i>API Hub</p>
+            <h3>用 AI 连接 Comate 与组织自有系统</h3>
+            <p class="desc">把内部业务系统、第三方 SaaS 与外部 API 接入「专家」，推进 Agent 真正落地到业务链路。</p>
+            <ul class="hub-points">
+              <li><span class="dot">1</span><span>模板 → 凭证 → 连接器，三步完成接入</span></li>
+              <li><span class="dot">2</span><span>支持连接器直连与 Skill 编排两种调用</span></li>
+              <li><span class="dot">3</span><span>与智能旗舰版开放接口能力协同扩展</span></li>
+            </ul>
+          </div>
+          <div class="hub-visual">
+            <div class="mock mock-api">
+              <div class="api-head">
+                <h4>API Hub 快速上手</h4>
+                <p>按流程打通 AI Agent 系统接入能力</p>
+                <div class="api-progress">
+                  <div class="node"><i>1</i><span>模板</span></div>
+                  <div class="node"><i>2</i><span>连接器</span></div>
+                  <div class="node"><i>3</i><span>凭证</span></div>
+                </div>
+              </div>
+              <div class="api-steps">
+                <div class="api-step">
+                  <h5>创建连接模板</h5>
+                  <p>配置地址、接口与认证，供后续复用。</p>
+                  <button class="btn-dark" type="button">立即创建</button>
+                </div>
+                <div class="api-step">
+                  <h5>创建连接器</h5>
+                  <p>关联模板与凭证，生成可调用连接。</p>
+                  <button class="btn-dark" type="button">立即创建</button>
+                </div>
+                <div class="api-step">
+                  <h5>凭证管理</h5>
+                  <p>统一管理访问凭证，保障调用合规。</p>
+                  <button class="btn-dark" type="button">前往管理</button>
+                </div>
+              </div>
+              <div class="api-grid">
+                <div class="api-item">
+                  <div class="ic">API</div>
+                  <h5>API 调用方式</h5>
+                  <p>连接器直连 / Skill 编排</p>
+                </div>
+                <div class="api-item">
+                  <div class="ic">Sk</div>
+                  <h5>Skill 模板</h5>
+                  <p>标准模板包，上传即可用</p>
+                </div>
+                <div class="api-item">
+                  <div class="ic">&gt;_</div>
+                  <h5>脚本模板</h5>
+                  <p>预置认证与映射脚本</p>
+                </div>
+                <div class="api-item">
+                  <div class="ic">专</div>
+                  <h5>专家场景</h5>
+                  <p>对话中自动调用连接器</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="compare" id="compare-smart">
+    <div class="compare-inner">
+      <h1>WPS 365 套餐价格</h1>
+      <p class="sub">利用 WPS 365 帮助企业实现数字化办公转型</p>
+      <div class="plan-tabs-wrap compare-tabs-wrap">
+        <div class="plan-tabs" data-active="smart">
+          <div class="pill"></div>
+          <button type="button" data-tab="business" data-anchor="compare">商业版</button>
+          <button type="button" data-tab="smart" data-anchor="compare" class="active">智能版<span class="badge-new">NEW</span></button>
+        </div>
+      </div>
+      <div class="detail-table">
+        <div class="compare-head smart">
+          <div class="col">套餐名称 / 价格</div>
+          <div class="col">
+            <div class="badge">尊享智能高级权益</div>
+            <div class="name">智能高级版</div>
+            <div class="price"><span class="num">1199</span> 元 / 人 / 年</div>
+            <a class="tw-btn-ghost mini" href="#">立即购买</a>
+          </div>
+          <div class="col recom">
+            <div class="recommend-tag"><img src="https://qn.cache.wpscdn.cn/encs/plus/img/recom-badge.37d2bba.svg" alt="荐"/></div>
+            <div class="badge">尊享智能旗舰权益</div>
+            <div class="name">智能旗舰版</div>
+            <div class="price"><span class="num">2399</span> 元 / 人 / 年</div>
+            <a class="tw-btn-primary mini" href="#">立即购买</a>
+          </div>
+        </div>
+
+        <div class="group" data-group="smart-ai">
+          <div class="group-h ai"><img src="https://ks3.wpsplus.wpscdn.cn/img/ai_hub_logo.png" alt=""/><span>WPS AI</span></div>
+          <table class="smart-table">
+            <colgroup>
+              <col class="feat-col"/><col class="plan-col"/><col class="plan-col"/>
+            </colgroup>
+            <tbody>
+              <tr>
+                <th>Comate Studio</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+              </tr>
+              <tr>
+                <th>个人自定义模型</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+              </tr>
+              <tr>
+                <th>企业AI额度</th>
+                <td class="c txt">1000/月/人</td>
+                <td class="c txt">3000/月/人</td>
+              </tr>
+              <tr>
+                <th>智能问答</th>
+                <td class="c txt">200次 * 购买人数</td>
+                <td class="c txt">250次 * 购买人数</td>
+              </tr>
+              <tr>
+                <th>单次问答可选文档个数</th>
+                <td class="c txt">50个</td>
+                <td class="c txt">50个</td>
+              </tr>
+              <tr>
+                <th>文档入库限制</th>
+                <td class="c txt">2000份 * 购买人数</td>
+                <td class="c txt">2500份 * 购买人数</td>
+              </tr>
+              <tr>
+                <th>内容智能抽取</th>
+                <td class="c txt">100页 * 购买人数</td>
+                <td class="c txt">150页 * 购买人数</td>
+              </tr>
+              <tr>
+                <th>对客公开问答次数</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
+                <td class="c txt">1000次/企业</td>
+              </tr>
+              <tr>
+                <th>智能问答开放接口</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
+                <td class="c txt">1000次/企业</td>
+              </tr>
+              <tr>
+                <th>智能搜索</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+              </tr>
+              <tr>
+                <th>知识库数据统计</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+              </tr>
+              <tr>
+                <th>知识库互联网公开</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+              </tr>
+              <tr>
+                <th>AI Hub</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+              </tr>
+              <tr>
+                <th>AI使用分析助手</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+              </tr>
+              <tr>
+                <th>AI伴写</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+              </tr>
+              <tr>
+                <th>AI灵感市集</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+              </tr>
+              <tr>
+                <th>AI全文总结</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+              </tr>
+              <tr>
+                <th>AI文档问答</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="group" data-group="smart-office">
+          <div class="group-h"><img src="https://ks3.wpsplus.wpscdn.cn/img/wps_2024_newwebsite.png" alt=""/><span>WPS Office 授权</span></div>
+          <table class="smart-table">
+            <colgroup>
+              <col class="feat-col"/><col class="plan-col"/><col class="plan-col"/>
+            </colgroup>
+            <tbody>
+              <tr>
+                <th>Windows等多平台授权认证</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+              </tr>
+              <tr>
+                <th>Linux授权认证</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+              </tr>
+              <tr>
+                <th>VBA</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="group" data-group="smart-asset">
+          <div class="group-h"><img src="https://ks3.wpsplus.wpscdn.cn/img/%E6%95%B0%E5%AD%97%E8%B5%84%E4%BA%A7_2024_newwebsite.png" alt=""/><span>数字资产管控</span></div>
+          <table class="smart-table">
+            <colgroup>
+              <col class="feat-col"/><col class="plan-col"/><col class="plan-col"/>
+            </colgroup>
+            <tbody>
+              <tr>
+                <th>企业储存空间</th>
+                <td class="c txt">3T/人</td>
+                <td class="c txt">5T/人</td>
+              </tr>
+              <tr>
+                <th>空间自定义分配</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+              </tr>
+              <tr>
+                <th>单文件上传大小</th>
+                <td class="c txt">15G</td>
+                <td class="c txt">20G</td>
+              </tr>
+              <tr>
+                <th>音视频在线播放</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+              </tr>
+              <tr>
+                <th>团队创建审批管理</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+              </tr>
+              <tr>
+                <th>离职员工文档交接</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+              </tr>
+              <tr>
+                <th>变更团队拥有者</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+              </tr>
+              <tr>
+                <th>恢复已解散团队</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+              </tr>
+              <tr>
+                <th>团队文档水印</th>
+                <td class="c txt">不限</td>
+                <td class="c txt">不限</td>
+              </tr>
+              <tr>
+                <th>团队文档加密保护</th>
+                <td class="c txt">不限</td>
+                <td class="c txt">不限</td>
+              </tr>
+              <tr>
+                <th>企业文档水印</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+              </tr>
+              <tr>
+                <th>企业文档水印样式自定义</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
+              </tr>
+              <tr>
+                <th>企业文档分享链接管控范围</th>
+                <td class="c txt">不限时长</td>
+                <td class="c txt">不限时长</td>
+              </tr>
+              <tr>
+                <th>二级回收站文件恢复时长</th>
+                <td class="c txt">不限时长</td>
+                <td class="c txt">不限时长</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+      <p class="table-note">智能版对比表：AI 相关权益前置，其余按产品表格填充。</p>
+    </div>
+  </section>
+</div>
+
+<section class="faq-sec" id="sharedFaq">
+  <div class="faq-inner">
+    <div class="faq-head">
+      <h2>支付常见问题</h2>
+      <p class="sub">利用 WPS 365 帮助企业实现数字化办公转型</p>
+      <a class="faq-more" href="#">更多支付相关问题</a>
+    </div>
+    <div class="faq-grid">
+      <article class="faq-card">
+        <h3>01. 可以开具发票吗？</h3>
+        <p class="faq-body">购买后，您可前往“企业管理后台--订单权益--<a href="#">发票管理</a>”开具发票。无特殊或不可抗力的情况下我司将在10个工作日内开具数字电子发票。我司可开具增值税普通发票或增值税专用发票，其服务名称一栏内容是*信息技术服务*技术服务费*或具体的商品名称，开具的发票金额均为含税价格，税率6%。</p>
+        <a class="faq-link" href="#">更多发票问题，查看详情 &gt;</a>
+      </article>
+      <article class="faq-card">
+        <h3>02. 可以对公打款吗？可以微信或支付宝吗？</h3>
+        <p class="faq-body">支持对公打款。订单支付时选择“汇款支付”，汇款支付界面将会显示对公打款账户，需要您在10日内完成付款并在“管理后台--增值中心--<a href="#">订单记录</a>”提交电子回单图片/汇款单图片。提交后，无特殊或不可抗力的情况下，我们将会在2个工作日内完成审核并开通权益。您也可以通过支付宝或微信支付进行付费。</p>
+      </article>
+      <article class="faq-card">
+        <h3>03. 付费套餐到期后还可以继续使用吗？</h3>
+        <p class="faq-body">当您购买的付费套餐过期后，套餐将会自动降为新的 WPS 365 体验版，影响点为: 1) 无法继续使用付费功能，2) 企业人数超过上限时，将会限制添加成员。企业中的文档数据和成员不会被删除，用户可正常访问企业数据。您可以选择续费，续费后将可继续使用付费功能。</p>
+        <a class="faq-link" href="#">如需了解更多，查看详情 &gt;</a>
+      </article>
+      <article class="faq-card">
+        <h3>04. 中途增加名额，价格如何计算？</h3>
+        <p class="faq-body">假设现在是2020年2月27日，您购买的是商业标准版5人，套餐有效期至2020年4月9日，此时，您需要增加1名新企业成员。那么，增加的1名新企业成员所需支付的费用为: 套餐剩余付费天数(42天)*商业标准版日单价(1元)增购的人数 (1人) =42元(注: 商业标准版的日单价=商品金额365元/365天=1元/人/日)<span class="faq-note">注:增加新成员不会改变企业套餐到期时间，是在当前套餐到期时间的基础上，计算增加成员所需支付的费用。 您可输入所要增加的购买人数，系统会自动为您计算所需费用。</span></p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">© 2008-2026 Kingsoft Office Software, Inc. All Rights Reserved. · 智能版定价页框架稿（商业版对齐线上）</footer>
+
+<div class="float-side">
+  <a href="#">购买<br>咨询</a>
+  <a href="#">预约<br>演示</a>
+  <a href="#">联系<br>我们</a>
+</div>
+
+<script>
+(function(){
+  const planTabsRoots=[...document.querySelectorAll('.plan-tabs')];
+  const panels=document.querySelectorAll('.panel');
+  const demoButtons=document.querySelectorAll('[data-demo-tab]');
+  function switchTab(name, opts={}){
+    const lockCompare=opts.anchor==='compare';
+    // 表格区切换：锁定对比 Tab 在视口中的位置，避免内容高度差导致上下跳
+    let lockTop=null;
+    if(lockCompare){
+      const cur=document.querySelector('.panel.active .compare-tabs-wrap')
+        || document.querySelector('.panel.active .compare');
+      if(cur) lockTop=cur.getBoundingClientRect().top;
+    }
+    planTabsRoots.forEach(root=>{
+      root.dataset.active=name;
+      root.querySelectorAll('button[data-tab]').forEach(b=>{
+        b.classList.toggle('active', b.dataset.tab===name);
+      });
+    });
+    panels.forEach(p=>{
+      p.classList.toggle('no-anim', lockCompare);
+      p.classList.toggle('active', p.dataset.panel===name);
+    });
+    demoButtons.forEach(b=>b.classList.toggle('active', b.dataset.demoTab===name));
+    if(name==='smart') startHubAutoplay();
+    else stopHubAutoplay();
+    if(lockCompare && lockTop!=null){
+      const target=document.getElementById(name==='smart'?'compare-smart':'compare-business');
+      const lockEl=target?.querySelector('.compare-tabs-wrap')||target;
+      const sync=()=>{
+        if(!lockEl) return;
+        const delta=lockEl.getBoundingClientRect().top-lockTop;
+        if(Math.abs(delta)>0.5) window.scrollBy(0, delta);
+      };
+      sync();
+      requestAnimationFrame(()=>{
+        sync();
+        requestAnimationFrame(sync);
+      });
+    }
+  }
+  planTabsRoots.forEach(root=>{
+    root.querySelectorAll('button[data-tab]').forEach(b=>{
+      b.addEventListener('click',()=>switchTab(b.dataset.tab,{anchor:b.dataset.anchor||''}));
+    });
+  });
+  demoButtons.forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.demoTab)));
+
+  document.querySelectorAll('.expand-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const g=btn.closest('.group');
+      g.classList.toggle('expanded');
+      const lab=btn.querySelector('span'); if(lab) lab.textContent = g.classList.contains('expanded') ? '收起权益' : '展开查看更多权益';
+    });
+  });
+
+  const hubShell=document.getElementById('hubShell');
+  const hubTabs=[...document.querySelectorAll('.hub-tabs [role="tab"]')];
+  const hubPanels=[...document.querySelectorAll('.hub-panel')];
+  let hubIndex=0, hubTimer=null;
+  const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function goHub(i){
+    hubIndex=(i+hubTabs.length)%hubTabs.length;
+    hubTabs.forEach((t,ti)=>{
+      const on=ti===hubIndex;
+      t.classList.toggle('active', on);
+      t.setAttribute('aria-selected', on?'true':'false');
+      t.tabIndex=on?0:-1;
+    });
+    hubPanels.forEach((p,pi)=>{
+      const on=pi===hubIndex;
+      p.classList.toggle('active', on);
+      if(on) p.removeAttribute('hidden');
+      else p.setAttribute('hidden','');
+    });
+  }
+  function nextHub(){goHub(hubIndex+1)}
+  function stopHubAutoplay(){clearInterval(hubTimer); hubTimer=null}
+  function startHubAutoplay(){
+    stopHubAutoplay();
+    if(reduceMotion) return;
+    hubTimer=setInterval(nextHub,8000);
+  }
+
+  hubTabs.forEach((t,i)=>{
+    t.addEventListener('click',()=>{goHub(i); startHubAutoplay()});
+    t.addEventListener('keydown',e=>{
+      if(e.key==='ArrowRight'||e.key==='ArrowLeft'){
+        e.preventDefault();
+        const dir=e.key==='ArrowRight'?1:-1;
+        goHub(hubIndex+dir);
+        hubTabs[hubIndex].focus();
+        startHubAutoplay();
+      }
+    });
+  });
+  if(hubShell){
+    hubShell.addEventListener('mouseenter', stopHubAutoplay);
+    hubShell.addEventListener('mouseleave', ()=>{
+      if(document.getElementById('panel-smart')?.classList.contains('active')) startHubAutoplay();
+    });
+  }
+
+  const initial=new URLSearchParams(location.search).get('tab')==='smart'?'smart':'business';
+  goHub(0);
+  switchTab(initial);
+})();
+</script>
+</body>
+</html>
