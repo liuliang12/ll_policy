@@ -260,9 +260,9 @@ img{display:block}
   top:var(--sticky-top);
   z-index:20;
 }
-/* 智能版仅改列数，样式与商业版表头一致 */
+/* 智能版仅改列数，样式与商业版表头一致（体验版 + 高级 + 旗舰） */
 .compare-head.smart{
-  grid-template-columns:200px repeat(2,minmax(0,1fr));
+  grid-template-columns:200px repeat(3,minmax(0,1fr));
   box-sizing:border-box;
   border:1px solid transparent; /* 对齐下方分组卡片边框，避免列偏移 */
 }
@@ -1280,7 +1280,7 @@ img{display:block}
         </div>
         <div class="sc-highlight">
           <p class="sc-key">1000 / 月 / 人 AI 额度</p>
-          <p class="sc-desc">在商业旗舰版基础上额外支持：Comate Studio、企业知识库与 AI Hub 管控等</p>
+          <p class="sc-desc">包含 Comate、Comate Studio、企业知识库、AI Hub 管控，以及智能问答与知识入库等能力</p>
         </div>
         <div class="sc-cta">
           <a class="sc-btn ghost" href="#">立即购买</a>
@@ -1540,6 +1540,11 @@ img{display:block}
         <div class="compare-head smart">
           <div class="col">套餐名称 / 价格</div>
           <div class="col">
+            <div class="name">体验版</div>
+            <div class="price"><span class="num">0</span> 元 / 人 / 年</div>
+            <a class="tw-btn-ghost mini" href="#">开始试用</a>
+          </div>
+          <div class="col">
             <div class="badge">尊享智能高级权益</div>
             <div class="name">智能高级版</div>
             <div class="price"><span class="num">1199</span> 元 / 人 / 年</div>
@@ -1558,96 +1563,114 @@ img{display:block}
           <div class="group-h ai"><img src="https://ks3.wpsplus.wpscdn.cn/img/ai_hub_logo.png" alt=""/><span>WPS AI</span></div>
           <table class="smart-table">
             <colgroup>
-              <col class="feat-col"/><col class="plan-col"/><col class="plan-col"/>
+              <col class="feat-col"/><col class="plan-col"/><col class="plan-col"/><col class="plan-col"/>
             </colgroup>
             <tbody>
               <tr>
                 <th>Comate Studio</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
               </tr>
               <tr>
                 <th>个人自定义模型</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
               </tr>
               <tr>
                 <th>企业AI额度</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
                 <td class="c txt">1000/月/人</td>
                 <td class="c txt">3000/月/人</td>
               </tr>
               <tr>
                 <th>智能问答</th>
+                <td class="c txt">企业上限100次</td>
                 <td class="c txt">200次 * 购买人数</td>
                 <td class="c txt">250次 * 购买人数</td>
               </tr>
               <tr>
                 <th>单次问答可选文档个数</th>
+                <td class="c txt">10个</td>
                 <td class="c txt">50个</td>
                 <td class="c txt">50个</td>
               </tr>
               <tr>
                 <th>文档入库限制</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
                 <td class="c txt">2000份 * 购买人数</td>
                 <td class="c txt">2500份 * 购买人数</td>
               </tr>
               <tr>
                 <th>内容智能抽取</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
                 <td class="c txt">100页 * 购买人数</td>
                 <td class="c txt">150页 * 购买人数</td>
               </tr>
               <tr>
                 <th>对客公开问答次数</th>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
                 <td class="c txt">1000次/企业</td>
               </tr>
               <tr>
                 <th>智能问答开放接口</th>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
                 <td class="c txt">1000次/企业</td>
               </tr>
               <tr>
                 <th>智能搜索</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
               </tr>
               <tr>
                 <th>知识库数据统计</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
               </tr>
               <tr>
                 <th>知识库互联网公开</th>
+                <td class="c txt">10个/企业</td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
               </tr>
               <tr>
                 <th>AI Hub</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
               </tr>
               <tr>
                 <th>AI使用分析助手</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
               </tr>
               <tr>
                 <th>AI伴写</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
               </tr>
               <tr>
                 <th>AI灵感市集</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
               </tr>
               <tr>
                 <th>AI全文总结</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
               </tr>
               <tr>
                 <th>AI文档问答</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
               </tr>
@@ -1659,21 +1682,24 @@ img{display:block}
           <div class="group-h"><img src="https://ks3.wpsplus.wpscdn.cn/img/wps_2024_newwebsite.png" alt=""/><span>WPS Office 授权</span></div>
           <table class="smart-table">
             <colgroup>
-              <col class="feat-col"/><col class="plan-col"/><col class="plan-col"/>
+              <col class="feat-col"/><col class="plan-col"/><col class="plan-col"/><col class="plan-col"/>
             </colgroup>
             <tbody>
               <tr>
                 <th>Windows等多平台授权认证</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
               </tr>
               <tr>
                 <th>Linux授权认证</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
               </tr>
               <tr>
                 <th>VBA</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
               </tr>
@@ -1685,76 +1711,90 @@ img{display:block}
           <div class="group-h"><img src="https://ks3.wpsplus.wpscdn.cn/img/%E6%95%B0%E5%AD%97%E8%B5%84%E4%BA%A7_2024_newwebsite.png" alt=""/><span>数字资产管控</span></div>
           <table class="smart-table">
             <colgroup>
-              <col class="feat-col"/><col class="plan-col"/><col class="plan-col"/>
+              <col class="feat-col"/><col class="plan-col"/><col class="plan-col"/><col class="plan-col"/>
             </colgroup>
             <tbody>
               <tr>
                 <th>企业储存空间</th>
+                <td class="c txt">激活人数 * 2GB，上限 10GB</td>
                 <td class="c txt">3T/人</td>
                 <td class="c txt">5T/人</td>
               </tr>
               <tr>
                 <th>空间自定义分配</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
               </tr>
               <tr>
                 <th>单文件上传大小</th>
+                <td class="c txt">10MB</td>
                 <td class="c txt">15G</td>
                 <td class="c txt">20G</td>
               </tr>
               <tr>
                 <th>音视频在线播放</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
               </tr>
               <tr>
                 <th>团队创建审批管理</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
               </tr>
               <tr>
                 <th>离职员工文档交接</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
               </tr>
               <tr>
                 <th>变更团队拥有者</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
               </tr>
               <tr>
                 <th>恢复已解散团队</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
               </tr>
               <tr>
                 <th>团队文档水印</th>
+                <td class="c txt">3个团队/企业</td>
                 <td class="c txt">不限</td>
                 <td class="c txt">不限</td>
               </tr>
               <tr>
                 <th>团队文档加密保护</th>
+                <td class="c txt">3个团队/企业</td>
                 <td class="c txt">不限</td>
                 <td class="c txt">不限</td>
               </tr>
               <tr>
                 <th>企业文档水印</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
               </tr>
               <tr>
                 <th>企业文档水印样式自定义</th>
+                <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-close.a0011f6.svg" alt="无"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
                 <td class="c"><img class="ico" src="https://qn.cache.wpscdn.cn/encs/plus/img/icon-checked.e44527c.svg" alt="有"/></td>
               </tr>
               <tr>
                 <th>企业文档分享链接管控范围</th>
+                <td class="c txt">最近30天</td>
                 <td class="c txt">不限时长</td>
                 <td class="c txt">不限时长</td>
               </tr>
               <tr>
                 <th>二级回收站文件恢复时长</th>
+                <td class="c txt">最近7天</td>
                 <td class="c txt">不限时长</td>
                 <td class="c txt">不限时长</td>
               </tr>
@@ -1763,7 +1803,7 @@ img{display:block}
         </div>
 
       </div>
-      <p class="table-note">智能版对比表：AI 相关权益前置，其余按产品表格填充。</p>
+      <p class="table-note">智能版对比表：含体验版对照；AI 相关权益前置，其余按产品表格填充。</p>
     </div>
   </section>
 </div>
