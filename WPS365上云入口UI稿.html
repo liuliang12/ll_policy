@@ -43,6 +43,8 @@
     .storage-expand { padding:4px 7px; border:1px solid #cbd9ff; border-radius:4px; background:#f5f8ff; color:#3f6fff; font-size:11px; font-weight:600; line-height:1; cursor:pointer; }
     .storage-expand[hidden] { display:none; }
     .storage-expand:hover { border-color:#94b0ff; background:#edf3ff; }
+    .storage-expand.is-warning { border-color:#f3c36d; background:#fff8e9; color:#d98a12; }
+    .storage-expand.is-danger { border-color:#efaaa9; background:#fff1f1; color:#d64242; }
     .storage-meter { display:flex; align-items:center; gap:9px; margin-top:9px; }
     .storage-track { flex:1; height:5px; overflow:hidden; border-radius:4px; background:#edf0f4; }
     .storage-track i { display:block; width:10%; height:100%; border-radius:4px; background:#6d94f7; }
@@ -206,15 +208,15 @@
         </div>
       </section>
       <section class="card diagnostics" id="diagnosticsCard">
-        <div class="diagnostics-head"><h2>受阻数据诊断</h2></div>
+        <div class="diagnostics-head"><h2>企业用况诊断</h2></div>
         <div class="diagnostics-notice-slot" id="diagnosticsNoticeSlot"></div>
         <div class="diagnostics-grid">
-          <button class="diagnostics-item" data-space-detail="无法上传记录">无法上传文件<b>0<span>份 ›</span></b></button>
-          <button class="diagnostics-item" data-space-detail="申请扩容成员">扩容申请<b>0<span>人 ›</span></b></button>
-          <button class="diagnostics-item" data-space-detail="申请提升上传上限成员">上传上限申请<b>0<span>人 ›</span></b></button>
           <button class="diagnostics-item" data-function-summary>受阻成员<b>8<span>名</span></b></button>
           <button class="diagnostics-item" data-function-summary>受阻次数<b>32<span>次</span></b></button>
           <button class="diagnostics-item" data-function-summary>受阻功能种类<b>5<span>种</span></b></button>
+          <button class="diagnostics-item" data-space-detail="申请扩容成员">扩容申请人数<b>0<span>人 ›</span></b></button>
+          <button class="diagnostics-item" data-space-detail="无法上传记录">无法上传文件数<b>0<span>份 ›</span></b></button>
+          <button class="diagnostics-item" data-space-detail="申请提升上传上限成员">超限上传申请人数<b>0<span>人 ›</span></b></button>
         </div>
       </section>
       <section class="card apps">
@@ -266,9 +268,12 @@
     }
     function updateStorageVisual() {
       const percent=role === "member" ? spaceUsage.memberAvailablePercent : spaceUsage.enterprisePercent;
+      const level=usageLevel(percent);
       $("storageFill").style.width=`${percent}%`;
       $("storageUsage").textContent=`${(percent / 10).toFixed(2)}GB / 10.00GB`;
-      $("storageFill").parentElement.className=`storage-track is-${usageLevel(percent)}`;
+      $("storageFill").parentElement.className=`storage-track is-${level}`;
+      $("storageExpand").classList.remove("is-warning", "is-danger");
+      if (level !== "low") $("storageExpand").classList.add(`is-${level}`);
     }
     function updatePreviewControls() {
       document.querySelectorAll("[data-opened]").forEach(button=>button.classList.toggle("active", String(opened) === button.dataset.opened));
