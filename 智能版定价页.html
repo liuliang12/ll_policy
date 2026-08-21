@@ -52,25 +52,36 @@ img{display:block}
 .demo-actions button{border:1px solid #374151;background:#1f2937;color:#f3f4f6;border-radius:6px;padding:var(--space-4) var(--space-12);font-size:var(--fs-12)}
 .demo-actions button.active{background:var(--blue);border-color:var(--blue)}
 
-/* nav */
-.site-header{height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;padding:0 var(--space-32);border-bottom:1px solid rgba(0,0,0,.06);background:#fff;position:sticky;top:var(--demo-h);z-index:180}
-.brand{display:flex;align-items:center}
+/* nav — 左：Logo+主导航；右：电话 / 登录 / 下载 / CTA（对齐线上首页截图） */
+.site-header{
+  height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;gap:var(--space-24);
+  padding:0 max(var(--space-32),calc((100% - 1200px) / 2));
+  border-bottom:1px solid rgba(0,0,0,.06);background:#fff;position:sticky;top:var(--demo-h);z-index:180;
+  box-sizing:border-box;
+}
+.nav-left{display:flex;align-items:center;gap:var(--space-32);min-width:0}
+.brand{display:flex;align-items:center;flex:none}
 .brand img{height:28px}
 .nav-mid{display:flex;align-items:center;gap:var(--space-24);font-size:var(--fs-14);color:var(--sub)}
-.nav-mid a:hover,.nav-mid a.active{color:var(--blue)}
+.nav-mid > a,.nav-link{
+  display:inline-flex;align-items:center;gap:var(--space-4);
+  height:var(--nav-h);color:inherit;white-space:nowrap;
+}
+.nav-mid > a:hover,.nav-mid > a.active,
+.nav-link:hover,.nav-item.open .nav-dd-trigger,.nav-dd-trigger:hover,.nav-dd-trigger.active{color:var(--blue)}
 .nav-item{position:relative}
 .nav-dd-trigger{
   display:inline-flex;align-items:center;gap:var(--space-4);
   height:var(--nav-h);border:0;background:transparent;padding:0;
   color:inherit;font:inherit;font-size:var(--fs-14);cursor:pointer;
 }
-.nav-dd-trigger:hover,.nav-dd-trigger.active,.nav-item.open .nav-dd-trigger{color:var(--blue)}
-.nav-dd-trigger .caret{
+.nav-caret,.nav-dd-trigger .caret{
   width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;
-  border-top:5px solid currentColor;opacity:.7;transition:transform .18s ease;
+  border-top:5px solid currentColor;opacity:.55;transition:transform .18s ease;
 }
 .nav-item.open .nav-dd-trigger .caret,
-.nav-item:hover .nav-dd-trigger .caret{transform:rotate(180deg)}
+.nav-item:hover .nav-dd-trigger .caret,
+.nav-item:hover > .nav-link .nav-caret{transform:rotate(180deg)}
 .nav-dd{
   position:absolute;top:calc(100% - 4px);left:50%;transform:translateX(-50%);
   min-width:168px;padding:var(--space-8);border-radius:8px;background:#fff;
@@ -87,8 +98,15 @@ img{display:block}
 }
 .nav-dd a:hover{background:#f5f8ff;color:var(--blue)}
 .nav-dd a.active{background:rgba(31,105,224,.08);color:var(--blue);font-weight:600}
-.nav-right{display:flex;align-items:center;gap:var(--space-16);font-size:var(--fs-14);color:var(--sub)}
+.nav-right{display:flex;align-items:center;gap:var(--space-16);font-size:var(--fs-14);color:var(--sub);flex:none}
+.nav-phone{
+  display:inline-flex;align-items:center;gap:var(--space-8);
+  color:var(--text);white-space:nowrap;font-variant-numeric:tabular-nums;
+}
+.nav-phone svg{width:16px;height:16px;flex:none;color:var(--sub)}
+.nav-right > a:not(.nav-cta):hover{color:var(--blue)}
 .nav-cta{display:inline-flex;align-items:center;justify-content:center;height:32px;padding:0 var(--space-16);border-radius:6px;background:var(--blue);color:#fff;border:1px solid var(--blue);font-size:var(--fs-14)}
+.nav-cta:hover{background:var(--blue-hover);border-color:var(--blue-hover);color:#fff}
 
 /* 页面模式：WPS 365（商业/智能） vs WPS AI 企业版（额度包） */
 body[data-page="wpsai"] .page-only-wps365{display:none!important}
@@ -639,9 +657,11 @@ body[data-page="wpsai"] #panel-aipack.panel{display:block}
   margin-top:3px;
   position:relative;
 }
-#panel-smart .sp-feats .sp-ic img{
+#panel-smart .sp-feats .sp-ic img,
+#panel-smart .sp-feats .sp-ic svg{
   width:100%;
   height:100%;
+  display:block;
   object-fit:contain;
 }
 #panel-smart .sp-cta{
@@ -725,15 +745,21 @@ body[data-page="wpsai"] #panel-aipack.panel{display:block}
   display:flex;
   align-items:center;
   justify-content:center;
+  flex-wrap:wrap;
   gap:var(--space-8);
+  text-align:center;
 }
 .smart-card h3{
   margin:0;
-  font-size:var(--fs-24);
+  font-size:var(--fs-20);
   font-weight:600;
   letter-spacing:-.02em;
   line-height:var(--lh-tight);
   color:var(--sc-ink);
+}
+#compare-aipack .compare-head .name{
+  font-size:var(--fs-14);
+  line-height:var(--lh-base);
 }
 .smart-card .sc-badge{
   flex:0 0 auto;
@@ -998,24 +1024,33 @@ body[data-page="wpsai"] #panel-aipack.panel{display:block}
 </div>
 
 <header class="site-header">
-  <a class="brand" href="https://365.wps.cn/"><img src="https://qn.cache.wpscdn.cn/encs/plus/img/wps_365.682dc42.svg" alt="WPS 365"/></a>
-  <nav class="nav-mid">
-    <a href="https://365.wps.cn/">产品</a>
-    <div class="nav-item" id="navPricing">
-      <button type="button" class="nav-dd-trigger active" aria-expanded="false" aria-haspopup="true" aria-controls="pricingMenu">定价<span class="caret" aria-hidden="true"></span></button>
-      <div class="nav-dd" id="pricingMenu" role="menu">
-        <a href="?page=wps365" role="menuitem" data-page-link="wps365" class="active">WPS 365</a>
-        <a href="?page=wpsai" role="menuitem" data-page-link="wpsai">WPS AI 企业版</a>
+  <div class="nav-left">
+    <a class="brand" href="智能版首页.html"><img src="https://qn.cache.wpscdn.cn/encs/plus/img/wps_365.682dc42.svg" alt="WPS 365"/></a>
+    <nav class="nav-mid" aria-label="主导航">
+      <div class="nav-item">
+        <a class="nav-link" href="智能版首页.html">产品<span class="nav-caret" aria-hidden="true"></span></a>
       </div>
-    </div>
-    <a href="https://365.wps.cn/solution">解决方案</a>
-    <a href="https://365.wps.cn/case">客户案例</a>
-    <a href="https://365.wps.cn/support">服务支持</a>
-  </nav>
+      <div class="nav-item" id="navPricing">
+        <button type="button" class="nav-dd-trigger active" aria-expanded="false" aria-haspopup="true" aria-controls="pricingMenu">定价<span class="caret" aria-hidden="true"></span></button>
+        <div class="nav-dd" id="pricingMenu" role="menu">
+          <a href="?page=wps365" role="menuitem" data-page-link="wps365" class="active">WPS 365</a>
+          <a href="?page=wpsai" role="menuitem" data-page-link="wpsai">WPS AI 企业版</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a class="nav-link" href="https://365.wps.cn/solution">解决方案<span class="nav-caret" aria-hidden="true"></span></a>
+      </div>
+      <a href="https://365.wps.cn/case">客户案例</a>
+      <a href="https://365.wps.cn/support">服务支持</a>
+    </nav>
+  </div>
   <div class="nav-right">
-    <a href="#">技术支持</a>
-    <a href="https://365.wps.cn/download365">下载</a>
+    <a class="nav-phone" href="tel:4006775005" aria-label="客服电话 400-677-5005">
+      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.2 2.4c.3-.3.8-.4 1.1-.2l1.4.8c.3.2.5.6.4 1l-.3 1.2c-.1.3 0 .6.2.8l1.6 1.6c.2.2.5.3.8.2l1.2-.3c.4-.1.8 0 1 .4l.8 1.4c.2.4.1.8-.2 1.1l-.9.9c-.4.4-1 .6-1.6.5-1.5-.2-3.2-1.1-4.8-2.7S3.4 7.1 3.2 5.6c-.1-.6.1-1.2.5-1.6l.5-.6z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+      400-677-5005
+    </a>
     <a href="#">登录</a>
+    <a href="https://365.wps.cn/download365">下载</a>
     <a class="nav-cta" href="#">免费试用</a>
   </div>
 </header>
@@ -1298,19 +1333,19 @@ body[data-page="wpsai"] #panel-aipack.panel{display:block}
           </div>
           <ul class="sp-feats">
             <li>
-              <span class="sp-ic"><img src="wps365-pricing/assets/ic-tick.svg" alt=""/></span>
+              <span class="sp-ic"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3.55 6.53l2.19 2.21a.18.18 0 0 0 .26 0L10.02 4.45M.5 11.5V2A1.5 1.5 0 0 1 2 .5h9.5A1.5 1.5 0 0 1 13 2v9.5a1.5 1.5 0 0 1-1.5 1.5H2A1.5 1.5 0 0 1 .5 11.5z" stroke="#333" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               <span>1000/月/人 AI 额度</span>
             </li>
             <li>
-              <span class="sp-ic"><img src="wps365-pricing/assets/ic-aichat-a.svg" alt=""/></span>
+              <span class="sp-ic"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M13 5V2A1.5 1.5 0 0 0 11.5.5H2A1.5 1.5 0 0 0 .5 2v7A1.5 1.5 0 0 0 2 10.5h1V13l3-2.5H7.25" stroke="#333" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 4.75v2M10 4.75v2M7 3.75v4" stroke="#333" stroke-width="1.5" stroke-linecap="round"/></svg></span>
               <span>200 次×购买人数 智能问答</span>
             </li>
             <li>
-              <span class="sp-ic"><img src="wps365-pricing/assets/ic-cloud-b.svg" alt=""/></span>
+              <span class="sp-ic"><svg viewBox="0 0 15 13" fill="none" aria-hidden="true"><path d="M11.62 4.02C13.63 4.51 14.5 6.06 14.5 8.31c0 1.82-1.56 3.49-3.49 3.5H4.27A3.77 3.77 0 0 1 .5 8.04c0-2.08 1.14-3.56 2.71-4.02C3.5 2 5.25.5 7.5.5c2.38 0 3.56 1.14 4.12 3.52z" stroke="#333"/></svg></span>
               <span>3TB/人 空间</span>
             </li>
             <li>
-              <span class="sp-ic"><img src="wps365-pricing/assets/ic-comate.svg" alt=""/></span>
+              <span class="sp-ic"><svg viewBox="0 0 15 14" fill="none" aria-hidden="true"><path d="M7.25.5a6.75 6.75 0 0 1 3.97 12.07L9.1 8.7a3.1 3.1 0 1 0-3.4.3L3.1 12.9A6.75 6.75 0 0 1 7.25.5z" stroke="#333" stroke-linejoin="round"/><path d="M8.1.9A6.2 6.2 0 0 1 12.8 7.2c0 2-1 3.8-2.5 4.9L8.9 9.5a3.5 3.5 0 0 0 .7-3.7A5.2 5.2 0 0 0 8.1.9z" stroke="#333"/></svg></span>
               <span>Comate+Comate Studio</span>
             </li>
           </ul>
@@ -1336,19 +1371,19 @@ body[data-page="wpsai"] #panel-aipack.panel{display:block}
           </div>
           <ul class="sp-feats">
             <li>
-              <span class="sp-ic"><img src="wps365-pricing/assets/ic-tick.svg" alt=""/></span>
+              <span class="sp-ic"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3.55 6.53l2.19 2.21a.18.18 0 0 0 .26 0L10.02 4.45M.5 11.5V2A1.5 1.5 0 0 1 2 .5h9.5A1.5 1.5 0 0 1 13 2v9.5a1.5 1.5 0 0 1-1.5 1.5H2A1.5 1.5 0 0 1 .5 11.5z" stroke="#333" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               <span>3000/月/人 AI 额度</span>
             </li>
             <li>
-              <span class="sp-ic"><img src="wps365-pricing/assets/ic-aichat-a.svg" alt=""/></span>
+              <span class="sp-ic"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M13 5V2A1.5 1.5 0 0 0 11.5.5H2A1.5 1.5 0 0 0 .5 2v7A1.5 1.5 0 0 0 2 10.5h1V13l3-2.5H7.25" stroke="#333" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 4.75v2M10 4.75v2M7 3.75v4" stroke="#333" stroke-width="1.5" stroke-linecap="round"/></svg></span>
               <span>250 次×购买人数 智能问答</span>
             </li>
             <li>
-              <span class="sp-ic"><img src="wps365-pricing/assets/ic-cloud-b.svg" alt=""/></span>
+              <span class="sp-ic"><svg viewBox="0 0 15 13" fill="none" aria-hidden="true"><path d="M11.62 4.02C13.63 4.51 14.5 6.06 14.5 8.31c0 1.82-1.56 3.49-3.49 3.5H4.27A3.77 3.77 0 0 1 .5 8.04c0-2.08 1.14-3.56 2.71-4.02C3.5 2 5.25.5 7.5.5c2.38 0 3.56 1.14 4.12 3.52z" stroke="#333"/></svg></span>
               <span>5TB/人 空间</span>
             </li>
             <li>
-              <span class="sp-ic"><img src="wps365-pricing/assets/ic-code-b.svg" alt=""/></span>
+              <span class="sp-ic"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M13 7V4.5M4 13H2A1.5 1.5 0 0 1 .5 11.5v-7M13 4.5V2A1.5 1.5 0 0 0 11.5.5H2A1.5 1.5 0 0 0 .5 2v2.5M13 4.5H.5" stroke="#333" stroke-linecap="square"/></svg></span>
               <span>1000 次/企业公开问答与开放接口</span>
             </li>
           </ul>
@@ -1657,7 +1692,7 @@ body[data-page="wpsai"] #panel-aipack.panel{display:block}
       <article class="smart-card theme-sky">
         <div class="sc-body">
           <div class="sc-title-row">
-            <h3>标准版</h3>
+            <h3>WPS 365 AI 标准版</h3>
           </div>
           <div class="sc-price">
             <div class="sc-price-row">
@@ -1680,7 +1715,7 @@ body[data-page="wpsai"] #panel-aipack.panel{display:block}
       <article class="smart-card theme-blue featured">
         <div class="sc-body">
           <div class="sc-title-row">
-            <h3>高级版</h3>
+            <h3>WPS 365 AI 高级版</h3>
             <span class="sc-badge">推荐</span>
           </div>
           <div class="sc-price">
@@ -1689,11 +1724,11 @@ body[data-page="wpsai"] #panel-aipack.panel{display:block}
               <span class="sc-amount">9.8</span>
               <span class="sc-unit">万 / 年</span>
             </div>
-            <p class="sc-meta">含标准版全部能力</p>
+            <p class="sc-meta">含 WPS 365 AI 标准版全部能力</p>
           </div>
           <div class="sc-highlight">
             <p class="sc-key">200 万额度</p>
-            <p class="sc-desc">在标准版基础上，增加：智能知识基座 API、Comate Studio、API Hub、DataHub、AI 安全管控、AI 模型管理</p>
+            <p class="sc-desc">在 WPS 365 AI 标准版基础上，增加：智能知识基座 API、Comate Studio、API Hub、DataHub、AI 安全管控、AI 模型管理</p>
           </div>
           <div class="sc-cta">
             <a class="sc-btn primary" href="#">立即购买</a>
@@ -1704,7 +1739,7 @@ body[data-page="wpsai"] #panel-aipack.panel{display:block}
       <article class="smart-card theme-purple">
         <div class="sc-body">
           <div class="sc-title-row">
-            <h3>旗舰版</h3>
+            <h3>WPS 365 AI 旗舰版</h3>
           </div>
           <div class="sc-price">
             <div class="sc-price-row">
@@ -1712,11 +1747,11 @@ body[data-page="wpsai"] #panel-aipack.panel{display:block}
               <span class="sc-amount">98</span>
               <span class="sc-unit">万 / 年</span>
             </div>
-            <p class="sc-meta">含高级版全部能力</p>
+            <p class="sc-meta">含 WPS 365 AI 高级版全部能力</p>
           </div>
           <div class="sc-highlight">
             <p class="sc-key">2000 万额度</p>
-            <p class="sc-desc">在高级版基础上，增加：最新模型优先使用权</p>
+            <p class="sc-desc">在 WPS 365 AI 高级版基础上，增加：最新模型优先使用权</p>
           </div>
           <div class="sc-cta">
             <a class="sc-btn ghost" href="#">立即购买</a>
@@ -1740,19 +1775,19 @@ body[data-page="wpsai"] #panel-aipack.panel{display:block}
         <div class="compare-head smart">
           <div class="col">套餐名称 / 价格</div>
           <div class="col">
-            <div class="name">标准版</div>
+            <div class="name">WPS 365 AI 标准版</div>
             <div class="price"><span class="num">9800</span> 元 / 年</div>
             <a class="tw-btn-ghost mini" href="#">立即购买</a>
           </div>
           <div class="col recom">
             <div class="recommend-tag"><img src="https://qn.cache.wpscdn.cn/encs/plus/img/recom-badge.37d2bba.svg" alt="荐"/></div>
             <div class="badge">推荐</div>
-            <div class="name">高级版</div>
+            <div class="name">WPS 365 AI 高级版</div>
             <div class="price"><span class="num">9.8</span> 万 / 年</div>
             <a class="tw-btn-primary mini" href="#">立即购买</a>
           </div>
           <div class="col">
-            <div class="name">旗舰版</div>
+            <div class="name">WPS 365 AI 旗舰版</div>
             <div class="price"><span class="num">98</span> 万 / 年</div>
             <a class="tw-btn-ghost mini" href="#">立即购买</a>
           </div>
@@ -1961,7 +1996,7 @@ body[data-page="wpsai"] #panel-aipack.panel{display:block}
           </table>
         </div>
       </div>
-      <p class="table-note">WPS AI 企业版额度包对比：列序为标准版 → 高级版 → 旗舰版；勾选表示具备该能力。</p>
+      <p class="table-note">WPS AI 企业版额度包对比：列序为 WPS 365 AI 标准版 → 高级版 → 旗舰版；勾选表示具备该能力。</p>
     </div>
   </section>
 </div>
