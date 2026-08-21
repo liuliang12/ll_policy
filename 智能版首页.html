@@ -168,7 +168,15 @@ img{display:block;max-width:100%}
   background:linear-gradient(180deg,#f7faff 0%,#fff 40%);
 }
 .pricing-sec .sec-h,.pricing-sec .sec-sub{padding:0 var(--space-24)}
-.plan-tabs-wrap{display:flex;justify-content:center;padding:var(--space-24) var(--space-24) var(--space-16)}
+.plan-tabs-wrap{display:flex;justify-content:center;padding:var(--space-24) var(--space-24) var(--space-8)}
+.aipack-entry{
+  display:flex;justify-content:center;align-items:center;
+  padding:0 var(--space-24) var(--space-16);
+}
+.aipack-entry a{
+  color:var(--blue);font-size:var(--fs-14);font-weight:400;line-height:var(--lh-base);
+}
+.aipack-entry a:hover{text-decoration:underline}
 .plan-tabs{position:relative;display:grid;grid-template-columns:1fr 1fr;width:260px;max-width:calc(100vw - 48px);padding:var(--space-4);border-radius:999px;background:#eef1f6}
 .plan-tabs .pill{position:absolute;top:4px;left:4px;width:calc((100% - 8px)/2);height:calc(100% - 8px);border-radius:999px;background:#fff;box-shadow:0 4px 14px rgba(31,56,110,.12);transition:transform .28s cubic-bezier(.22,1,.36,1)}
 .plan-tabs[data-active="smart"] .pill{transform:translateX(100%)}
@@ -457,6 +465,9 @@ img{display:block;max-width:100%}
       <button type="button" data-tab="smart">智能版<span class="badge-new">NEW</span></button>
     </div>
   </div>
+  <p class="aipack-entry">
+    <a href="智能版定价页.html?page=wpsai">了解企业AI额度包 &gt;</a>
+  </p>
 
   <div class="panel active" id="panel-business" data-panel="business">
     <div class="pkg-wrap">
