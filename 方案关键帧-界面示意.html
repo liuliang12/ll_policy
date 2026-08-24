@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AiDocs智联 · 方案关键帧（界面示意）</title>
+<style>
+  :root {
+    --bg: #f0f2f5;
+    --panel: #ffffff;
+    --sidebar: #f7f8fa;
+    --border: #e8eaed;
+    --border-strong: #d9dce1;
+    --text: #1f2329;
+    --text-2: #646a73;
+    --text-3: #8f959e;
+    --blue: #1a66ff;
+    --blue-soft: #e8f0ff;
+    --blue-hover: #0d52e0;
+    --red: #f54a45;
+    --orange: #ff8800;
+    --green: #34c724;
+    --purple: #7b61ff;
+    --rail: #2b2f36;
+    --shadow: 0 8px 28px rgba(31, 35, 41, 0.08);
+    --radius: 8px;
+    --font: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font);
+    background: #e6e9ef;
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ===== Shell ===== */
+  .app-shell {
+    max-width: 1440px;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .topbar {
+    background: #1f2329;
+    color: #fff;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .topbar h1 {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+  .topbar .sub {
+    font-size: 12px;
+    color: #a0a6b0;
+  }
+  .frame-tabs {
+    display: flex;
+    gap: 6px;
+    flex: 1;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .frame-tabs button {
+    border: 1px solid transparent;
+    background: transparent;
+    color: #c5cad3;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .frame-tabs button:hover { background: rgba(255,255,255,0.08); color: #fff; }
+  .frame-tabs button.active {
+    background: #fff;
+    color: #1f2329;
+    font-weight: 600;
+  }
+
+  .stage-wrap {
+    padding: 16px 20px 28px;
+    flex: 1;
+  }
+  .frame-meta {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+  .frame-meta .title-block h2 {
+    font-size: 18px;
+    font-weight: 650;
+  }
+  .frame-meta .title-block p {
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--text-2);
+    max-width: 780px;
+    line-height: 1.5;
+  }
+  .badge-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .badge {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--border-strong);
+    background: #fff;
+    color: var(--text-2);
+  }
+  .badge.new {
+    background: #fff4e8;
+    border-color: #ffd4a8;
+    color: #b85c00;
+  }
+  .badge.mvp {
+    background: var(--blue-soft);
+    border-color: #b8d0ff;
+    color: var(--blue);
+  }
+
+  .stage {
+    background: var(--bg);
+    border: 1px solid var(--border-strong);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    min-height: 720px;
+    position: relative;
+  }
+  .frame { display: none; height: 100%; min-height: 720px; }
+  .frame.active { display: block; }
+
+  /* ===== Shared UI chrome ===== */
+  .wps-app {
+    display: grid;
+    grid-template-columns: 52px 220px 1fr;
+    height: 720px;
+    background: var(--panel);
+  }
+  .rail {
+    background: #f3f4f6;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0;
+    gap: 10px;
+  }
+  .rail .dot {
+    width: 28px; height: 28px; border-radius: 8px;
+    background: #dde1e6;
+  }
+  .rail .dot.active { background: var(--blue); }
+  .rail .spacer { flex: 1; }
+  .nav {
+    background: var(--sidebar);
+    border-right: 1px solid var(--border);
+    padding: 12px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .nav .btn-primary {
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    height: 34px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .nav .btn-secondary {
+    background: #fff;
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    height: 32px;
+    font-size: 12px;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--text);
+  }
+  .nav-item.active {
+    background: var(--blue-soft);
+    color: var(--blue);
+    font-weight: 600;
+  }
+  .nav-section {
+    margin: 10px 8px 4px;
+    font-size: 11px;
+    color: var(--text-3);
+  }
+  .ico {
+    width: 14px; height: 14px; border-radius: 3px;
+    background: #c9ced6; flex-shrink: 0;
+  }
+  .main { display: flex; flex-direction: column; min-width: 0; }
+  .header {
+    height: 52px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 12px;
+  }
+  .search {
+    flex: 1;
+    max-width: 520px;
+    margin: 0 auto;
+    height: 32px;
+    border-radius: 16px;
+    background: #f2f3f5;
+    border: 1px solid transparent;
+    color: var(--text-3);
+    font-size: 12px;
+    display: flex; align-items: center; padding: 0 14px;
+  }
+  .header-right { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+  .chip {
+    height: 28px; padding: 0 10px; border-radius: 6px;
+    border: 1px solid var(--border-strong); background: #fff;
+    font-size: 12px; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: linear-gradient(135deg, #7aa7ff, #4d7fff);
+  }
+  .content { flex: 1; padding: 14px 18px; overflow: hidden; position: relative; }
+  .team-head {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+  }
+  .team-logo {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--blue); color: #fff;
+    display: grid; place-items: center; font-size: 12px; font-weight: 700;
+  }
+  .team-head h3 { font-size: 16px; }
+  .safe {
+    font-size: 11px; color: var(--green); background: #eaffee;
+    border-radius: 4px; padding: 2px 6px; margin-left: 6px;
+  }
+  .team-actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+  .btn {
+    height: 28px; padding: 0 10px; border-radius: 6px;
+    border: 1px solid var(--border-strong); background: #fff;
+    font-size: 12px; cursor: default; display: inline-flex; align-items: center; gap: 4px;
+  }
+  .btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .btn.dark { background: #1f2329; border-color: #1f2329; color: #fff; }
+  .btn.ghost { background: transparent; }
+  .toolbar {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 8px; color: var(--text-2); font-size: 13px;
+  }
+  .toolbar .spacer { flex: 1; }
+  .table {
+    width: 100%; border-collapse: collapse; font-size: 13px;
+  }
+  .table th {
+    text-align: left; color: var(--text-3); font-weight: 500;
+    padding: 8px 10px; border-bottom: 1px solid var(--border);
+  }
+  .table td {
+    padding: 10px; border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .folder {
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .folder-ico {
+    width: 20px; height: 16px; border-radius: 2px 2px 3px 3px;
+    background: #4d9fff; position: relative;
+  }
+  .folder-ico::before {
+    content: ""; position: absolute; left: 0; top: -4px;
+    width: 8px; height: 5px; background: #3a8aef; border-radius: 2px 2px 0 0;
+  }
+  .row-selected { background: #f3f8ff; }
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; padding: 2px 8px; border-radius: 999px;
+    background: #eaffef; color: #1a9f3d;
+  }
+  .status-pill.warn { background: #fff6e8; color: #c56a00; }
+  .status-pill.run { background: var(--blue-soft); color: var(--blue); }
+
+  /* Context menu */
+  .ctx-menu {
+    position: absolute;
+    top: 210px; left: 280px;
+    width: 200px;
+    background: #fff;
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    box-shadow: 0 12px 32px rgba(0,0,0,.12);
+    padding: 6px 0;
+    z-index: 5;
+    font-size: 13px;
+  }
+  .ctx-menu .item {
+    padding: 8px 14px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .ctx-menu .item.hl {
+    background: var(--blue-soft);
+    color: var(--blue);
+    font-weight: 600;
+  }
+  .ctx-menu .sep { height: 1px; background: var(--border); margin: 4px 0; }
+  .ctx-menu .tag-new {
+    font-size: 10px; background: #fff4e8; color: #b85c00;
+    padding: 1px 5px; border-radius: 3px;
+  }
+
+  /* Toast */
+  .toast {
+    position: absolute;
+    left: 50%; bottom: 28px; transform: translateX(-50%);
+    background: #1f2329; color: #fff;
+    padding: 10px 14px; border-radius: 8px;
+    font-size: 13px; display: flex; align-items: center; gap: 12px;
+    box-shadow: var(--shadow); z-index: 6; white-space: nowrap;
+  }
+  .toast a { color: #8eb6ff; text-decoration: none; font-weight: 600; }
+
+  /* Drawer / panel */
+  .drawer {
+    position: absolute; top: 0; right: 0; bottom: 0; width: 380px;
+    background: #fff; border-left: 1px solid var(--border-strong);
+    box-shadow: -8px 0 24px rgba(0,0,0,.06);
+    display: flex; flex-direction: column; z-index: 4;
+  }
+  .drawer[hidden] { display: none !important; }
+  .drawer .dh {
+    padding: 14px 16px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .drawer .dh h4 { font-size: 15px; }
+  .drawer .dh .drawer-close {
+    border: none; background: transparent; cursor: pointer;
+    font-size: 18px; line-height: 1; color: var(--text-3); padding: 4px 8px;
+    border-radius: 4px;
+  }
+  .drawer .dh .drawer-close:hover { background: #f2f3f5; color: var(--text); }
+  #f4-auto-btn { cursor: pointer; }
+  #f4-auto-btn:hover { filter: brightness(0.95); }
+  .f4-table-wrap { transition: max-width .2s ease; }
+  .f4-table-wrap.panel-open { max-width: calc(100% - 340px); }
+  .drawer .db { padding: 14px 16px; overflow: auto; flex: 1; }
+  .drawer .df {
+    padding: 12px 16px; border-top: 1px solid var(--border);
+    display: flex; gap: 8px; justify-content: flex-end;
+  }
+
+  .card-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  }
+  .scene-card {
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    padding: 12px;
+    background: #fff;
+    position: relative;
+  }
+  .scene-card.active {
+    border-color: var(--blue);
+    background: #f7faff;
+    box-shadow: inset 0 0 0 1px var(--blue);
+  }
+  .scene-card.disabled {
+    opacity: 0.55;
+    background: #fafafa;
+  }
+  .scene-card .ico-lg {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: grid; place-items: center; font-size: 14px; font-weight: 700; color: #fff;
+    margin-bottom: 8px;
+  }
+  .scene-card h5 { font-size: 13px; margin-bottom: 4px; }
+  .scene-card p { font-size: 11px; color: var(--text-3); line-height: 1.4; }
+  .scene-card .soon {
+    position: absolute; top: 8px; right: 8px;
+    font-size: 10px; background: #eee; color: var(--text-3);
+    padding: 1px 6px; border-radius: 4px;
+  }
+  .scene-card .ok {
+    position: absolute; top: 8px; right: 8px;
+    font-size: 10px; background: var(--blue-soft); color: var(--blue);
+    padding: 1px 6px; border-radius: 4px;
+  }
+
+  .field { margin-bottom: 12px; }
+  .field label {
+    display: block; font-size: 12px; color: var(--text-2); margin-bottom: 6px;
+  }
+  .field .input, .field select, .field .fake-input {
+    width: 100%; height: 34px; border: 1px solid var(--border-strong);
+    border-radius: 6px; padding: 0 10px; font-size: 13px;
+    background: #fff; display: flex; align-items: center; color: var(--text);
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip-tog {
+    font-size: 12px; padding: 4px 10px; border-radius: 999px;
+    border: 1px solid var(--border-strong); background: #fff; color: var(--text-2);
+  }
+  .chip-tog.on {
+    background: var(--blue-soft); border-color: #b8d0ff; color: var(--blue);
+  }
+
+  /* Review layout */
+  .review-layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    height: 100%;
+    min-height: 520px;
+    background: #fff;
+  }
+  .dual-screens {
+    display: grid;
+    grid-template-columns: 1fr 36px 1fr;
+    gap: 0;
+    height: 720px;
+    background: #e8eaed;
+    padding: 12px;
+  }
+  .screen-wrap {
+    background: #fff;
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .screen-label {
+    background: #1f2329;
+    color: #fff;
+    padding: 8px 12px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .screen-label .step {
+    background: var(--blue);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-weight: 700;
+    font-size: 11px;
+  }
+  .screen-label .who {
+    color: #a0a6b0;
+    margin-left: auto;
+    font-size: 11px;
+  }
+  .screen-body { flex: 1; min-height: 0; overflow: hidden; }
+  .flow-arrow-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: var(--text-2);
+    font-size: 11px;
+    text-align: center;
+    padding: 0 4px;
+  }
+  .flow-arrow-col .arr {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: #1f2329; color: #fff;
+    display: grid; place-items: center; font-size: 14px;
+  }
+  .story-bar {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--text-2);
+    line-height: 1.55;
+  }
+  .story-bar strong { color: var(--text); }
+  .chat-full {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #f7f8fa;
+  }
+  .chat-side {
+    width: 200px;
+    background: #fff;
+    border-right: 1px solid var(--border);
+    padding: 10px 8px;
+    font-size: 12px;
+  }
+  .chat-side .gi {
+    padding: 8px; border-radius: 6px; margin-bottom: 4px; color: var(--text-2);
+  }
+  .chat-side .gi.on { background: var(--blue-soft); color: var(--blue); font-weight: 600; }
+  .chat-main-col { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .doc-pane {
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
+  }
+  .doc-toolbar {
+    height: 44px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; padding: 0 12px; gap: 8px;
+    font-size: 12px; color: var(--text-2);
+  }
+  .doc-body {
+    flex: 1; padding: 28px 40px; background: #f5f6f8; overflow: hidden;
+  }
+  .paper {
+    background: #fff; min-height: 100%; padding: 28px 32px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06); font-size: 13px; line-height: 1.8;
+  }
+  .paper h3 { text-align: center; margin-bottom: 16px; }
+  .hl-line { background: #dce9ff; padding: 2px 0; }
+  .review-pane {
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
+  }
+  .review-pane .rp-h {
+    padding: 12px 14px; border-bottom: 1px solid var(--border);
+    font-weight: 650; font-size: 14px;
+  }
+  .risk-sum {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;
+    padding: 10px 12px; border-bottom: 1px solid var(--border);
+  }
+  .risk-sum .r {
+    background: #f7f8fa; border-radius: 6px; padding: 8px 6px; text-align: center;
+  }
+  .risk-sum .n { font-size: 16px; font-weight: 700; }
+  .risk-sum .l { font-size: 10px; color: var(--text-3); margin-top: 2px; }
+  .risk-sum .high .n { color: var(--red); }
+  .risk-sum .mid .n { color: var(--orange); }
+  .risk-sum .low .n { color: var(--green); }
+  .risk-card {
+    margin: 10px 12px; border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px; background: #fff;
+  }
+  .risk-card .rt {
+    display: flex; justify-content: space-between; gap: 8px;
+    font-size: 12px; font-weight: 600; margin-bottom: 6px;
+  }
+  .tag-mid {
+    font-size: 10px; color: #c56a00; background: #fff6e8;
+    padding: 1px 6px; border-radius: 3px; font-weight: 500;
+  }
+  .risk-card .tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
+  .mini-tag {
+    font-size: 10px; background: #f2f3f5; color: var(--text-2);
+    padding: 1px 6px; border-radius: 3px;
+  }
+  .risk-card ul { padding-left: 16px; font-size: 11px; color: var(--text-2); line-height: 1.6; }
+  .suggest {
+    margin-top: 8px; background: #f3fbf5; border-radius: 6px; padding: 8px;
+    font-size: 11px; line-height: 1.5;
+  }
+  .suggest .del { color: var(--red); text-decoration: line-through; }
+  .suggest .add { color: var(--green); }
+  .chat-pane {
+    display: flex; flex-direction: column; background: #f7f8fa;
+  }
+  .chat-h {
+    height: 48px; background: #fff; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; padding: 0 12px; gap: 8px; font-size: 13px; font-weight: 600;
+  }
+  .chat-body { flex: 1; padding: 14px 12px; display: flex; flex-direction: column; gap: 12px; }
+  .bubble {
+    max-width: 92%; background: #fff; border-radius: 8px; padding: 10px 12px;
+    font-size: 12px; line-height: 1.5; border: 1px solid var(--border);
+  }
+  .bubble.sys { border-color: #c9dbff; background: #f5f9ff; }
+  .bubble .bt { font-weight: 650; margin-bottom: 4px; font-size: 12px; }
+  .bubble .meta { color: var(--text-3); font-size: 11px; margin-bottom: 6px; }
+  .bubble .actions { display: flex; gap: 6px; margin-top: 8px; }
+  .msg-me {
+    align-self: flex-end; background: #cce0ff; border: none; border-radius: 8px;
+    padding: 8px 10px; font-size: 12px;
+  }
+
+  /* Comate-like */
+  .comate {
+    display: grid; grid-template-columns: 220px 1fr; height: 720px; background: #f5f6f8;
+  }
+  .comate-nav {
+    background: #fff; border-right: 1px solid var(--border); padding: 12px;
+  }
+  .comate-nav .item {
+    padding: 8px 10px; border-radius: 6px; font-size: 13px; margin-bottom: 2px;
+  }
+  .comate-nav .item.active { background: #f0f1f3; font-weight: 600; }
+  .comate-main { padding: 20px 24px; }
+  .comate-main h3 { font-size: 22px; margin-bottom: 4px; }
+  .comate-main .desc { color: var(--text-2); font-size: 13px; margin-bottom: 14px; }
+  .tabs-row { display: flex; gap: 18px; border-bottom: 1px solid var(--border); margin-bottom: 14px; }
+  .tabs-row .t {
+    padding: 8px 2px 10px; font-size: 13px; color: var(--text-2); position: relative;
+  }
+  .tabs-row .t.active { color: var(--text); font-weight: 650; }
+  .tabs-row .t.active::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: #1f2329;
+  }
+  .task-card {
+    background: #fff; border: 1px solid var(--border); border-radius: 10px;
+    padding: 14px 16px; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .task-card .info { flex: 1; }
+  .task-card .name { font-weight: 650; font-size: 14px; margin-bottom: 4px; }
+  .task-card .meta { font-size: 12px; color: var(--text-3); }
+
+  /* Usage */
+  .usage-box {
+    background: #fff; border: 1px solid var(--border); border-radius: 10px;
+    padding: 14px; margin-top: 10px;
+  }
+  .usage-box .u-title { font-size: 13px; font-weight: 650; margin-bottom: 6px; }
+  .usage-box .u-num { font-size: 22px; font-weight: 700; }
+  .bar {
+    height: 6px; background: #eceef1; border-radius: 999px; margin: 8px 0;
+    overflow: hidden;
+  }
+  .bar > i { display: block; height: 100%; background: #3d4450; width: 28%; }
+  .log-row {
+    display: flex; justify-content: space-between; gap: 8px;
+    padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 12px;
+  }
+  .log-row:last-child { border-bottom: none; }
+
+  /* Blueprint */
+  .blueprint {
+    height: 720px; padding: 28px 32px; background:
+      radial-gradient(circle at 20% 20%, #eaf1ff 0, transparent 40%),
+      radial-gradient(circle at 80% 70%, #eefaf1 0, transparent 35%),
+      #f7f8fb;
+  }
+  .blueprint h3 { font-size: 18px; margin-bottom: 6px; }
+  .blueprint .lead { color: var(--text-2); font-size: 13px; margin-bottom: 20px; }
+  .bp-flow {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 22px;
+  }
+  .bp-node {
+    background: #fff; border: 1px solid var(--border-strong); border-radius: 10px;
+    padding: 14px 12px; text-align: center; position: relative;
+  }
+  .bp-node .k { font-size: 11px; color: var(--text-3); margin-bottom: 4px; }
+  .bp-node .v { font-size: 13px; font-weight: 650; }
+  .bp-node.mvp { border-color: var(--blue); box-shadow: inset 0 0 0 1px var(--blue); }
+  .bp-arrow {
+    position: absolute; right: -12px; top: 50%; transform: translateY(-50%);
+    color: var(--text-3); font-size: 16px; z-index: 1;
+  }
+  .bp-grid {
+    display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 12px;
+  }
+  .bp-card {
+    background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 14px;
+  }
+  .bp-card h4 { font-size: 13px; margin-bottom: 10px; }
+  .bp-card li {
+    list-style: none; font-size: 12px; color: var(--text-2);
+    padding: 6px 0; border-bottom: 1px dashed var(--border);
+    display: flex; justify-content: space-between; gap: 8px;
+  }
+  .bp-card li:last-child { border-bottom: none; }
+  .phase {
+    font-size: 10px; padding: 1px 6px; border-radius: 3px; white-space: nowrap;
+  }
+  .phase.mvp { background: var(--blue-soft); color: var(--blue); }
+  .phase.g { background: #eaffee; color: #1a9f3d; }
+  .phase.e { background: #f3f0ff; color: #6b4eff; }
+
+  .callout-note {
+    margin-top: 12px; font-size: 12px; color: var(--text-2);
+    background: #fff; border: 1px dashed #b8d0ff; border-radius: 8px;
+    padding: 10px 12px;
+  }
+
+  .nav-hint {
+    position: fixed; right: 18px; bottom: 18px;
+    background: #1f2329; color: #fff; border-radius: 8px;
+    padding: 8px 12px; font-size: 12px; opacity: 0.85; z-index: 20;
+  }
+  kbd {
+    background: #3a3f48; padding: 1px 5px; border-radius: 3px; font-size: 11px;
+  }
+</style>
+</head>
+<body>
+  <div class="app-shell">
+    <div class="topbar">
+      <div>
+        <h1>AiDocs智联 · 方案关键帧</h1>
+        <div class="sub">界面示意 · 蓝图 + MVP（合同审查）· 与组长对齐用</div>
+      </div>
+      <div class="frame-tabs" id="tabs">
+        <button data-frame="1" class="active">F1 入口发现</button>
+        <button data-frame="2">F2 模板库</button>
+        <button data-frame="3">F3 合同配置</button>
+        <button data-frame="4">F4 运行中</button>
+        <button data-frame="5">F5 结果 / 群确认</button>
+        <button data-frame="6">F6 管理消耗</button>
+        <button data-frame="7">F7 进阶 Comate</button>
+        <button data-frame="8">F8 终局蓝图</button>
+      </div>
+    </div>
+
+    <div class="stage-wrap">
+      <!-- ==================== F1 ==================== -->
+      <section class="frame active" data-frame="1">
+        <div class="frame-meta">
+          <div class="title-block">
+            <h2>F1 · 入口发现</h2>
+            <p>战略意图：功能找用户——右键提供首次「设置自动化」；进入文件夹后，日常只保留工具栏一个「自动化」小入口，不改文件列表结构。</p>
+          </div>
+          <div class="badge-row">
+            <span class="badge mvp">MVP：右键开通</span>
+            <span class="badge new">新增：设置自动化</span>
+            <span class="badge">toast = 增长示意</span>
+          </div>
+        </div>
+        <div class="stage">
+          <div class="wps-app">
+            <div class="rail">
+              <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+              <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+              <div class="spacer"></div><div class="dot"></div>
+            </div>
+            <div class="nav">
+              <button class="btn-primary">+ 新建</button>
+              <button class="btn-secondary">打开</button>
+              <div class="nav-item"><span class="ico"></span>最近</div>
+              <div class="nav-item"><span class="ico"></span>星标</div>
+              <div class="nav-item"><span class="ico"></span>共享</div>
+              <div class="nav-section">云文档</div>
+              <div class="nav-item"><span class="ico"></span>我的云文档</div>
+              <div class="nav-item active"><span class="ico"></span>团队文档</div>
+              <div class="nav-item"><span class="ico"></span>知识库</div>
+              <div class="nav-item"><span class="ico"></span>回收站</div>
+            </div>
+            <div class="main">
+              <div class="header">
+                <div class="search">搜索文件、模板、文库、应用、技巧...</div>
+                <div class="header-right">
+                  <span class="chip">智能问答</span>
+                  <div class="avatar"></div>
+                </div>
+              </div>
+              <div class="content">
+                <div class="team-head">
+                  <div class="team-logo">法</div>
+                  <div>
+                    <h3>法务团队 <span class="safe">团队安全</span></h3>
+                  </div>
+                  <div class="team-actions">
+                    <span class="btn">进入群聊</span>
+                    <span class="chip">智能问答</span>
+                  </div>
+                </div>
+                <div class="toolbar">
+                  <span>← 团队文档</span>
+                  <span class="spacer"></span>
+                  <span class="btn">新建</span>
+                  <span class="btn">导入</span>
+                </div>
+                <table class="table">
+                  <thead>
+                    <tr><th style="width:46%">名称</th><th>创建者</th><th>最后修改</th><th>大小</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr class="row-selected">
+                      <td><span class="folder"><span class="folder-ico"></span>待审核合同</span></td>
+                      <td>我</td><td>今天 16:47</td><td>—</td>
+                    </tr>
+                    <tr>
+                      <td><span class="folder"><span class="folder-ico"></span>已审核合同</span></td>
+                      <td>我</td><td>今天 16:48</td><td>—</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div class="ctx-menu">
+                  <div class="item">分享</div>
+                  <div class="item">文件收集</div>
+                  <div class="item">文档权限</div>
+                  <div class="item">AI 文档问答</div>
+                  <div class="sep"></div>
+                  <div class="item hl">设置自动化 <span class="tag-new">新增</span></div>
+                  <div class="sep"></div>
+                  <div class="item">打开</div>
+                  <div class="item">重命名</div>
+                  <div class="item">复制</div>
+                  <div class="item" style="color:var(--red)">删除文件</div>
+                </div>
+
+                <div class="toast">
+                  检测到新合同文件，需要自动审查吗？
+                  <a href="#">一键开启模板</a>
+                  <span style="opacity:.7;margin-left:8px;font-size:11px">（增长期示意 · MVP 不做）</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== F2 ==================== -->
+      <section class="frame" data-frame="2">
+        <div class="frame-meta">
+          <div class="title-block">
+            <h2>F2 · 场景模板库</h2>
+            <p>战略意图：蓝图一次看见全场景；MVP 只点亮合同审查，其余灰态露出，避免「只盯一个场景」的立项观感。</p>
+          </div>
+          <div class="badge-row">
+            <span class="badge mvp">MVP 可点：合同</span>
+            <span class="badge">灰态：发票 / 简历 / 群聊归集</span>
+          </div>
+        </div>
+        <div class="stage">
+          <div class="wps-app">
+            <div class="rail">
+              <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+              <div class="spacer"></div><div class="dot"></div>
+            </div>
+            <div class="nav">
+              <button class="btn-primary">+ 新建</button>
+              <button class="btn-secondary">打开</button>
+              <div class="nav-item active"><span class="ico"></span>团队文档</div>
+              <div class="nav-item"><span class="ico"></span>知识库</div>
+            </div>
+            <div class="main" style="position:relative">
+              <div class="header">
+                <div class="search">搜索...</div>
+                <div class="header-right"><div class="avatar"></div></div>
+              </div>
+              <div class="content">
+                <div class="team-head">
+                  <div class="team-logo">法</div>
+                  <h3>法务团队 · 待审核合同</h3>
+                </div>
+                <table class="table">
+                  <thead><tr><th>名称</th><th>创建者</th><th>最后修改</th></tr></thead>
+                  <tbody>
+                    <tr><td><span class="folder"><span class="folder-ico"></span>采购合同-华创科技.docx</span></td><td>张敏</td><td>今天 15:20</td></tr>
+                    <tr><td><span class="folder"><span class="folder-ico"></span>服务协议-星河.docx</span></td><td>李昂</td><td>今天 14:02</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <aside class="drawer">
+                <div class="dh">
+                  <h4>设置自动化</h4>
+                  <span style="color:var(--text-3)">✕</span>
+                </div>
+                <div class="db">
+                  <div style="font-size:12px;color:var(--text-2);margin-bottom:10px">为「待审核合同」选择场景模板</div>
+                  <div class="card-grid">
+                    <div class="scene-card active">
+                      <span class="ok">MVP</span>
+                      <div class="ico-lg" style="background:#f5a623">审</div>
+                      <h5>合同审查</h5>
+                      <p>上传即审查，风险报告推送法务群</p>
+                    </div>
+                    <div class="scene-card disabled">
+                      <span class="soon">即将推出</span>
+                      <div class="ico-lg" style="background:#e85d4c">票</div>
+                      <h5>发票审批</h5>
+                      <p>金额分支 + 入账台账</p>
+                    </div>
+                    <div class="scene-card disabled">
+                      <span class="soon">即将推出</span>
+                      <div class="ico-lg" style="background:#4c8bf5">历</div>
+                      <h5>简历入库</h5>
+                      <p>抽取字段写入候选人库</p>
+                    </div>
+                    <div class="scene-card disabled">
+                      <span class="soon">即将推出</span>
+                      <div class="ico-lg" style="background:#34c724">群</div>
+                      <h5>群聊文件归集</h5>
+                      <p>群文件自动分类归档</p>
+                    </div>
+                  </div>
+                  <div class="callout-note">增长期场景在此露出，立项看全貌；本期仅合同可配置。</div>
+                </div>
+                <div class="df">
+                  <span class="btn">取消</span>
+                  <span class="btn primary">使用此模板</span>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== F3 ==================== -->
+      <section class="frame" data-frame="3">
+        <div class="frame-meta">
+          <div class="title-block">
+            <h2>F3 · 文件夹轻量配置（审查复用 AiDocs）</h2>
+            <p><strong>分工：</strong>审查规则在 AiDocs 配；本页只选「用哪条规则」+ 自动化收口参数。<br>
+            <strong>本页必配：</strong>通知群、确认人、修改人、归档夹；主夹只读挂载。</p>
+          </div>
+          <div class="badge-row">
+            <span class="badge mvp">MVP</span>
+            <span class="badge">AiDocs 规则引用</span>
+            <span class="badge new">群 / 确认人 / 修改人</span>
+          </div>
+        </div>
+        <div class="stage">
+          <div class="wps-app">
+            <div class="rail"><div class="dot active"></div><div class="dot"></div><div class="spacer"></div></div>
+            <div class="nav">
+              <button class="btn-primary">+ 新建</button>
+              <div class="nav-item active"><span class="ico"></span>团队文档</div>
+            </div>
+            <div class="main" style="position:relative">
+              <div class="header"><div class="search">搜索...</div><div class="header-right"><div class="avatar"></div></div></div>
+              <div class="content" style="opacity:.45">
+                <div class="team-head"><div class="team-logo">法</div><h3>法务团队</h3></div>
+                <table class="table">
+                  <tbody>
+                    <tr><td><span class="folder"><span class="folder-ico"></span>待审核合同</span></td></tr>
+                    <tr><td><span class="folder"><span class="folder-ico"></span>已审核合同</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <aside class="drawer" style="width:440px">
+                <div class="dh">
+                  <h4>合同审查 · 文件夹自动化</h4>
+                  <span style="color:var(--text-3)">✕</span>
+                </div>
+                <div class="db" style="font-size:13px">
+                  <div style="font-size:11px;font-weight:650;color:var(--text-3);margin:0 0 8px;letter-spacing:.04em">① 挂载</div>
+                  <div class="field">
+                    <label>主文件夹（触发 · 只读）</label>
+                    <div class="fake-input">法务团队 / 待审核合同</div>
+                    <div style="font-size:11px;color:var(--text-3);margin-top:4px">上传/移入/复制入夹触发 · 夹内保存不触发 · 退回后仅「重新提交」再跑 · 从归档移回主夹会再触发</div>
+                  </div>
+
+                  <div style="font-size:11px;font-weight:650;color:var(--text-3);margin:14px 0 8px;letter-spacing:.04em">② 审查（复用 AiDocs）</div>
+                  <div class="field">
+                    <label>审查规则</label>
+                    <div class="fake-input" style="justify-content:space-between">
+                      <span>AI 智能审查</span>
+                      <span style="color:var(--text-3);font-size:11px">▾</span>
+                    </div>
+                    <div style="font-size:11px;color:var(--text-2);margin-top:6px;line-height:1.45;background:#f7f8fa;border-radius:6px;padding:8px">
+                      文档审查 · AI 自动识别常见审查点<br>
+                      <span style="color:var(--blue)">在 AiDocs 中编辑规则</span>
+                      <span style="color:var(--text-3)"> · </span>
+                      <span style="color:var(--blue)">新建规则</span>
+                    </div>
+                  </div>
+
+                  <div style="font-size:11px;font-weight:650;color:var(--text-3);margin:14px 0 8px;letter-spacing:.04em">③ 通知与角色</div>
+                  <div class="field">
+                    <label>通知群聊</label>
+                    <div class="fake-input" style="justify-content:space-between">
+                      <span>法务团队群</span>
+                      <span style="color:var(--text-3);font-size:11px">▾</span>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label>确认人（群卡片可点通过 / 需修改）</label>
+                    <div class="fake-input" style="justify-content:space-between">
+                      <span>指定：陈洁、刘洋（任一确认）</span>
+                      <span style="color:var(--text-3);font-size:11px">▾</span>
+                    </div>
+                    <div style="font-size:11px;color:var(--text-3);margin-top:4px">也可选：群内所有人 / 指定角色</div>
+                  </div>
+                  <div class="field">
+                    <label>修改人（退回后接收「重新提交」）</label>
+                    <div class="fake-input" style="justify-content:space-between">
+                      <span>默认：文件上传者 / 创建者</span>
+                      <span style="color:var(--text-3);font-size:11px">▾</span>
+                    </div>
+                    <div style="font-size:11px;color:var(--text-3);margin-top:4px">也可选：指定成员；确认人退回时仍可 @ 调整</div>
+                  </div>
+
+                  <div style="font-size:11px;font-weight:650;color:var(--text-3);margin:14px 0 8px;letter-spacing:.04em">④ 收尾（动作参数）</div>
+                  <div class="field">
+                    <label>通过后归档至</label>
+                    <div class="fake-input">法务团队 / 已审核合同</div>
+                    <div style="font-size:11px;color:var(--text-3);margin-top:4px">仅输出位置，不对归档夹开启自动化</div>
+                  </div>
+                  <div class="field">
+                    <label>同步台账（选填）</label>
+                    <div class="fake-input">合同台账 · 多维表</div>
+                  </div>
+
+                  <div class="callout-note">
+                    审查清单 / 补充要求 / 参考资料 → 在 AiDocs 配（仅文档审查类；对比审查不进本模板）。<br>
+                    本页只配：用哪条规则、通知哪、谁确认、谁改、通过去哪。<br>
+                    <strong>MVP：一文件夹仅挂一条规则。</strong>群确认是内容闸门，<strong>不替代公司 OA</strong>。
+                  </div>
+                </div>
+                <div class="df">
+                  <span class="btn">取消</span>
+                  <span class="btn primary">开启自动化</span>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== F4 ==================== -->
+      <section class="frame" data-frame="4">
+        <div class="frame-meta">
+          <div class="title-block">
+            <h2>F4 · 文件夹内：自动化收拢为一个小入口</h2>
+            <p><strong>原则：</strong>文件列表区尽量零改动。配置、运行记录、消耗、启停全部进<strong>同一个「自动化」入口</strong>（面板），不在标题、工具栏、列表上散落多个自动化控件。</p>
+          </div>
+          <div class="badge-row">
+            <span class="badge mvp">MVP</span>
+            <span class="badge">单入口</span>
+            <span class="badge">列表零业务改动</span>
+          </div>
+        </div>
+        <div class="stage">
+          <div class="wps-app">
+            <div class="rail"><div class="dot active"></div><div class="dot"></div><div class="spacer"></div></div>
+            <div class="nav">
+              <button class="btn-primary">+ 新建</button>
+              <div class="nav-item active"><span class="ico"></span>团队文档</div>
+            </div>
+            <div class="main">
+              <div class="header"><div class="search">搜索...</div><div class="header-right"><span class="chip">智能问答</span><div class="avatar"></div></div></div>
+              <div class="content" style="position:relative">
+                <div class="story-bar" style="margin:-14px -18px 12px;border:none;border-bottom:1px solid var(--border)">
+                  <strong>可点击演示：</strong>点右上红框「自动化」打开面板；点面板右上角 <strong>✕</strong> 关闭。
+                  默认面板关闭，入口始终可见。
+                </div>
+                <div class="team-head">
+                  <div class="team-logo">法</div>
+                  <div>
+                    <h3>待审核合同</h3>
+                  </div>
+                  <div class="team-actions">
+                    <span class="btn">进入群聊</span>
+                    <span class="chip">智能问答</span>
+                    <button type="button" id="f4-auto-btn" class="btn primary" style="outline:2px solid #ff4d4f;outline-offset:3px;border-radius:6px;font-family:inherit">
+                      自动化
+                      <i style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin-left:6px;vertical-align:middle"></i>
+                    </button>
+                  </div>
+                </div>
+                <div style="font-size:11px;color:#ff4d4f;text-align:right;margin:-4px 0 10px;padding-right:4px">
+                  ↑ 点这里打开自动化面板
+                </div>
+                <div class="toolbar">
+                  <span>← 法务团队</span>
+                  <span class="spacer"></span>
+                  <span class="btn">新建</span>
+                  <span class="btn">导入</span>
+                </div>
+                <div class="f4-table-wrap" id="f4-table-wrap">
+                  <table class="table">
+                    <thead>
+                      <tr><th style="width:52%">名称</th><th>创建者</th><th>最后修改</th><th>大小</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>采购合同-华创科技.docx</td>
+                        <td>张敏</td><td>今天 15:21</td><td>128 KB</td>
+                      </tr>
+                      <tr>
+                        <td>服务协议-星河.docx</td>
+                        <td>李昂</td><td>今天 15:40</td><td>96 KB</td>
+                      </tr>
+                      <tr>
+                        <td>NDA-华东渠道.docx</td>
+                        <td>王倩</td><td>今天 14:18</td><td>64 KB</td>
+                      </tr>
+                      <tr>
+                        <td>框架协议-启明.docx</td>
+                        <td>张敏</td><td>今天 13:05</td><td>210 KB</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <aside class="drawer" id="f4-auto-panel" hidden style="width:320px">
+                  <div class="dh">
+                    <h4>自动化</h4>
+                    <button type="button" class="drawer-close" id="f4-auto-close" aria-label="关闭">✕</button>
+                  </div>
+                  <div class="db">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                      <div>
+                        <div style="font-weight:650">合同审查</div>
+                        <div style="font-size:12px;color:var(--text-3)">已开启 · 挂在本文件夹</div>
+                      </div>
+                      <span class="status-pill">运行中</span>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
+                      <span class="btn" style="justify-content:flex-start">调整配置</span>
+                      <span class="btn" style="justify-content:flex-start">运行记录</span>
+                      <span class="btn" style="justify-content:flex-start">算粒消耗</span>
+                      <span class="btn" style="justify-content:flex-start">暂停规则</span>
+                      <span class="btn" style="justify-content:flex-start;color:var(--blue)">在 Comate 中打开</span>
+                    </div>
+                    <div class="callout-note">点 ✕ 关闭后，列表恢复全宽；入口仍在右上「自动化」。</div>
+                  </div>
+                </aside>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== F5 ==================== -->
+      <section class="frame" data-frame="5">
+        <div class="frame-meta">
+          <div class="title-block">
+            <h2>F5 · 审查结果页 / 群聊收口（含退回重提）</h2>
+            <p><strong>通过：</strong>群里点确认 → 文件移动到归档夹（内容闸门；正式用印/会签仍走公司 OA）。<br>
+            <strong>需修改：</strong>退回 → 通知修改人（群 @ 或私信）→ 改稿后点「重新提交」→ 新 run。夹内保存不自动重跑。</p>
+          </div>
+          <div class="badge-row">
+            <span class="badge mvp">MVP 主路径</span>
+            <span class="badge">两界面分离</span>
+            <span class="badge new">退回后显式重提</span>
+          </div>
+        </div>
+        <div class="stage">
+          <div class="dual-screens">
+            <!-- 界面 A：审查结果 -->
+            <div class="screen-wrap">
+              <div class="screen-label">
+                <span class="step">界面 A</span>
+                <span>查看审查结果（AiDocs）</span>
+                <span class="who">谁用：法务要看细节时</span>
+              </div>
+              <div class="screen-body">
+                <div class="review-layout" style="min-height:100%;height:100%">
+                  <div class="doc-pane">
+                    <div class="doc-toolbar">
+                      <strong style="color:var(--text)">框架协议-启明.docx</strong>
+                      <span class="spacer"></span>
+                      <span>WPS AI</span>
+                    </div>
+                    <div class="doc-body" style="padding:16px 20px">
+                      <div class="paper" style="padding:18px 20px;font-size:12px">
+                        <h3 style="font-size:14px">框架协议（节选）</h3>
+                        <p>甲方：启明　　乙方：金小萌科技</p>
+                        <p class="hl-line">三、违约责任：一方违约的，应承担相应责任。</p>
+                        <p class="hl-line">四、争议解决：协商不成提交有管辖权法院。</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="review-pane">
+                    <div class="rp-h">文档智能审查</div>
+                    <div class="risk-sum">
+                      <div class="r"><div class="n">12</div><div class="l">全部</div></div>
+                      <div class="r high"><div class="n">3</div><div class="l">高</div></div>
+                      <div class="r mid"><div class="n">6</div><div class="l">中</div></div>
+                      <div class="r low"><div class="n">3</div><div class="l">低</div></div>
+                    </div>
+                    <div class="risk-card">
+                      <div class="rt">
+                        <span>违约责任义务不清</span>
+                        <span class="tag-mid">中风险</span>
+                      </div>
+                      <ul>
+                        <li>未约定赔偿上限</li>
+                        <li>未区分重大/一般违约</li>
+                      </ul>
+                      <div class="suggest">
+                        <div style="margin-bottom:4px;font-weight:600;color:#1a9f3d">建议修订</div>
+                        <span class="del">应承担相应责任</span>
+                        <span class="add"> 赔偿直接损失，上限不超过总价 20%</span>
+                      </div>
+                    </div>
+                    <div style="padding:8px 12px;font-size:11px;color:var(--text-3)">
+                      只负责看清风险；改稿在文档里完成，不在群里用自然语言改文件。
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flow-arrow-col">
+              <div style="font-weight:650;color:var(--text)">收口</div>
+              <div class="arr">→</div>
+              <div>群确认<br>或退回重提</div>
+            </div>
+
+            <!-- 界面 B：群聊确认 + 重提 -->
+            <div class="screen-wrap">
+              <div class="screen-label">
+                <span class="step">界面 B</span>
+                <span>群聊确认 / 重新提交</span>
+                <span class="who">法务收口 · 修改人重提</span>
+              </div>
+              <div class="screen-body">
+                <div class="chat-full" style="flex-direction:row">
+                  <div class="chat-side">
+                    <div style="padding:6px 8px;color:var(--text-3);font-size:11px;margin-bottom:6px">消息</div>
+                    <div class="gi on">法务团队群</div>
+                    <div class="gi">与张敏的会话</div>
+                  </div>
+                  <div class="chat-main-col">
+                    <div class="chat-h">
+                      法务团队群
+                      <span class="spacer"></span>
+                      <span class="btn" style="background:#6b4eff;color:#fff;border:none">群大脑</span>
+                    </div>
+                    <div class="chat-body" style="overflow:auto">
+                      <div class="bubble sys">
+                        <div class="bt">① 法务 · 合同审查待确认</div>
+                        <div class="meta">主文件夹：待审核合同 · 确认人：陈洁 / 刘洋</div>
+                        <div><strong>框架协议-启明.docx</strong></div>
+                        <div style="margin-top:4px">高 3 · 中 6 · 低 3</div>
+                        <div class="actions">
+                          <span class="btn primary">确认通过并归档</span>
+                          <span class="btn">需修改</span>
+                        </div>
+                        <div style="margin-top:6px"><span class="btn ghost">打开审查报告 → 界面 A</span></div>
+                      </div>
+                      <div class="bubble" style="border-color:#ffd4a8;background:#fffaf3">
+                        <div class="bt">② 退回后 · 通知修改人</div>
+                        <div class="meta">@张敏 · 文件仍在主夹，未搬家、未写文件状态字段</div>
+                        <div>法务意见：管辖与违约责任需修订。请改完后重新提交。</div>
+                        <div class="actions">
+                          <span class="btn ghost">打开报告</span>
+                          <span class="btn primary">我已改完，重新提交审查</span>
+                        </div>
+                      </div>
+                      <div style="font-size:11px;color:var(--text-3);padding:0 4px;line-height:1.5">
+                        首次：上传/移入主夹自动跑。退回后：仅「重新提交」开新 run。任一确认人生效。通过后移动归档；OA 不在本期。
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== F6 ==================== -->
+      <section class="frame" data-frame="6">
+        <div class="frame-meta">
+          <div class="title-block">
+            <h2>F6 · 自动化面板（与 F4 同一入口）</h2>
+            <p>从文件夹「自动化」点开：配置、运行记录、算粒、启停；失败态（算粒不足/审查失败/通知失败/归档失败）在此感知并重试。列表零状态时的托底。</p>
+          </div>
+          <div class="badge-row">
+            <span class="badge mvp">MVP 最小可用</span>
+            <span class="badge">复用已有额度能力</span>
+          </div>
+        </div>
+        <div class="stage">
+          <div class="wps-app">
+            <div class="rail"><div class="dot active"></div><div class="spacer"></div></div>
+            <div class="nav">
+              <button class="btn-primary">+ 新建</button>
+              <div class="nav-item active"><span class="ico"></span>团队文档</div>
+            </div>
+            <div class="main" style="position:relative">
+              <div class="header"><div class="search">搜索...</div><div class="header-right"><div class="avatar"></div></div></div>
+              <div class="content" style="opacity:.4">
+                <div class="team-head"><div class="team-logo">法</div><h3>待审核合同</h3></div>
+              </div>
+              <aside class="drawer" style="width:420px">
+                <div class="dh">
+                  <h4>自动化管理</h4>
+                  <span style="color:var(--text-3)">✕</span>
+                </div>
+                <div class="db">
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                    <div>
+                      <div style="font-weight:650">合同审查</div>
+                      <div style="font-size:12px;color:var(--text-3)">主文件夹：待审核合同 · 归档参数：已审核合同</div>
+                    </div>
+                    <span class="status-pill">运行中</span>
+                  </div>
+                  <div style="display:flex;gap:8px;margin-bottom:14px">
+                    <span class="btn">调整参数</span>
+                    <span class="btn">暂停</span>
+                  </div>
+                  <div class="usage-box">
+                    <div class="u-title">本规则本月消耗</div>
+                    <div class="u-num">1,000 <span style="font-size:13px;font-weight:500;color:var(--text-3)">算粒</span></div>
+                    <div class="bar"><i></i></div>
+                    <div style="font-size:11px;color:var(--text-3)">约 200 份合同 × 5 粒 · 复用企业算粒包</div>
+                  </div>
+                  <div style="margin-top:14px;font-size:13px;font-weight:650;margin-bottom:6px">运行记录</div>
+                  <div class="log-row"><span>采购合同-华创 · 已完成</span><span>5 粒</span></div>
+                  <div class="log-row"><span>服务协议-星河 · 审查中</span><span>—</span></div>
+                  <div class="log-row"><span>NDA-华东 · 待确认</span><span>5 粒</span></div>
+                  <div class="log-row"><span>框架协议-启明 · 待重新提交</span><span>5 粒</span></div>
+                  <div class="log-row"><span>旧版协议 · 审查失败</span><span style="color:var(--red)">重试</span></div>
+                  <div class="callout-note">规则归属主文件夹。过程态在运行记录；通过后才移动归档。台账失败不挡归档。列表不展示这些状态。</div>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== F7 ==================== -->
+      <section class="frame" data-frame="7">
+        <div class="frame-meta">
+          <div class="title-block">
+            <h2>F7 · 进阶引导至 Comate</h2>
+            <p>战略意图：模板消费自然升级到编排引擎——文件夹面板解决 80%，复杂触发/节点「在 Comate 中打开」。</p>
+          </div>
+          <div class="badge-row">
+            <span class="badge mvp">引导能力</span>
+            <span class="badge">发现 Comate 入口</span>
+          </div>
+        </div>
+        <div class="stage">
+          <div class="comate">
+            <div class="comate-nav">
+              <div class="item">+ 新任务</div>
+              <div class="item">专家</div>
+              <div class="item">伙伴</div>
+              <div class="item">团队</div>
+              <div class="item">技能</div>
+              <div class="item">Wiki</div>
+              <div class="item">应用</div>
+              <div class="item active">自动化</div>
+              <div style="margin-top:18px;font-size:11px;color:var(--text-3);padding:0 10px">来自云盘文件夹</div>
+              <div class="item" style="background:#f5f9ff;color:var(--blue);font-size:12px">待审核合同 · 合同审查</div>
+            </div>
+            <div class="comate-main">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                <div>
+                  <h3>自动化</h3>
+                  <div class="desc">无需人工介入，自动执行工作任务</div>
+                </div>
+                <div style="display:flex;gap:8px">
+                  <span class="btn">对话创建</span>
+                  <span class="btn dark">+ 新建</span>
+                </div>
+              </div>
+              <div class="tabs-row">
+                <div class="t">定时任务</div>
+                <div class="t">触发任务</div>
+                <div class="t active">流程任务</div>
+                <div class="t">模板</div>
+              </div>
+              <div style="margin-bottom:12px;padding:10px 12px;background:#fff7eb;border:1px solid #ffd4a8;border-radius:8px;font-size:12px;color:#8a4b00">
+                你从云盘「待审核合同」打开。可在此增删节点、改触发器；保存后将同步回文件夹规则。
+              </div>
+              <div class="task-card">
+                <div class="info">
+                  <div class="name">合同审查 · 文件夹自动化</div>
+                  <div class="meta">当前节点：AiDocs 审查 → 群聊确认 → 归档　　来源：云盘文件夹</div>
+                </div>
+                <span class="btn dark">去编排</span>
+              </div>
+              <div class="task-card">
+                <div class="info">
+                  <div class="name">商务合同审批 V2（已有能力示意）</div>
+                  <div class="meta">当前节点：人工合同复审　　处理人：我</div>
+                </div>
+                <span class="btn dark">去处理</span>
+              </div>
+              <div class="callout-note">
+                进阶用户也可直接打开 Comate。若在 Comate 改掉「主夹进入」触发器，将降级为普通 Comate 流程并提示解除文件夹挂载，避免名实不符。
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== F8 ==================== -->
+      <section class="frame" data-frame="8">
+        <div class="frame-meta">
+          <div class="title-block">
+            <h2>F8 · 终局蓝图</h2>
+            <p>战略意图：立项看全貌——入口矩阵 × 场景地图 × 365 闭环 × 算粒；MVP 只是其中一刀。</p>
+          </div>
+          <div class="badge-row">
+            <span class="badge">蓝图</span>
+            <span class="badge mvp">红框 = 2 个月切片</span>
+          </div>
+        </div>
+        <div class="stage">
+          <div class="blueprint">
+            <h3>AiDocs智联 · 能力链路</h3>
+            <div class="lead">场景模板层 → Comate 自动化引擎 → AiDocs 知识基座 → WPS 365 产品矩阵 → 算粒计费（全程复用，不新建计费模型）</div>
+            <div class="bp-flow">
+              <div class="bp-node mvp">
+                <div class="k">入口</div>
+                <div class="v">主文件夹</div>
+                <span class="bp-arrow">→</span>
+              </div>
+              <div class="bp-node mvp">
+                <div class="k">模板</div>
+                <div class="v">合同审查</div>
+                <span class="bp-arrow">→</span>
+              </div>
+              <div class="bp-node mvp">
+                <div class="k">引擎</div>
+                <div class="v">Comate</div>
+                <span class="bp-arrow">→</span>
+              </div>
+              <div class="bp-node mvp">
+                <div class="k">处理</div>
+                <div class="v">AiDocs</div>
+                <span class="bp-arrow">→</span>
+              </div>
+              <div class="bp-node mvp">
+                <div class="k">闭环</div>
+                <div class="v">群确认≠OA</div>
+              </div>
+            </div>
+            <div class="bp-grid">
+              <div class="bp-card">
+                <h4>入口矩阵</h4>
+                <ul>
+                  <li>右键主夹「设置自动化」 <span class="phase mvp">MVP</span></li>
+                  <li>入主夹触发 + 退回后重提 <span class="phase mvp">MVP</span></li>
+                  <li>文件夹内单入口「自动化」 <span class="phase mvp">MVP</span></li>
+                  <li>团队工具 / 应用专区 <span class="phase g">增长</span></li>
+                  <li>邮件/群聊来源端截流 <span class="phase g">增长</span></li>
+                </ul>
+              </div>
+              <div class="bp-card">
+                <h4>场景地图</h4>
+                <ul>
+                  <li>合同审查 <span class="phase mvp">MVP</span></li>
+                  <li>发票审批 <span class="phase g">增长 P0</span></li>
+                  <li>简历入库 <span class="phase g">增长 P1</span></li>
+                  <li>群聊文件归集 <span class="phase g">增长 P1</span></li>
+                  <li>MCP 连接器生态 <span class="phase e">生态</span></li>
+                </ul>
+              </div>
+              <div class="bp-card">
+                <h4>挂载与冲突（预留）</h4>
+                <ul>
+                  <li>一夹一条规则 <span class="phase mvp">MVP</span></li>
+                  <li>场景互斥组（审查类不同开） <span class="phase g">增长</span></li>
+                  <li>读可并行 · 写唯一裁决 <span class="phase g">增长</span></li>
+                  <li>优先级 / 条件分流 <span class="phase g">增长</span></li>
+                  <li>复杂编排进 Comate <span class="phase e">生态</span></li>
+                </ul>
+              </div>
+            </div>
+            <div style="margin-top:12px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--text-2);line-height:1.55">
+              <div style="font-weight:650;color:var(--text);margin-bottom:6px">多规则冲突矩阵（蓝图 · 非本期交付）</div>
+              <div style="display:grid;grid-template-columns:120px 1fr 1fr 1fr;gap:6px;font-size:11px">
+                <div style="font-weight:650">动作 \ 动作</div>
+                <div style="font-weight:650">审查/抽取（读）</div>
+                <div style="font-weight:650">通知推群</div>
+                <div style="font-weight:650">移动归档（写）</div>
+                <div>审查/抽取</div><div>可并行</div><div>可并行</div><div>读先于写</div>
+                <div>通知推群</div><div>可并行</div><div>宜合并摘要</div><div>写后通知</div>
+                <div>移动归档</div><div>—</div><div>—</div><div style="color:#c56a00">互斥 / 优先级唯一赢家</div>
+              </div>
+              <div style="margin-top:8px;color:var(--text-3)">原则：读可并行；写必须唯一归属（互斥组或优先级）；同触发多通知优先合并。</div>
+            </div>
+            <div class="callout-note">
+              不做新产品、不新建计费、不替代 OA。文件夹自动化 = 规则挂在主文件夹；其它夹仅为动作参数。过程态在 run；文件夹壳上自动化单入口。群确认是内容闸门；OA 经 Comate 连接器为增长期可选下游。
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="nav-hint">← → 切换关键帧 · 或点击顶部页签</div>
+
+<script>
+  const tabs = document.querySelectorAll('#tabs button');
+  const frames = document.querySelectorAll('.frame');
+  function show(n) {
+    tabs.forEach(b => b.classList.toggle('active', b.dataset.frame === String(n)));
+    frames.forEach(f => f.classList.toggle('active', f.dataset.frame === String(n)));
+  }
+  tabs.forEach(b => b.addEventListener('click', () => show(b.dataset.frame)));
+  document.addEventListener('keydown', (e) => {
+    const cur = Number(document.querySelector('#tabs button.active').dataset.frame);
+    if (e.key === 'ArrowRight') show(Math.min(8, cur + 1));
+    if (e.key === 'ArrowLeft') show(Math.max(1, cur - 1));
+  });
+
+  // F4：自动化入口 ↔ 面板
+  const f4Btn = document.getElementById('f4-auto-btn');
+  const f4Panel = document.getElementById('f4-auto-panel');
+  const f4Close = document.getElementById('f4-auto-close');
+  const f4Table = document.getElementById('f4-table-wrap');
+  function openF4Panel() {
+    if (!f4Panel) return;
+    f4Panel.hidden = false;
+    f4Table && f4Table.classList.add('panel-open');
+  }
+  function closeF4Panel() {
+    if (!f4Panel) return;
+    f4Panel.hidden = true;
+    f4Table && f4Table.classList.remove('panel-open');
+  }
+  f4Btn && f4Btn.addEventListener('click', openF4Panel);
+  f4Close && f4Close.addEventListener('click', closeF4Panel);
+</script>
+</body>
+</html>
