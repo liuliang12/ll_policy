@@ -255,6 +255,7 @@
     border-radius: 4px; padding: 2px 6px; margin-left: 6px;
   }
   .team-actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+  [hidden] { display: none !important; }
   .btn {
     height: 28px; padding: 0 10px; border-radius: 6px;
     border: 1px solid var(--border-strong); background: #fff;
@@ -286,9 +287,33 @@
     width: 20px; height: 16px; border-radius: 2px 2px 3px 3px;
     background: #4d9fff; position: relative;
   }
-  .folder-ico::before {
-    content: ""; position: absolute; left: 0; top: -4px;
-    width: 8px; height: 5px; background: #3a8aef; border-radius: 2px 2px 0 0;
+  .folder-ico.sm {
+    width: 14px; height: 11px; flex-shrink: 0;
+  }
+  .folder-ico.sm::before {
+    width: 6px; height: 4px; top: -3px;
+  }
+  .folder-link-inline {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: #f0f1f3; color: var(--text);
+    border-radius: 4px;
+    padding: 1px 8px 1px 6px; font-size: 12px;
+    vertical-align: -2px; white-space: nowrap; line-height: 1.5;
+    text-decoration: none; max-width: 220px;
+    cursor: default;
+  }
+  .folder-link-inline .name {
+    overflow: hidden; text-overflow: ellipsis;
+  }
+  .folder-link-pick {
+    display: flex; align-items: center; gap: 8px;
+    height: 34px; border: 1px solid var(--border-strong);
+    border-radius: 6px; padding: 0 8px; background: #fff;
+  }
+  .folder-link-pick select {
+    flex: 1; min-width: 0; height: 32px; border: none; background: transparent;
+    font-size: 13px; color: var(--blue); font-family: inherit;
+    font-weight: 650; cursor: pointer;
   }
   .row-selected { background: #f3f8ff; }
   .status-pill {
@@ -296,8 +321,14 @@
     font-size: 11px; padding: 2px 8px; border-radius: 999px;
     background: #eaffef; color: #1a9f3d;
   }
+  .status-pill.off { background: #f0f1f3; color: var(--text-3); }
   .status-pill.warn { background: #fff6e8; color: #c56a00; }
   .status-pill.run { background: var(--blue-soft); color: var(--blue); }
+  .f3-shell input:disabled, .f3-shell select:disabled, .f3-shell textarea:disabled {
+    background: #f7f8fa; color: var(--text-3); cursor: not-allowed;
+  }
+  .f3-shell .f3-card.readonly .trig-opt { opacity: .6; cursor: not-allowed; }
+  .nl-box.locked .skill-chip { cursor: default; opacity: .75; }
 
   /* Context menu */
   .ctx-menu {
@@ -784,6 +815,191 @@
   kbd {
     background: #3a3f48; padding: 1px 5px; border-radius: 3px; font-size: 11px;
   }
+
+  /* F3 · 触发 + NL 任务 + 模板参数 */
+  .f3-shell { max-width: 1080px; margin: 0 auto; }
+  .f3-top {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 12px; margin-bottom: 12px;
+  }
+  .f3-layout {
+    display: grid; grid-template-columns: 1.35fr 0.65fr; gap: 12px; align-items: start;
+  }
+  .f3-card {
+    background: #fff; border: 1px solid var(--border-strong);
+    border-radius: 10px; padding: 12px 14px;
+  }
+  .f3-card .ch {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 8px; margin-bottom: 8px;
+  }
+  .f3-card .ch h5 { font-size: 13px; font-weight: 650; }
+  .f3-card .ch .hint { font-size: 11px; color: var(--text-3); }
+  .f3-card .sub { font-size: 11px; color: var(--text-3); margin-bottom: 10px; line-height: 1.45; }
+  .nl-editor {
+    border: 1px solid var(--border-strong); border-radius: 8px;
+    overflow: hidden; background: #fff;
+  }
+  .nl-editor.flash .nl-box { animation: nlflash .55s ease; }
+  .nl-box {
+    border: none; border-radius: 0;
+    padding: 12px 14px; background: #fff;
+    font-size: 13px; line-height: 1.85; color: var(--text);
+    min-height: 320px; white-space: pre-wrap; word-break: break-word;
+  }
+  @keyframes nlflash {
+    from { background: #e8f0ff; }
+    to { background: #fff; }
+  }
+  /* 可配置参数：灰色 tag，不可点击，值随配置面板同步更新 */
+  mark.nl-slot {
+    background: #f0f1f3; color: var(--text);
+    border-radius: 4px;
+    padding: 0 6px;
+    cursor: default; white-space: nowrap;
+    font-style: normal;
+  }
+  /* Skill：实线胶囊，可点击拉出配置面板 */
+  .skill-chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: #e8f0ff; color: #1a66ff;
+    border: 1px solid #b9d0ff; border-radius: 999px;
+    padding: 1px 8px 1px 6px; font-size: 12px; font-weight: 650;
+    vertical-align: -2px; white-space: nowrap; line-height: 1.5;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(26,102,255,.12);
+    transition: background .12s ease, box-shadow .12s ease, border-color .12s ease;
+  }
+  .skill-chip:hover {
+    background: #dce9ff; border-color: #7ea6ff;
+    box-shadow: 0 0 0 3px rgba(26,102,255,.14);
+  }
+  .skill-chip.on {
+    background: #d6e4ff; box-shadow: 0 0 0 2px #1a66ff;
+  }
+  .skill-chip.miss {
+    background: #fff2f1; color: #c42b26; border-color: #ffccc7;
+  }
+  .skill-chip.miss.on { box-shadow: 0 0 0 2px #c42b26; }
+  mark.nl-slot.miss {
+    background: #fff2f1; color: #c42b26;
+  }
+  .skill-chip .bolt {
+    width: 14px; height: 14px; border-radius: 4px;
+    background: #1a66ff; color: #fff;
+    display: inline-grid; place-items: center;
+    font-size: 9px; font-weight: 700; line-height: 1;
+  }
+  .nl-toolbar {
+    display: flex; align-items: center; gap: 14px;
+    padding: 8px 12px; border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--text-2);
+  }
+  .nl-toolbar .tb {
+    display: inline-flex; align-items: center; gap: 4px; cursor: default;
+  }
+  .nl-toolbar .tb.skill { color: var(--blue); font-weight: 650; }
+  .nl-toolbar .right { margin-left: auto; }
+  .legend-skill, .legend-param, .legend-fixed {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: 11px; line-height: 1.5; padding: 0 5px;
+  }
+  .legend-skill {
+    background: #e8f0ff; color: #1a66ff;
+    border: 1px solid #b9d0ff; border-radius: 999px; font-weight: 650;
+    cursor: pointer;
+  }
+  .legend-param {
+    background: #f0f1f3; color: var(--text);
+    border-radius: 4px;
+    cursor: default;
+  }
+  .legend-fixed { color: var(--text-3); }
+  .param-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  }
+  .param-grid .span-2 { grid-column: 1 / -1; }
+  .skill-list { display: flex; flex-direction: column; gap: 8px; }
+  .skill-card {
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 12px; background: #fafafa;
+  }
+  .skill-h {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 650; margin-bottom: 8px;
+  }
+  .skill-tag {
+    font-size: 10px; font-weight: 650; letter-spacing: 0.02em;
+    background: #1f2329; color: #fff; padding: 1px 6px; border-radius: 4px;
+  }
+  .skill-h .meta { margin-left: auto; font-size: 11px; font-weight: 500; color: var(--text-3); }
+  .skill-card .field { margin-bottom: 8px; }
+  .skill-card .field:last-child { margin-bottom: 0; }
+  .appr-node {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 6px; padding: 8px; margin-bottom: 6px;
+  }
+  .appr-node:last-of-type { margin-bottom: 0; }
+  .appr-node .an-h {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+    font-size: 12px; font-weight: 650; margin-bottom: 6px;
+  }
+  .appr-node .an-h .n { font-size: 10px; font-weight: 500; color: var(--text-3); }
+  .tpl-params {
+    background: #fff; border: 1px dashed var(--border-strong);
+    border-radius: 6px; padding: 8px;
+  }
+  .tpl-params .cap {
+    font-size: 11px; color: var(--text-3); margin-bottom: 8px;
+  }
+  .rule-hint {
+    font-size: 11px; font-weight: 400; color: var(--text-3); margin-left: 4px;
+  }
+  .node-label {
+    font-size: 12px; font-weight: 650; color: var(--text); margin-right: 2px;
+  }
+  .insp-empty {
+    padding: 28px 12px; text-align: center; color: var(--text-3);
+    font-size: 13px; line-height: 1.6;
+  }
+  .save-tip {
+    margin-top: 8px; font-size: 12px; color: #c42b26; line-height: 1.5;
+    background: #fff2f1; border: 1px solid #ffccc7; border-radius: 6px;
+    padding: 8px 10px;
+  }
+  .req { color: #f54a45; font-weight: 650; }
+  .param-grid .span-2 { grid-column: 1 / -1; }
+  .field input[type="text"], .field select, .field textarea {
+    width: 100%; height: 34px; border: 1px solid var(--border-strong);
+    border-radius: 6px; padding: 0 10px; font-size: 13px;
+    font-family: inherit; background: #fff; color: var(--text);
+  }
+  .field textarea {
+    height: auto; min-height: 56px; padding: 8px 10px; resize: vertical;
+  }
+  .trig-opt {
+    display: flex; align-items: center; gap: 6px;
+    border-radius: 6px; padding: 6px 10px; font-size: 12px;
+    border: 1px solid var(--border); background: #fafafa; cursor: pointer;
+    user-select: none;
+  }
+  .trig-opt.on {
+    background: #f7faff; border-color: var(--blue); color: var(--text);
+  }
+  .trig-opt input { accent-color: var(--blue); }
+  .f3-foot {
+    margin-top: 12px; font-size: 12px; color: var(--text-2); line-height: 1.55;
+    background: #fff; border: 1px dashed #b8d0ff; border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .linkish {
+    border: none; background: none; color: var(--blue); font-size: 12px;
+    cursor: pointer; font-family: inherit; padding: 0;
+  }
+  .linkish:hover { text-decoration: underline; }
+  @media (max-width: 900px) {
+    .f3-layout { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
@@ -796,7 +1012,7 @@
       <div class="frame-tabs" id="tabs">
         <button data-frame="1" class="active">F1 入口发现</button>
         <button data-frame="2">F2 模板库</button>
-        <button data-frame="3">F3 流程配置</button>
+        <button data-frame="3">F3 任务配置</button>
         <button data-frame="4">F4 管理面板</button>
         <button data-frame="5">F5 完整闭环</button>
         <button data-frame="6">F6 运行管理</button>
@@ -906,7 +1122,7 @@
         <div class="frame-meta">
           <div class="title-block">
             <h2>F2 · 场景：文档审查（不是只做合同）</h2>
-            <p>MVP 场景叫<strong>文档审查</strong>。相对纯 AiDocs：可配置触发 + 风险分支流转 + 定稿会签 + 通过后归档/报告/台账；定稿不通过可重提再 AI 审查。</p>
+            <p>MVP 场景叫<strong>文档审查</strong>。选模板后进入任务配置：只拆出触发条件，其余用自然语言描述；关键变量提成表单，改完自动回写任务描述。</p>
           </div>
           <div class="badge-row">
             <span class="badge mvp">MVP：文档审查</span>
@@ -955,7 +1171,7 @@
                       <span class="ok">MVP</span>
                       <div class="ico-lg" style="background:#f5a623">审</div>
                       <h5>文档审查</h5>
-                      <p>入夹触发 → 风险分支 → 定稿会签</p>
+                      <p>入夹触发后自动审查，并走定稿协作</p>
                     </div>
                     <div class="scene-card disabled">
                       <span class="soon">即将推出</span>
@@ -980,7 +1196,7 @@
                 </div>
                 <div class="df">
                   <span class="btn">取消</span>
-                  <span class="btn primary">下一步</span>
+                  <button type="button" id="f2-next" class="btn primary" style="font-family:inherit;cursor:pointer">下一步</button>
                 </div>
               </aside>
             </div>
@@ -992,184 +1208,182 @@
       <section class="frame" data-frame="3">
         <div class="frame-meta">
           <div class="title-block">
-            <h2>F3 · 文档审查 · 自动化流程配置</h2>
-            <p>开自动化 = <strong>新建流程</strong>（名称可自动生成，用于轻审批标题）。人工节点均落轻审批；处理人可配；表单<strong>必带当前文档链接 + AiDocs 审查结果链接</strong>。</p>
+            <h2>F3 · 文档审查 · 任务配置</h2>
+            <p>任务内容呈现完整流程，<strong>只读不可直接编辑</strong>。点选其中的 Skill，右侧只出现该 Skill 的参数表单，改完同步回写。必填参数为空时无法保存。支持<strong>未开启 / 已开启</strong>状态与<strong>配置 / 查看</strong>两种模式；已开启时保存即按最新流程执行。</p>
           </div>
           <div class="badge-row">
-            <span class="badge mvp">流程配置</span>
-            <span class="badge new">人节点 = 轻审批</span>
-            <span class="badge">处理人可配</span>
+            <span class="badge mvp">触发 + NL</span>
+            <span class="badge new">按 Skill 配参数</span>
+            <span class="badge new">未开启 / 已开启状态机</span>
+            <span class="badge">人节点 = 轻审批</span>
           </div>
         </div>
         <div class="stage" style="background:#f0f2f5;padding:14px 18px;overflow:auto">
-          <div style="max-width:720px;margin:0 auto">
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:12px">
+          <div class="f3-shell">
+            <div class="f3-top">
               <div style="flex:1">
-                <div style="font-size:12px;color:var(--text-3);margin-bottom:4px">开启自动化 = 新建一条自动化流程</div>
-                <div class="field" style="margin-bottom:6px">
-                  <label>流程名称 <span style="font-weight:500;color:var(--text-3)">可自动生成，也可改</span></label>
-                  <div class="fake-input" style="justify-content:space-between;max-width:420px">
-                    <span>待审文档 · 文档审查</span>
-                    <span style="color:var(--blue);font-size:12px">重新生成</span>
+                <div class="field" style="margin-bottom:0">
+                  <label>任务名称</label>
+                  <div style="display:flex;align-items:center;gap:10px">
+                    <input id="f3-flow-name" type="text" value="待审文档 · 文档审查" style="max-width:420px" />
+                    <span class="status-pill off" id="f3-status-pill">未开启</span>
                   </div>
                 </div>
-                <div style="font-size:11px;color:var(--text-3);line-height:1.45">命名规则示意：<strong>主文件夹名 + 场景</strong>。此名称会出现在各人工节点的轻审批标题中。<br>本夹已有主挂载时不可再「新建」第二条进夹流程（一夹一条）。</div>
               </div>
-              <div style="display:flex;gap:8px;flex-shrink:0;padding-top:18px">
-                <span class="btn">取消</span>
-                <span class="btn primary">保存并开启</span>
+              <div style="display:flex;gap:8px;flex-shrink:0;align-self:flex-end">
+                <button type="button" class="btn" id="f3-mode-cancel" hidden style="font-family:inherit;cursor:pointer">取消</button>
+                <button type="button" class="btn" id="f3-toggle-enable" hidden style="font-family:inherit;cursor:pointer">停用</button>
+                <button type="button" class="btn primary" id="f3-save" style="font-family:inherit;cursor:pointer">保存</button>
+              </div>
+            </div>
+            <div id="f3-save-tip" class="save-tip" hidden>有 Skill 必填参数未填写，无法保存。请点选任务内容中标红的 Skill 补全。</div>
+
+            <div class="f3-card" style="margin-bottom:12px">
+              <div class="ch">
+                <h5>触发条件</h5>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <label class="trig-opt on"><input id="f3-trig-upload" type="checkbox" checked /> 上传文件到本文件夹</label>
+                <label class="trig-opt on"><input id="f3-trig-move" type="checkbox" checked /> 移入文件到本文件夹</label>
+                <label class="trig-opt"><input id="f3-trig-copy" type="checkbox" /> 复制进入（可选）</label>
               </div>
             </div>
 
-            <div class="flow-cfg">
-              <!-- 触发 -->
-              <div class="flow-node">
-                <div class="fn-h"><span class="fn-tag">节点 1</span> 触发条件</div>
-                <div style="font-size:12px;color:var(--text-2);margin-bottom:8px">当主文件夹内发生以下动作时启动流程（可多选）</div>
-                <div style="display:flex;gap:8px;flex-wrap:wrap">
-                  <label style="display:flex;align-items:center;gap:6px;background:#f7faff;border:1px solid var(--blue);border-radius:6px;padding:6px 10px;font-size:12px">
-                    <input type="checkbox" checked disabled /> 上传文件到本文件夹
-                  </label>
-                  <label style="display:flex;align-items:center;gap:6px;background:#f7faff;border:1px solid var(--blue);border-radius:6px;padding:6px 10px;font-size:12px">
-                    <input type="checkbox" checked disabled /> 移入文件到本文件夹
-                  </label>
-                  <label style="display:flex;align-items:center;gap:6px;background:#fafafa;border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:12px;opacity:.55">
-                    <input type="checkbox" disabled /> 复制进入（可选）
-                  </label>
+            <div class="f3-layout">
+              <div class="f3-card">
+                <div class="ch">
+                  <h5>任务内容</h5>
+                  <span class="hint">由下方关键参数自动生成 · 不可直接编辑</span>
                 </div>
-              </div>
-
-              <div class="flow-join">↓</div>
-
-              <!-- AiDocs -->
-              <div class="flow-node">
-                <div class="fn-h"><span class="fn-tag">节点 2</span> 文档审查（AiDocs）</div>
-                <div class="field" style="margin-bottom:8px">
-                  <label>选用已有模板</label>
-                  <div class="fake-input" style="justify-content:space-between">
-                    <span>合同审查</span><span style="color:var(--text-3)">拉取 AiDocs ▾</span>
+                <div class="nl-editor" id="f3-nl-editor">
+                  <div id="f3-nl" class="nl-box"></div>
+                  <div class="nl-toolbar">
+                    <span class="tb">🔒 任务内容仅由关键参数生成</span>
+                    <span class="tb" style="gap:6px">
+                      <span class="legend-skill">⚡ Skill（点击编辑）</span>
+                      <span class="legend-param">参数（随配置同步）</span>
+                      <span class="legend-fixed">固定内容</span>
+                    </span>
+                    <span class="tb right">如需修改请点选 Skill 调整参数</span>
                   </div>
                 </div>
-                <div class="field" style="margin-bottom:8px">
-                  <label>补充自定义审查需求 <span style="font-weight:500;color:var(--text-3)">选填</span></label>
-                  <div class="fake-input" style="height:auto;min-height:56px;align-items:flex-start;padding:8px 10px;color:var(--text-3)">
-                    例：重点关注付款条款与违约上限…
+              </div>
+
+              <div class="f3-card" id="f3-inspector">
+                <div class="ch" id="f3-insp-head" hidden>
+                  <h5 id="f3-insp-title">Skill 参数</h5>
+                  <span class="hint">改完同步到任务内容</span>
+                </div>
+                <div id="f3-insp-empty" class="insp-empty">在任务内容中点选 Skill<br>即可编辑该步骤的参数</div>
+
+                <div class="skill-panel" data-panel="review" hidden>
+                  <div class="field">
+                    <label>审查模板 <span class="req">*</span></label>
+                    <select id="f3-template">
+                      <option value="">请选择</option>
+                      <option selected>合同审查</option>
+                      <option>通用文档审查</option>
+                      <option>投标文件审查</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label>补充说明 <span style="font-weight:500;color:var(--text-3)">选填</span></label>
+                    <textarea id="f3-extra" placeholder="例：重点关注付款条款与违约上限"></textarea>
                   </div>
                 </div>
-                <div style="font-size:12px">
-                  <span style="color:var(--blue)">在 AiDocs 管理模板</span>
-                  <span style="color:var(--text-3)">　·　清单 / 参考资料在 AiDocs 维护</span>
-                </div>
-              </div>
 
-              <div class="callout-note" style="margin:4px 0 8px">
-                <strong>人工节点约定：</strong>「完成修改，提交定稿流程」/ 定稿审核 / 改稿重提 = 各发起一次轻审批；审批标题用<strong>流程名称</strong> + 节点名；处理人可配；表单<strong>必须同时带：当前文档链接 + AiDocs 审查结果链接</strong>（缺一不可）。
-              </div>
-
-              <div class="flow-join">↓ 按审查结果分支</div>
-
-              <!-- 分支 -->
-              <div class="flow-branch">
-                <div class="br">
-                  <div class="br-h" style="color:#c56a00">有风险</div>
-                  <div class="flow-node" style="padding:8px;margin:0">
-                    <div class="fn-h" style="margin-bottom:6px"><span class="fn-tag warn">节点 3a</span> 完成修改，提交定稿流程 · 轻审批</div>
-                    <div class="field" style="margin-bottom:6px">
-                      <label style="font-size:11px">处理人（可配）</label>
-                      <div class="fake-input" style="height:30px;font-size:12px;justify-content:space-between">
-                        <span>默认上传者 · 张敏</span><span style="color:var(--text-3)">改 ▾</span>
-                      </div>
+                <div class="skill-panel" data-panel="appr1" hidden>
+                  <div class="field">
+                    <label>审批模板 <span class="req">*</span></label>
+                    <select id="f3-appr1-tpl">
+                      <option value="">请选择</option>
+                      <option value="fix" selected>完成修改提交定稿</option>
+                      <option value="final">定稿审核</option>
+                      <option value="resubmit">改稿重提</option>
+                    </select>
+                  </div>
+                  <div class="tpl-params" data-appr="1">
+                    <div class="cap">审批节点</div>
+                    <div class="field" data-show="assignee">
+                      <label><span class="node-label" data-node="1">节点1</span>·审批人 <span class="req">*</span> <span class="rule-hint" data-hint="1">单人 · 或签</span></label>
+                      <select id="f3-fixer-type">
+                        <option value="uploader" selected>默认上传者</option>
+                        <option value="named">指定人员</option>
+                      </select>
+                      <input id="f3-fixer-name" type="text" value="张敏" hidden style="margin-top:6px" />
                     </div>
-                    <div style="background:#f7faff;border:1px solid #d6e4ff;border-radius:6px;padding:6px 8px;font-size:11px;color:var(--text-2);line-height:1.45;margin-bottom:6px">
-                      <div style="font-weight:650;color:var(--blue);margin-bottom:2px">轻审批表单字段</div>
-                      · 标题：<strong>待审文档 · 文档审查</strong> · 完成修改，提交定稿流程<br>
-                      · <strong>当前文档链接</strong>（必带）　· <strong>AiDocs 审查结果链接</strong>（必带）<br>
-                      · 风险摘要　· 操作：完成修改并提交定稿
+                  </div>
+                </div>
+
+                <div class="skill-panel" data-panel="appr2" hidden>
+                  <div class="field">
+                    <label>审批模板 <span class="req">*</span></label>
+                    <select id="f3-appr2-tpl">
+                      <option value="">请选择</option>
+                      <option value="fix">完成修改提交定稿</option>
+                      <option value="final" selected>定稿审核</option>
+                      <option value="resubmit">改稿重提</option>
+                    </select>
+                  </div>
+                  <div class="tpl-params" data-appr="2">
+                    <div class="cap">审批节点</div>
+                    <div class="field" data-show="assignees">
+                      <label><span class="node-label" data-node="1">节点1</span>·审批人 <span class="req">*</span> <span class="rule-hint" data-hint="2">多人 · 会签</span></label>
+                      <input id="f3-approvers" type="text" value="陈洁、刘洋、王倩" />
                     </div>
-                    <div style="font-size:11px;color:var(--text-3);line-height:1.4">提交后进入定稿审核</div>
+                    <div class="field" data-show="assignee" hidden>
+                      <label><span class="node-label" data-node="1">节点1</span>·审批人 <span class="req">*</span> <span class="rule-hint" data-hint="2">多人 · 会签</span></label>
+                      <select id="f3-appr2-type">
+                        <option value="uploader" selected>默认上传者</option>
+                        <option value="named">指定人员</option>
+                      </select>
+                      <input id="f3-appr2-name" type="text" value="张敏" hidden style="margin-top:6px" />
+                    </div>
                   </div>
                 </div>
-                <div class="br">
-                  <div class="br-h" style="color:#1a9f3d">无风险</div>
-                  <div style="font-size:12px;color:var(--text-2);line-height:1.5;padding:8px 4px">
-                    <strong>跳过</strong>「完成修改，提交定稿流程」轻审批，<br>直接进入定稿审核节点
+
+                <div class="skill-panel" data-panel="move" hidden>
+                  <div class="field">
+                    <label>目标文件夹 <span class="req">*</span></label>
+                    <div class="folder-link-pick">
+                      <span class="folder-ico sm"></span>
+                      <select id="f3-archive" aria-label="目标文件夹链接">
+                        <option value="">请选择</option>
+                        <option value="已审文档" selected>已审文档</option>
+                        <option value="已审核合同">已审核合同</option>
+                        <option value="法务团队/归档">法务团队/归档</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label class="trig-opt on" style="margin:0">
+                      <input id="f3-ledger" type="checkbox" checked /> 同时写入审查台账
+                    </label>
                   </div>
                 </div>
-              </div>
 
-              <div class="flow-join">↓ 汇合</div>
-
-              <!-- 定稿审核 -->
-              <div class="flow-node">
-                <div class="fn-h"><span class="fn-tag">节点 4</span> 定稿审核 · 轻审批（可会签）</div>
-                <div class="field" style="margin-bottom:8px">
-                  <label>处理人（可配 · 可多人）</label>
-                  <div class="fake-input" style="justify-content:space-between">
-                    <span>陈洁、刘洋、王倩</span><span style="color:var(--text-3)">选人 ▾</span>
+                <div class="skill-panel" data-panel="appr3" hidden>
+                  <div class="field">
+                    <label>审批模板 <span class="req">*</span></label>
+                    <select id="f3-appr3-tpl">
+                      <option value="">请选择</option>
+                      <option value="fix">完成修改提交定稿</option>
+                      <option value="final">定稿审核</option>
+                      <option value="resubmit" selected>改稿重提</option>
+                    </select>
+                  </div>
+                  <div class="tpl-params" data-appr="3">
+                    <div class="cap">审批节点</div>
+                    <div class="field" data-show="assignee">
+                      <label><span class="node-label" data-node="1">节点1</span>·审批人 <span class="req">*</span> <span class="rule-hint" data-hint="3">单人 · 或签</span></label>
+                      <select id="f3-rewriter-type">
+                        <option value="uploader" selected>默认上传者</option>
+                        <option value="named">指定人员</option>
+                      </select>
+                      <input id="f3-rewriter-name" type="text" value="张敏" hidden style="margin-top:6px" />
+                    </div>
                   </div>
                 </div>
-                <div style="display:flex;gap:8px;margin-bottom:8px;font-size:12px">
-                  <label style="display:flex;align-items:center;gap:4px;background:#f7faff;border:1px solid var(--blue);border-radius:6px;padding:4px 8px">
-                    <input type="radio" checked disabled /> 会签（全部通过）
-                  </label>
-                  <label style="display:flex;align-items:center;gap:4px;background:#fafafa;border:1px solid var(--border);border-radius:6px;padding:4px 8px">
-                    <input type="radio" disabled /> 或签（任一通过）
-                  </label>
-                </div>
-                <div style="background:#f7faff;border:1px solid #d6e4ff;border-radius:6px;padding:8px 10px;font-size:11px;color:var(--text-2);line-height:1.45;margin-bottom:8px">
-                  <div style="font-weight:650;color:var(--blue);margin-bottom:2px">轻审批表单字段</div>
-                  · 标题：<strong>待审文档 · 文档审查</strong> · 定稿审核<br>
-                  · <strong>当前文档链接</strong>（必带）　· <strong>AiDocs 审查结果链接</strong>（必带）　· 风险结论<br>
-                  · 若经「完成修改，提交定稿流程」：带「修改说明」　· 操作：通过 / 不通过（可填意见）
-                </div>
-                <div style="font-size:11px;color:var(--text-3);line-height:1.45">
-                  通过 → 自动归档　·　不通过 → 进入节点 4b 改稿重提
-                </div>
-              </div>
-
-              <div class="flow-join">↓ 定稿不通过时</div>
-
-              <!-- 改稿重提 -->
-              <div class="flow-node">
-                <div class="fn-h"><span class="fn-tag warn">节点 4b</span> 改稿重提 · 轻审批</div>
-                <div class="field" style="margin-bottom:8px">
-                  <label>处理人（可配）</label>
-                  <div class="fake-input" style="justify-content:space-between">
-                    <span>默认上传者 · 可改指定人</span><span style="color:var(--text-3)">改 ▾</span>
-                  </div>
-                </div>
-                <div style="background:#fffaf3;border:1px solid #ffd4a8;border-radius:6px;padding:8px 10px;font-size:11px;color:var(--text-2);line-height:1.45;margin-bottom:6px">
-                  <div style="font-weight:650;color:#c56a00;margin-bottom:2px">轻审批表单字段</div>
-                  · 标题：<strong>待审文档 · 文档审查</strong> · 改稿重提<br>
-                  · <strong>当前文档链接</strong>（必带）　· <strong>AiDocs 审查结果链接</strong>（必带）　· 定稿不通过意见<br>
-                  · 操作：「我已改完，重新提交」
-                </div>
-                <div style="margin-top:8px;padding:8px 10px;background:#f7faff;border:1px solid #d6e4ff;border-radius:6px;font-size:12px;line-height:1.5;color:var(--text)">
-                  <strong>本节点审批通过后 → 回到节点 2</strong>（文档审查 / AiDocs），重新出报告后再按有/无风险分支继续；不是直达定稿。
-                </div>
-              </div>
-
-              <div class="flow-join">↺ 4b 通过 → 节点 2　｜　↓ 节点 4 定稿通过</div>
-
-              <!-- 归档 -->
-              <div class="flow-node">
-                <div class="fn-h"><span class="fn-tag ok">节点 5</span> 自动归档</div>
-                <div class="fake-input" style="margin-bottom:6px">
-                  <span style="color:var(--text-3);margin-right:6px">归档至</span>已审文档
-                </div>
-                <div style="font-size:12px;color:var(--text-2)">+ 报告可回看　+ 写入审查台账</div>
-              </div>
-
-              <div class="flow-join">↓ 可继续扩展</div>
-
-              <!-- 外部 -->
-              <div class="flow-node" style="border-style:dashed;opacity:.9">
-                <div class="fn-h"><span class="fn-tag ext">预留</span> 外部系统节点</div>
-                <div style="font-size:12px;color:var(--text-2);line-height:1.5">
-                  后续可在定稿通过后增加：发起 OA / Webhook / 其它 Comate 连接器。<br>
-                  <span style="color:var(--text-3)">本期不实现，架构预留插槽。</span>
-                </div>
-                <div style="margin-top:8px"><span class="btn" style="opacity:.7">+ 添加外部节点</span></div>
               </div>
             </div>
           </div>
@@ -1181,7 +1395,7 @@
         <div class="frame-meta">
           <div class="title-block">
             <h2>F4 · 自动化管理面板</h2>
-            <p>文件夹单入口「自动化」。面板内：流程配置、运行管理、额度管理、去 Comate 管理自动化。</p>
+            <p>文件夹单入口「自动化」。面板内：任务配置、运行管理、额度管理、去 Comate 管理自动化。</p>
           </div>
           <div class="badge-row">
             <span class="badge mvp">管理面板</span>
@@ -1241,7 +1455,7 @@
                       <span class="status-pill">运行中</span>
                     </div>
                     <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
-                      <button type="button" id="f4-go-config" class="btn" style="justify-content:flex-start;font-family:inherit">流程配置</button>
+                      <button type="button" id="f4-go-config" class="btn" style="justify-content:flex-start;font-family:inherit">任务配置</button>
                       <button type="button" id="f4-go-manage" class="btn" style="justify-content:flex-start;font-family:inherit">运行管理</button>
                       <button type="button" id="f4-go-quota" class="btn" style="justify-content:flex-start;font-family:inherit">额度管理</button>
                       <button type="button" id="f4-go-comate" class="btn" style="justify-content:flex-start;font-family:inherit">去 Comate 管理自动化</button>
@@ -1261,7 +1475,7 @@
         <div class="frame-meta">
           <div class="title-block">
             <h2>F5 · 完整闭环：人节点 = 轻审批</h2>
-            <p>「完成修改，提交定稿流程」/ 定稿审核 / 改稿重提各对应一次轻审批；表单<strong>必带当前文档链接 + AiDocs 审查结果链接</strong>；各节点处理人在 F3 可配。</p>
+            <p>「完成修改提交定稿」/ 定稿审核 / 改稿重提各对应一次轻审批；表单<strong>必带当前文档链接 + AiDocs 审查结果链接</strong>；处理人在 F3 关键参数中可配。</p>
           </div>
           <div class="badge-row">
             <span class="badge mvp">人节点→轻审批</span>
@@ -1295,7 +1509,7 @@
               <div style="font-weight:650;color:var(--text);margin-bottom:6px">映射关系</div>
               · 文件夹开自动化 = <strong>新建一条流程</strong>（名称可自动生成）<br>
               · 轻审批标题 = <strong>流程名</strong> + 节点名<br>
-              · 「完成修改，提交定稿流程」/ 定稿 / 改稿重提 → 各一次轻审批（处理人可配）<br>
+              · 「完成修改提交定稿」/ 定稿 / 改稿重提 → 各一次轻审批（处理人可配）<br>
               · 表单必带 <strong>当前文档链接 + AiDocs 结果链接</strong>（两份都要）<br>
               · ≠ 公司 OA；OA 仍走外部预留节点
             </div>
@@ -1315,7 +1529,7 @@
             </div>
             <div style="background:#fff;border-radius:10px;border:1px solid var(--border);padding:12px;border-top:3px solid #c56a00">
               <div style="font-size:11px;color:#c56a00;font-weight:650;margin-bottom:6px">③a 有风险 → 完成修改人</div>
-              <div style="font-weight:650;font-size:14px;margin-bottom:6px">完成修改，提交定稿流程 · 轻审批</div>
+              <div style="font-weight:650;font-size:14px;margin-bottom:6px">完成修改提交定稿 · 轻审批</div>
               <div style="font-size:12px;color:var(--text-2);line-height:1.5">待办带双链接 → 完成修改 → 提交定稿流程</div>
               <div style="margin-top:8px;padding-top:8px;border-top:1px dashed #ffd4a8;font-size:11px;color:#1a9f3d;line-height:1.4"><strong>③b 无风险</strong>：跳过本步，直达定稿审核</div>
             </div>
@@ -1348,7 +1562,7 @@
               <div style="background:#fff;border-radius:8px;padding:10px;border-left:3px solid #7b61ff">
                 <div style="font-size:11px;color:#7b61ff;font-weight:650">⑦ 再走分支</div>
                 <div style="font-weight:650;margin:4px 0">3a / 直达定稿</div>
-                <div style="font-size:12px;color:var(--text-2)">有风险再进「完成修改，提交定稿流程」；无风险再直达定稿会签</div>
+                <div style="font-size:12px;color:var(--text-2)">有风险再进「完成修改提交定稿」；无风险再直达定稿会签</div>
               </div>
             </div>
           </div>
@@ -1371,7 +1585,7 @@
                   <tr><td>修改人</td><td>轻审批③：按意见改稿 → 通过后回节点 2 再审（F3 可配人）</td><td>不靠保存自动再审</td></tr>
                 </tbody>
               </table>
-              <div style="font-size:11px;color:var(--text-3);margin-top:8px">三个轻审批处理人均可在 F3 配置；默认上传者可改。外部 OA 为流程预留节点。</div>
+              <div style="font-size:11px;color:var(--text-3);margin-top:8px">三个轻审批处理人均可在 F3 关键参数中配置；默认上传者可改。外部 OA 写在任务描述中预留，本期不启用。</div>
             </div>
           </div>
         </div>
@@ -1463,11 +1677,11 @@
         <div class="frame-meta">
           <div class="title-block">
             <h2>F7 · Comate 现状与职责边界</h2>
-            <p><strong>现状校准：</strong>Comate 自动化仍偏初级——任务内容多为<strong>自然语言描述</strong>，尚非清晰可视化编排流。MVP 的「清晰流程」放在<strong>文件夹侧结构化配置（F3）</strong>。</p>
+            <p><strong>现状校准：</strong>Comate 新建任务 = 选触发 + 用自然语言描述任务，尚非画布。文件夹侧与之<strong>同构</strong>，并靠预设模板的轻量参数降低填写门槛。</p>
           </div>
           <div class="badge-row">
-            <span class="badge mvp">清晰流在夹侧</span>
-            <span class="badge new">Comate≈NL 任务</span>
+            <span class="badge mvp">夹侧 ≈ Comate 同构</span>
+            <span class="badge new">模板参数降门槛</span>
             <span class="badge">引擎/算粒/托管</span>
           </div>
         </div>
@@ -1481,16 +1695,16 @@
               <div style="font-size:13px;font-weight:650;margin-bottom:8px">策略说明（夹 ↔ Comate）</div>
               <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;font-size:12px;line-height:1.55;color:var(--text-2)">
                 <div style="border:1px solid #d6e4ff;background:#f7faff;border-radius:8px;padding:10px 12px">
-                  <div style="font-weight:650;color:var(--blue);margin-bottom:6px">MVP · 清晰编排在文件夹</div>
-                  · F3 结构化流程（触发/AiDocs/人节点/归档）<br>
-                  · 夹侧：挂载、摘要、启停、运行记录（额度走统一模块）<br>
-                  · Comate：底层执行引擎 + 算粒 + 任务托管<br>
-                  <span style="color:var(--text-3)">用户改流程 → 优先回夹侧表单，不假设 Comate 画布</span>
+                  <div style="font-weight:650;color:var(--blue);margin-bottom:6px">MVP · 夹侧与 Comate 同构</div>
+                  · F3：触发单独拆出；任务内容=编号步骤 + 行内 Skill<br>
+                  · 预设：各 Skill 动态参数做成表单，改完回写任务内容<br>
+                  · Comate：执行引擎 + 算粒 + 按 NL 任务托管<br>
+                  <span style="color:var(--text-3)">用户改任务 → 优先回夹侧参数/描述，不假设 Comate 画布</span>
                 </div>
                 <div style="border:1px solid #e8e8e8;background:#fafafa;border-radius:8px;padding:10px 12px">
                   <div style="font-weight:650;color:var(--text);margin-bottom:6px">「在 Comate 中打开」做什么</div>
                   · 查看/管理已托管的触发任务<br>
-                  · 用 NL 补充说明、改等待时间等<br>
+                  · 查看运行记录、NL 任务内容（只读，不可直接编辑）<br>
                   · 扩展非「进夹」类触发（可能解绑）<br>
                   <span style="color:var(--text-3)">标签建议：<strong>已在 Comate 托管</strong>（勿写「已可视化编排」）</span>
                 </div>
@@ -1516,24 +1730,28 @@
                 <div style="margin-bottom:8px"><span style="color:var(--text-3)">任务类型</span><div style="margin-top:4px"><span class="btn primary" style="font-size:11px">触发任务（云端）</span></div></div>
                 <div style="margin-bottom:8px"><span style="color:var(--text-3)">触发事件</span><div class="fake-input" style="margin-top:4px;justify-content:space-between"><span>云文档 · 文件进入文件夹</span><span style="color:var(--text-3)">▾</span></div></div>
                 <div style="margin-bottom:4px;color:var(--text-3)">任务内容</div>
-                <div style="border:1px solid var(--border);border-radius:8px;padding:10px;min-height:88px;background:#fafafa;color:var(--text-3);line-height:1.5">
-                  用自然语言描述任务…<br>
-                  <span style="color:var(--text-2)">（例：文件入夹后调用 AiDocs 审查，有风险则…）</span>
+                <div style="border:1px solid var(--border);border-radius:8px;padding:10px;min-height:88px;background:#fff;line-height:1.7;color:var(--text)">
+                  请执行以下步骤：<br>
+                  1. 使用 <span class="skill-chip"><span class="bolt">⚡</span>文档审查</span> 对进入本文件夹的文件进行审查…<br>
+                  2. 使用 <span class="skill-chip"><span class="bolt">⚡</span>发起轻审批</span> 发起「完成修改提交定稿」…<br>
+                  3. 使用 <span class="skill-chip"><span class="bolt">⚡</span>发起轻审批</span> 发起「定稿审核」…
                 </div>
-                <div style="margin-top:8px;font-size:11px;color:var(--text-3)">← 与真实 Comate「新增任务」形态对齐：无节点画布</div>
+                <div style="margin-top:8px;font-size:11px;color:var(--text-3)">← 与 Comate 模板任务写法对齐：编号步骤 + 行内 Skill</div>
               </div>
             </div>
             <!-- 夹侧对照 -->
             <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px;font-size:12px;line-height:1.55">
-              <div style="font-weight:650;margin-bottom:8px">对照 · 文件夹 F3 才是清晰流</div>
+              <div style="font-weight:650;margin-bottom:8px">对照 · 文件夹 F3 降低填写门槛</div>
               <div style="border:1px solid #d6e4ff;border-radius:8px;padding:8px 10px;background:#f7faff;margin-bottom:8px">
-                节点 1 触发 → 2 AiDocs → 3a 完成修改提交定稿 → 4 定稿会签 → 4b 回节点 2 → 5 归档
+                同构：触发条件 + 任务内容（请执行以下步骤 + 行内 Skill）<br>
+                增量：各 Skill 动态参数做成表单，改完回写任务内容
               </div>
               <div style="color:var(--text-2);margin-bottom:8px">
-                人看得懂、可配置处理人/双链接；保存后由 Comate <strong>按结构化定义执行</strong>（需接口，而非让用户在 Comate 里用 NL 重写整条流）。
+                用户不必从空白写整条审查流；保存后把<strong>触发 + 任务描述</strong>交给 Comate 托管（对齐现状「新增任务」形态，不要求先有画布接口）。
               </div>
               <div class="callout-note" style="margin:0">
-                <strong>跳转 Comate：</strong>看托管任务 / NL 微调 / 运行。<br>
+                <strong>跳转 Comate：</strong>查看托管任务与运行记录。<br>
+                <strong>改任务：</strong>回到夹内通过关键参数表单修改（原文不可直接编辑）。<br>
                 改掉进夹触发 → 解绑。标签用「已在 Comate 托管」。
               </div>
             </div>
@@ -1546,7 +1764,7 @@
         <div class="frame-meta">
           <div class="title-block">
             <h2>F8 · 终局蓝图 + 立项前确认清单</h2>
-            <p>按最新对齐：清晰流程在夹侧（F3）；Comate≈NL 托管/引擎；人节点=轻审批。下方先锁<strong>四大依赖（P0）</strong>；其它确认项暂搁置。</p>
+            <p>按最新对齐：夹侧 F3 与 Comate 同构（触发 + NL）；预设用轻量参数降门槛；人节点=轻审批。下方先锁<strong>四大依赖（P0）</strong>。</p>
           </div>
           <div class="badge-row">
             <span class="badge">蓝图</span>
@@ -1558,7 +1776,7 @@
           <div class="blueprint">
             <h3>AiDocs智联 · 能力链路（最新对齐）</h3>
             <div class="lead">
-              开自动化 = 新建可自动命名流程（一夹一条主触发）→ 夹侧结构化配置（触发 / AiDocs / 人节点轻审批 / 归档）→ Comate 执行与算粒托管（现状 NL，非画布）→ 4b 通过回节点 2。定稿≠OA；外部 OA 预留。
+              开自动化 = 新建可自动命名任务（一夹一条主触发）→ 夹侧：触发 + NL 任务描述（原文只读，仅可夹内改关键参数回写）→ Comate 按 NL 托管执行与算粒 → 改稿重提通过后回到审查。定稿≠OA；外部 OA 写在任务描述中预留。
             </div>
             <div class="bp-flow">
               <div class="bp-node mvp">
@@ -1567,8 +1785,8 @@
                 <span class="bp-arrow">→</span>
               </div>
               <div class="bp-node mvp">
-                <div class="k">清晰流</div>
-                <div class="v">夹侧 F3</div>
+                <div class="k">任务</div>
+                <div class="v">夹侧 NL+参数</div>
                 <span class="bp-arrow">→</span>
               </div>
               <div class="bp-node mvp">
@@ -1600,7 +1818,7 @@
               <div class="bp-card">
                 <h4>流程与闸门</h4>
                 <ul>
-                  <li>文档审查结构化流程 <span class="phase mvp">MVP</span></li>
+                  <li>文档审查：触发 + NL + 轻量参数 <span class="phase mvp">MVP</span></li>
                   <li>人节点=轻审批；双链接必带 <span class="phase mvp">MVP</span></li>
                   <li>4b 通过 → 回节点 2 <span class="phase mvp">MVP</span></li>
                   <li>OA / 外部节点 <span class="phase g">增长</span></li>
@@ -1612,7 +1830,7 @@
                 <ul>
                   <li>执行引擎 + 算粒 + 托管 <span class="phase mvp">MVP</span></li>
                   <li>现状：NL 描述任务 <span class="phase mvp">MVP</span></li>
-                  <li>夹侧流程结构化下发 <span class="phase mvp">MVP</span></li>
+                  <li>按 NL 任务下发（对齐现状） <span class="phase mvp">MVP</span></li>
                   <li>可视化编排流 <span class="phase g">增长·待对齐</span></li>
                   <li>全局管理 / 夹相关视图 <span class="phase e">生态</span></li>
                 </ul>
@@ -1672,12 +1890,11 @@
                 <!-- 3 Comate -->
                 <div style="background:rgba(255,255,255,.07);border-radius:8px;padding:12px 14px;border-left:3px solid #6b4eff">
                   <div style="color:#b8a6ff;font-weight:650;margin-bottom:6px">④ Comate 流程编排规划 · 是否对得上本需求？</div>
-                  <div style="color:#e8eaed;margin-bottom:6px">我们要的是：夹侧结构化流程可执行 + 进夹触发挂载 + 运行记录（额度复用统一模块）；<strong>不是</strong>让用户在 Comate 用 NL 手写整条审查流。</div>
+                  <div style="color:#e8eaed;margin-bottom:6px">我们要的是：夹侧把「触发 + NL 任务描述」下发给 Comate（与现状新增任务形态对齐）+ 进夹挂载 + 运行记录；预设参数表单是夹侧 UX，<strong>不要求</strong> Comate 先有画布。</div>
                   <div style="color:#c5cad3">
-                    □ <strong>现状</strong>：新增任务=触发+NL 描述——与「清晰编排流」不对齐；MVP 清晰流放夹侧 F3，是否认可？<br>
-                    □ 夹侧结构化定义能否<strong>编译/下发</strong>为 Comate 可执行任务（用户无需 NL 重写）？<br>
+                    □ 夹侧生成的 NL 任务内容，Comate 能否<strong>原样托管执行</strong>（用户无需到 Comate 从空白重写）？<br>
                     □ 进夹触发、一夹一条主挂载、解绑策略，Comate 侧能否支撑？<br>
-                    □ Comate <strong>可视化编排流</strong>产品规划/排期？与本项目时间窗是否错位？错位则增长期再接「深编排」叙事。<br>
+                    □ Comate <strong>可视化编排流</strong>产品规划/排期？与本项目时间窗是否错位？错位则维持 NL 托管叙事。<br>
                     □ 未交付画布前：对外统一说「已在 Comate <strong>托管</strong>」，不说「已可视化编排」——产品/销售是否同意？
                   </div>
                 </div>
@@ -1687,7 +1904,7 @@
                 ① 文件夹进夹事件通知是否现成 →
                 ② AiDocs 调用+结果链接权限 →
                 ③ 轻审批动态表单/节点模板策略 →
-                ④ Comate 结构化下发 vs NL/画布规划是否对齐。
+                ④ Comate 能否按夹侧 NL 任务托管执行 vs 画布规划是否对齐。
               </div>
             </div>
 
@@ -1710,7 +1927,7 @@
             </div>
 
             <div class="callout-note" style="margin-top:12px">
-              不做新产品、不新建计费、不替代 OA。MVP 先锁四大依赖：进夹事件 · AiDocs 开放 · 轻审批发起形态 · Comate 托管/下发对齐。可视化编排流与一夹多流为增长期。
+              不做新产品、不新建计费、不替代 OA。MVP 先锁四大依赖：进夹事件 · AiDocs 开放 · 轻审批发起形态 · Comate 按 NL 托管/下发对齐。可视化编排流与一夹多流为增长期。
             </div>
           </div>
         </div>
@@ -1783,6 +2000,8 @@
     closePanel(f4Panel, f4Table);
     show(3);
   });
+  const f2Next = document.getElementById('f2-next');
+  f2Next && f2Next.addEventListener('click', () => show(3));
   f4GoManage && f4GoManage.addEventListener('click', goF6Manage);
   f4GoQuota && f4GoQuota.addEventListener('click', () => {
     if (f4QuotaTip) f4QuotaTip.hidden = false;
@@ -1806,6 +2025,241 @@
       }, 0));
     }
   });
+
+  // F3：预设参数 → 回写自然语言任务描述（任务内容只读，由参数驱动）
+  (function initF3() {
+    const $ = (id) => document.getElementById(id);
+    const flowName = $('f3-flow-name');
+    const nlBox = $('f3-nl');
+    const inspHead = $('f3-insp-head');
+    const inspEmpty = $('f3-insp-empty');
+    const inspTitle = $('f3-insp-title');
+    const inspPanels = document.querySelectorAll('.skill-panel');
+    if (!flowName || !nlBox) return;
+
+    let activePanel = null;
+    const panelTitle = { review: '文档审查', appr1: '发起轻审批 · 完成修改提交定稿', appr2: '发起轻审批 · 定稿审核', appr3: '发起轻审批 · 改稿重提', move: '移动文档' };
+
+    // ===== F3 状态机：任务状态（未开启/已开启）× 配置模式（配置/查看）=====
+    const statusPill = $('f3-status-pill');
+    const modeCancel = $('f3-mode-cancel');
+    const toggleEnable = $('f3-toggle-enable');
+    let taskEnabled = false;   // 未开启
+    let configMode = true;     // 配置模式
+
+    function applyState() {
+      // 状态 pill
+      if (statusPill) {
+        statusPill.textContent = taskEnabled ? '已开启' : '未开启';
+        statusPill.classList.toggle('off', !taskEnabled);
+      }
+      // 非编辑态：启用(停用)+进入配置；编辑态：取消+保存
+      if (toggleEnable) {
+        toggleEnable.hidden = configMode;
+        toggleEnable.textContent = taskEnabled ? '停用' : '启用';
+      }
+      if (modeCancel) modeCancel.hidden = !configMode;
+      const saveEl = $('f3-save');
+      if (saveEl) saveEl.textContent = configMode ? '保存' : '进入配置';
+      // 查看（非配置）模式：禁用所有表单输入
+      document.querySelectorAll('.f3-shell input, .f3-shell select, .f3-shell textarea').forEach((el) => {
+        el.disabled = !configMode;
+      });
+      nlBox.classList.toggle('locked', !configMode);
+    }
+    function hideSaveTip() { const tip = document.getElementById('f3-save-tip'); if (tip) tip.hidden = true; }
+    if (modeCancel) modeCancel.addEventListener('click', () => { configMode = false; applyState(); hideSaveTip(); });
+    if (toggleEnable) toggleEnable.addEventListener('click', () => { taskEnabled = !taskEnabled; applyState(); hideSaveTip(); });
+
+    // 点击任务内容中的 Skill → 右侧只显示该 Skill 的参数表单
+    function selectSkillPanel(panel) {
+      activePanel = panel;
+      nlBox.querySelectorAll('.skill-chip').forEach((c) => {
+        c.classList.toggle('on', c.dataset.panel === panel);
+      });
+      inspPanels.forEach((p) => { p.hidden = p.dataset.panel !== panel; });
+      if (inspHead) inspHead.hidden = false;
+      if (inspEmpty) inspEmpty.hidden = true;
+      if (inspTitle) inspTitle.textContent = (panelTitle[panel] || 'Skill') + ' · 参数';
+    }
+    nlBox.addEventListener('click', (e) => {
+      if (!configMode) return;
+      const chip = e.target.closest('.skill-chip');
+      if (chip && chip.dataset.panel) selectSkillPanel(chip.dataset.panel);
+    });
+
+    function escapeHtml(s) {
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+    function person(typeId, nameId) {
+      const type = $(typeId).value;
+      const name = ($(nameId).value || '').trim();
+      return type === 'named' ? (name || '指定人员') : '上传者';
+    }
+    function tplText(id) {
+      const el = $(id);
+      return el && el.options[el.selectedIndex] ? el.options[el.selectedIndex].text : '';
+    }
+    function apprSentence(p, slot, skill, n, panel, extra) {
+      let s = '使用 ' + skill('发起轻审批', panel) + '，模板为「' + slot(p['appr' + n + 'Tpl']) + '」，审批人为「' + slot(p['appr' + n + 'Who']) + '」';
+      s += '，表单自动带当前文档链接与审查结果链接';
+      s += extra || '。';
+      return s;
+    }
+    function readParams() {
+      const who2 = $('f3-appr2-tpl').value === 'final'
+        ? (($('f3-approvers').value || '').trim() || '定稿审核人')
+        : person('f3-appr2-type', 'f3-appr2-name');
+      return {
+        flowName: (flowName.value || '').trim() || '待审文档 · 文档审查',
+        template: $('f3-template').value,
+        extra: ($('f3-extra').value || '').trim(),
+        appr1Tpl: tplText('f3-appr1-tpl'),
+        appr2Tpl: tplText('f3-appr2-tpl'),
+        appr3Tpl: tplText('f3-appr3-tpl'),
+        appr1Who: person('f3-fixer-type', 'f3-fixer-name'),
+        appr2Who: who2,
+        appr3Who: person('f3-rewriter-type', 'f3-rewriter-name'),
+        archive: ($('f3-archive').value || '').trim() || '归档文件夹',
+        ledger: $('f3-ledger').checked
+      };
+    }
+    function folderLinkHtml(name) {
+      return '<a class="folder-link-inline" href="javascript:void(0)"><span class="folder-ico sm"></span><span class="name">' + escapeHtml(name) + '</span></a>';
+    }
+    function buildParts(p, slot, skill, folder) {
+      const extra = p.extra ? '补充说明：' + slot(p.extra) + '。' : '';
+      const ledger = p.ledger ? '，并' + slot('写入审查台账') : '';
+      return [
+        '请执行以下步骤：',
+        '1. 使用 ' + skill('文档审查', 'review') + ' 对进入本文件夹的文件进行审查，模板为「' + slot(p.template) + '」。' + extra,
+        '2. 若审查有风险，' + apprSentence(p, slot, skill, 1, 'appr1', '。审批通过后进入下一步。无风险则跳过本步，直接进入第 3 步。'),
+        '3. ' + apprSentence(p, slot, skill, 2, 'appr2', '，标题为「' + slot(p.flowName) + ' · ' + slot(p.appr2Tpl) + '」。'),
+        '4. 若定稿通过，使用 ' + skill('移动文档', 'move') + ' 将文件移至 ' + folder(p.archive) + ledger + '。',
+        '5. 若定稿不通过，' + apprSentence(p, slot, skill, 3, 'appr3', '；该审批通过后回到第 1 步重新审查，不是直达定稿。')
+      ];
+    }
+    function skillHtml(name, panel) {
+      return '<span class="skill-chip" data-panel="' + panel + '"><span class="bolt">⚡</span>' + escapeHtml(name) + '</span>';
+    }
+    function renderNl(flash) {
+      nlBox.innerHTML = buildParts(readParams(), (t) => '<mark class="nl-slot">' + escapeHtml(t) + '</mark>', skillHtml, folderLinkHtml).join('\n');
+      // 重新渲染后保持当前选中 Skill 的高亮
+      if (activePanel) {
+        nlBox.querySelectorAll('.skill-chip').forEach((c) => c.classList.toggle('on', c.dataset.panel === activePanel));
+      }
+      if (flash) {
+        const el = $('f3-nl-editor');
+        if (el) {
+          el.classList.remove('flash');
+          void el.offsetWidth;
+          el.classList.add('flash');
+        }
+      }
+    }
+    function syncTplFields() {
+      // 各审批模板的固有属性（由模板定义，仅供展示）
+      const TPL_RULE = {
+        fix:      { multi: '单人', sign: '或签' },
+        final:    { multi: '多人', sign: '会签' },
+        resubmit: { multi: '单人', sign: '或签' }
+      };
+      document.querySelectorAll('.tpl-params[data-appr]').forEach((node) => {
+        const n = node.getAttribute('data-appr');
+        const kind = $('f3-appr' + n + '-tpl').value;
+        node.querySelectorAll('[data-show]').forEach((el) => {
+          const show = el.getAttribute('data-show');
+          const on = (show === 'assignees' && kind === 'final')
+            || (show === 'assignee' && kind !== 'final');
+          el.hidden = !on;
+        });
+      });
+      // 更新审批人旁的规则灰字（随模板联动，仅展示）
+      document.querySelectorAll('.rule-hint[data-hint]').forEach((el) => {
+        const n = el.getAttribute('data-hint');
+        const kind = $('f3-appr' + n + '-tpl').value;
+        const rule = TPL_RULE[kind] || { multi: '—', sign: '—' };
+        el.textContent = rule.multi + ' · ' + rule.sign;
+      });
+      $('f3-fixer-name').hidden = $('f3-fixer-type').value !== 'named';
+      $('f3-rewriter-name').hidden = $('f3-rewriter-type').value !== 'named';
+      const appr2Name = $('f3-appr2-name');
+      if (appr2Name) appr2Name.hidden = $('f3-appr2-type').value !== 'named';
+    }
+    function paintTrig(label, on) {
+      label.classList.toggle('on', on);
+    }
+    function onParamChange() {
+      document.querySelectorAll('.trig-opt input[type="checkbox"], .trig-opt input[type="radio"]').forEach((el) => {
+        const lab = el.closest('.trig-opt');
+        if (lab) paintTrig(lab, el.checked);
+      });
+      syncTplFields();
+      renderNl(true);
+    }
+
+    ['f3-flow-name','f3-template','f3-extra','f3-fixer-type','f3-fixer-name','f3-rewriter-type','f3-rewriter-name','f3-approvers','f3-archive','f3-ledger','f3-appr1-tpl','f3-appr2-tpl','f3-appr3-tpl','f3-appr2-type','f3-appr2-name'].forEach((id) => {
+      const el = $(id);
+      if (!el) return;
+      el.addEventListener('input', onParamChange);
+      el.addEventListener('change', onParamChange);
+    });
+    ['f3-trig-upload','f3-trig-move','f3-trig-copy'].forEach((id) => {
+      const el = $(id);
+      if (!el) return;
+      el.addEventListener('change', () => {
+        const lab = el.closest('.trig-opt');
+        if (lab) paintTrig(lab, el.checked);
+      });
+    });
+
+    // 保存：Skill 必填参数为空时提示无法保存，并定位标红对应 Skill
+    const saveBtn = $('f3-save');
+    const saveTip = $('f3-save-tip');
+    function missingOf() {
+      const miss = new Set();
+      if (!($('f3-template').value || '').trim()) miss.add('review');
+      [1, 2, 3].forEach((n) => {
+        if (!($('f3-appr' + n + '-tpl').value || '').trim()) miss.add('appr' + n);
+      });
+      if (!($('f3-archive').value || '').trim()) miss.add('move');
+      // 审批人按类型校验
+      if ($('f3-fixer-type').value === 'named' && !($('f3-fixer-name').value || '').trim()) miss.add('appr1');
+      if ($('f3-approvers') && !($('f3-approvers').value || '').trim()) miss.add('appr2');
+      if ($('f3-rewriter-type').value === 'named' && !($('f3-rewriter-name').value || '').trim()) miss.add('appr3');
+      return miss;
+    }
+    function paintMissing(miss) {
+      nlBox.querySelectorAll('.skill-chip').forEach((c) => {
+        c.classList.toggle('miss', miss.has(c.dataset.panel));
+      });
+    }
+    saveBtn && saveBtn.addEventListener('click', () => {
+      // 非配置（查看）模式：点击「进入配置」返回编辑
+      if (!configMode) { configMode = true; applyState(); return; }
+      const miss = missingOf();
+      paintMissing(miss);
+      if (saveTip) saveTip.hidden = miss.size === 0;
+      if (miss.size) return;
+      // 保存成功 → 退出编辑态（取消/保存均回非编辑态）；启用状态不变
+      configMode = false;
+      applyState();
+      const saved = $('f3-save-tip');
+      if (saved) {
+        saved.hidden = false;
+        saved.style.cssText = 'margin-top:8px;font-size:12px;color:#1a9f3d;line-height:1.5;background:#eaffef;border:1px solid #b7ebc6;border-radius:6px;padding:8px 10px';
+        saved.textContent = taskEnabled
+          ? '已保存，任务已开启，按最新流程执行。'
+          : '已保存，任务未开启，不会自动执行。';
+      }
+    });
+    applyState();
+    syncTplFields();
+    renderNl(false);
+  })();
 </script>
 </body>
 </html>
