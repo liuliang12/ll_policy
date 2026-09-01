@@ -1460,7 +1460,7 @@ img, video, canvas, svg { max-width: 100%; }
   min-height: 0;
   display: flex;
   flex-direction: column;
-  background: var(--kd-color-background-bottom);
+  background: var(--kd-color-background-plate);
   border-radius: 8px 8px 0 0;
   box-shadow: var(--kd-shadow-sm);
 }
@@ -1613,6 +1613,7 @@ img, video, canvas, svg { max-width: 100%; }
       min-width: 0;
       overflow: auto;
       padding: 12px 20px 32px;
+      background: transparent;
     }
 
     .quota-grid {
@@ -1622,10 +1623,106 @@ img, video, canvas, svg { max-width: 100%; }
     }
     .quota-grid > * { min-width: 0; }
 
-    .benefit-usage {
+    .benefit-panel {
       max-width: 960px;
       width: 100%;
-      margin: 0 auto;
+      margin: 0 auto 16px;
+      padding: 16px 20px 20px;
+      background: var(--kd-color-fill-base);
+      border: none;
+      border-radius: var(--kd-border-radius-large);
+      box-sizing: border-box;
+    }
+    .benefit-panel:last-child {
+      margin-bottom: 0;
+    }
+    .benefit-panel-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      min-width: 0;
+    }
+    .benefit-panel-icon {
+      width: 20px;
+      height: 20px;
+      flex: 0 0 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--kd-border-radius-circle);
+      background: rgba(var(--kd-color-blue-6), 1);
+      color: #fff;
+    }
+    .benefit-panel-icon svg {
+      display: block;
+      width: 12px;
+      height: 12px;
+    }
+    .benefit-panel-title {
+      margin: 0;
+      font-size: var(--kd-font-size-base);
+      font-weight: var(--kd-font-weight-bold);
+      line-height: var(--kd-line-height-base);
+      color: var(--kd-color-text-primary);
+    }
+    .benefit-panel-extra {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-width: 0;
+      font-size: var(--kd-font-size-sub-base);
+      line-height: 20px;
+      color: var(--kd-color-text-secondary);
+    }
+    .benefit-panel-extra .kd-link {
+      border: none;
+      background: transparent;
+      padding: 0;
+      font-size: var(--kd-font-size-sub-base);
+      line-height: 20px;
+    }
+    .benefit-panel-badges {
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      min-width: 0;
+    }
+    .benefit-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: var(--kd-border-radius-circle);
+      background: var(--kd-color-fill-light);
+      font-size: var(--kd-font-size-small);
+      line-height: 18px;
+      color: var(--kd-color-text-secondary);
+      white-space: nowrap;
+    }
+    .benefit-chip .kd-link {
+      border: none;
+      background: transparent;
+      padding: 0;
+      font-size: var(--kd-font-size-small);
+      line-height: 18px;
+    }
+    .benefit-panel-source {
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 4px;
+      min-width: 0;
+    }
+    .benefit-panel-meta {
+      font-size: var(--kd-font-size-sub-base);
+      font-weight: var(--kd-font-weight-regular);
+      line-height: 20px;
+      color: var(--kd-color-text-secondary);
     }
 
     .description-bar:empty {
@@ -1679,7 +1776,7 @@ img, video, canvas, svg { max-width: 100%; }
       flex-direction: column;
       padding: 16px;
       background: var(--kd-color-fill-base);
-      border: 1px solid var(--kd-color-line-regular);
+      border: 1px solid var(--kd-color-line-light);
       border-radius: var(--kd-border-radius-large);
     }
     .quota-card-head {
@@ -1821,72 +1918,6 @@ img, video, canvas, svg { max-width: 100%; }
     .kd-message-root:empty { display: none; }
 
     /* ── 权益明细区域 ── */
-    .benefit-detail {
-      margin-top: 24px;
-    }
-    .benefit-detail-title {
-      margin: 0 0 16px;
-      text-align: center;
-      font-size: var(--kd-font-size-large);
-      font-weight: var(--kd-font-weight-bold);
-      line-height: var(--kd-line-height-large);
-      color: var(--kd-color-text-primary);
-    }
-    .benefit-summary {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      max-width: 960px;
-      width: 100%;
-      margin: 0 auto 16px;
-    }
-    .benefit-summary > * { min-width: 0; }
-    .benefit-summary-card {
-      display: flex;
-      min-height: 72px;
-      border: 1px solid var(--kd-color-line-regular);
-      border-radius: var(--kd-border-radius-large);
-      overflow: hidden;
-      background: var(--kd-color-fill-base);
-    }
-    .benefit-summary-label {
-      flex: 0 0 88px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 12px 8px;
-      background: var(--kd-color-fill-light);
-      font-size: var(--kd-font-size-base);
-      font-weight: var(--kd-font-weight-bold);
-      line-height: var(--kd-line-height-base);
-      color: var(--kd-color-text-primary);
-      border-right: 1px solid var(--kd-color-line-regular);
-    }
-    .benefit-summary-body {
-      flex: 1 1 auto;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 8px;
-      padding: 12px 16px;
-    }
-    .benefit-summary-row {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 4px 8px;
-      font-size: var(--kd-font-size-sub-base);
-      line-height: 20px;
-      color: var(--kd-color-text-primary);
-    }
-    .benefit-summary-row .kd-link {
-      border: none;
-      background: transparent;
-      padding: 0;
-      font-size: var(--kd-font-size-sub-base);
-      line-height: 20px;
-    }
     .benefit-info-tip {
       display: inline-flex;
       width: 14px;
@@ -1897,24 +1928,86 @@ img, video, canvas, svg { max-width: 100%; }
     }
     .benefit-info-tip svg { display: block; width: 14px; height: 14px; }
 
+    .benefit-mine-body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+    }
+    .benefit-mine-line {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: nowrap;
+      white-space: nowrap;
+      gap: 4px;
+      font-size: var(--kd-font-size-small);
+      line-height: var(--kd-font-line-height-small);
+      color: var(--kd-color-text-secondary);
+      font-weight: var(--kd-font-weight-regular);
+    }
+    .benefit-mine-line .kd-link {
+      border: none;
+      background: transparent;
+      padding: 0;
+      flex: 0 0 auto;
+      font-size: var(--kd-font-size-small);
+      line-height: var(--kd-font-line-height-small);
+      white-space: nowrap;
+    }
+    .benefit-expire-tip {
+      position: relative;
+      flex: 0 0 auto;
+      color: var(--kd-color-icon-secondary);
+    }
+    .benefit-expire-tip .benefit-info-tip {
+      cursor: pointer;
+    }
+    .benefit-expire-pop {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+      padding: 6px 10px;
+      border-radius: var(--kd-border-radius-middle);
+      border: 1px solid var(--kd-color-line-regular);
+      background: var(--kd-color-fill-base);
+      box-shadow: var(--kd-box-shadow-large);
+      font-size: var(--kd-font-size-sub-base);
+      line-height: 20px;
+      color: var(--kd-color-text-primary);
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .benefit-expire-tip:hover .benefit-expire-pop,
+    .benefit-expire-tip:focus .benefit-expire-pop,
+    .benefit-expire-tip:focus-within .benefit-expire-pop {
+      opacity: 1;
+      visibility: visible;
+    }
+
     .benefit-compare {
-      max-width: 960px;
       width: 100%;
       max-height: 560px;
-      margin: 0 auto;
-      border: 1px solid var(--kd-color-line-regular);
+      margin: 0;
+      border: 1px solid var(--kd-color-line-light);
       border-radius: var(--kd-border-radius-large);
       overflow: auto;
       background: var(--kd-color-fill-base);
     }
     .benefit-compare-table {
       width: 100%;
-      min-width: 760px;
+      min-width: 880px;
       border-collapse: separate;
       border-spacing: 0;
       table-layout: fixed;
     }
-    .benefit-compare-table col.col-feature { width: 22%; }
+    .benefit-compare-table col.col-feature { width: 20%; }
+    .benefit-compare-table col.col-mine { width: 20%; }
     .benefit-compare-table th,
     .benefit-compare-table td {
       padding: 14px 12px;
@@ -1942,11 +2035,17 @@ img, video, canvas, svg { max-width: 100%; }
       color: var(--kd-color-text-primary);
       vertical-align: top;
       box-shadow: inset 0 -1px 0 var(--kd-color-line-light);
+      overflow: visible;
     }
-    .benefit-compare-table thead th:first-child,
-    .benefit-compare-table thead th:nth-child(2) {
+    .benefit-compare-table thead th:first-child {
       vertical-align: middle;
       font-size: var(--kd-font-size-base);
+    }
+    .benefit-compare-table thead th:nth-child(2) {
+      vertical-align: top;
+      font-weight: var(--kd-font-weight-regular);
+      z-index: 3;
+      overflow: visible;
     }
     .benefit-plan-head {
       display: flex;
@@ -1958,7 +2057,10 @@ img, video, canvas, svg { max-width: 100%; }
     .benefit-plan-badge {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
+      flex: 0 0 20px;
       height: 20px;
+      box-sizing: border-box;
       padding: 0 6px;
       border-radius: var(--kd-border-radius-extra-small);
       font-size: var(--kd-font-size-small);
@@ -1977,9 +2079,15 @@ img, video, canvas, svg { max-width: 100%; }
       visibility: hidden;
     }
     .benefit-plan-name {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 24px;
+      height: 24px;
+      box-sizing: border-box;
       font-size: var(--kd-font-size-base);
       font-weight: var(--kd-font-weight-bold);
-      line-height: var(--kd-line-height-base);
+      line-height: 24px;
       color: var(--kd-color-text-primary);
     }
     .benefit-plan-desc {
@@ -2059,7 +2167,7 @@ img, video, canvas, svg { max-width: 100%; }
 
     @media (max-width: 1279px) {
       .quota-grid { grid-template-columns: repeat(2, 1fr); }
-      .benefit-summary { grid-template-columns: 1fr; }
+      .benefit-panel-extra { width: 100%; margin-left: 28px; }
       .benefit-compare { max-width: 100%; }
     }
   </style>
@@ -3081,6 +3189,7 @@ img, video, canvas, svg { max-width: 100%; }
           var badge = '<span class="' + badgeClass + '">' + (opts.badge || "占位") + "</span>";
 
           var cta = "";
+          var ctaClass = "benefit-plan-cta";
           if (opts.cta === "buy") {
             cta =
               '<!-- [Button: primary medium] -->' +
@@ -3088,6 +3197,18 @@ img, video, canvas, svg { max-width: 100%; }
           } else if (opts.cta === "recommend") {
             cta =
               '<a class="kd-button kd-button-m benefit-btn-recommend" href="' + buyUrl + '" target="_blank" rel="noopener noreferrer">立即购买</a>';
+          } else if (opts.cta === "none") {
+            ctaClass += " is-empty";
+            cta = '<span class="kd-button kd-button-primary kd-button-m">占位</span>';
+          }
+
+          var priceClass = "benefit-plan-price";
+          var priceText = opts.price || "";
+          if (opts.priceEmpty) {
+            priceClass += " is-empty";
+            priceText = "占位";
+          } else if (opts.priceClass) {
+            priceClass += " " + opts.priceClass;
           }
 
           return (
@@ -3095,48 +3216,58 @@ img, video, canvas, svg { max-width: 100%; }
               badge +
               '<div class="benefit-plan-name">' + opts.name + "</div>" +
               '<div class="benefit-plan-desc">' + opts.desc + "</div>" +
-              '<div class="benefit-plan-price">' + opts.price + "</div>" +
-              '<div class="benefit-plan-cta">' + cta + "</div>" +
+              '<div class="' + priceClass + '">' + priceText + "</div>" +
+              '<div class="' + ctaClass + '">' + cta + "</div>" +
             "</div>"
           );
         }
 
         return (
           '<!-- [Pattern: benefit-detail] -->' +
-          '<section class="benefit-detail" data-kd-pattern="benefit-detail">' +
-            '<h2 class="benefit-detail-title">权益明细</h2>' +
-            '<div class="benefit-summary">' +
-              '<article class="benefit-summary-card">' +
-                '<div class="benefit-summary-label">权益组成</div>' +
-                '<div class="benefit-summary-body">' +
-                  '<div class="benefit-summary-row">我的套餐：WPS 365 体验版 (2027-06-24到期)' + tipInfoIcon + "</div>" +
-                  '<div class="benefit-summary-row">' +
-                    "我的权益包：截屏管控权益包 (2027-03-25到期)" +
-                    '<!-- [Link: primary] -->' +
-                    '<button class="kd-link kd-link-primary" type="button" data-act="benefitPackMore">更多 &gt;</button>' +
-                  "</div>" +
+          '<section class="benefit-panel" data-kd-pattern="benefit-detail">' +
+            '<header class="benefit-panel-head">' +
+              '<span class="benefit-panel-icon" aria-hidden="true">' +
+                '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">' +
+                  '<path d="M2 3h8M2 6h8M2 9h5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>' +
+                "</svg>" +
+              "</span>" +
+              '<h2 class="benefit-panel-title">权益明细列表</h2>' +
+              '<div class="benefit-panel-extra">' +
+                '<div class="benefit-panel-source">' +
+                  '<!-- [Link: primary] -->' +
+                  '<button class="kd-link kd-link-primary" type="button" data-act="orderRecord">订单记录 &gt;</button>' +
                 "</div>" +
-              "</article>" +
-              '<article class="benefit-summary-card">' +
-                '<div class="benefit-summary-label">权益来源</div>' +
-                '<div class="benefit-summary-body">' +
-                  '<div class="benefit-summary-row">' +
-                    "企业购买：" +
-                    '<!-- [Link: primary] -->' +
-                    '<button class="kd-link kd-link-primary" type="button" data-act="orderRecord">订单记录 &gt;</button>' +
-                  "</div>" +
-                "</div>" +
-              "</article>" +
-            "</div>" +
+              "</div>" +
+            "</header>" +
             '<div class="benefit-compare">' +
               '<table class="benefit-compare-table">' +
                 "<colgroup>" +
                   '<col class="col-feature">' +
-                  "<col><col><col><col>" +
+                  '<col class="col-mine">' +
+                  "<col><col><col>" +
                 "</colgroup>" +
                 "<thead><tr>" +
                   "<th>功能</th>" +
-                  "<th>我的权益</th>" +
+                  "<th>" +
+                    '<div class="benefit-plan-head">' +
+                      '<span class="benefit-plan-badge is-placeholder">占位</span>' +
+                      '<div class="benefit-plan-name">我的权益</div>' +
+                      '<div class="benefit-mine-body">' +
+                        '<div class="benefit-mine-line">' +
+                          "当前套餐：WPS 365 体验版" +
+                          '<span class="benefit-expire-tip" tabindex="0" aria-label="到期时间">' +
+                            tipInfoIcon +
+                            '<span class="benefit-expire-pop">2027-06-24 到期</span>' +
+                          "</span>" +
+                        "</div>" +
+                        '<div class="benefit-mine-line">' +
+                          "权益包：截屏管控权益包等" +
+                          '<!-- [Link: primary] -->' +
+                          '<button class="kd-link kd-link-primary" type="button" data-act="benefitPackMore">更多 &gt;</button>' +
+                        "</div>" +
+                      "</div>" +
+                    "</div>" +
+                  "</th>" +
                   "<th>" + planHead({
                     badgeType: "none",
                     name: "商业协作版",
@@ -3181,9 +3312,18 @@ img, video, canvas, svg { max-width: 100%; }
             "</div>" +
           "</div>";
         return (
-          '<div class="benefit-usage">' +
+          '<section class="benefit-panel" data-kd-pattern="quota-cards">' +
+            '<header class="benefit-panel-head">' +
+              '<span class="benefit-panel-icon" aria-hidden="true">' +
+                '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">' +
+                  '<path d="M6 1.2A4.8 4.8 0 1 0 10.8 6H6V1.2Z" fill="currentColor" fill-opacity="0.45"/>' +
+                  '<path d="M6 1.2V6h4.8A4.8 4.8 0 0 0 6 1.2Z" fill="currentColor"/>' +
+                "</svg>" +
+              "</span>" +
+              '<h2 class="benefit-panel-title">权益使用概况</h2>' +
+            "</header>" +
             tip +
-            '<section class="quota-grid" data-kd-pattern="quota-cards">' +
+            '<div class="quota-grid">' +
               quotas.map(function (q) {
                 var status = q.percent >= 90 ? " kd-progress-error" : "";
                 var btns = q.actions.map(function (a) {
@@ -3207,8 +3347,8 @@ img, video, canvas, svg { max-width: 100%; }
                   "</article>"
                 );
               }).join("") +
-            "</section>" +
-          "</div>" +
+            "</div>" +
+          "</section>" +
           renderBenefitDetail()
         );
       }
