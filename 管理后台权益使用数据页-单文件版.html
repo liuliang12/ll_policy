@@ -1,0 +1,2897 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-platform="web" data-brand="wps">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WPS 365 企业管理后台 · 权益数据 - KDesign</title>
+  <style>
+/* @kd-registry: tokens v3.0 — synced from @kdocs/kdesign-theme@2.4.8 */
+/* ══════════════════════════════════════════════════════════════════════
+   KDesign Token 变量（完整版）
+   权威来源：@kdocs/kdesign-theme@2.4.8 (default.less + dark.less + modules)
+   架构：Base Palette (RGB triplets) + Semantic References (rgba)
+   选择器约定：:root = Light（默认），[data-theme="dark"] = Dark
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ══════════════════════════════════════════════════════════════════════
+   LIGHT THEME (default)
+   ══════════════════════════════════════════════════════════════════════ */
+
+:root {
+
+  /* ══ Base Palette (RGB triplets) ══════════════════════════════════ */
+
+  /* ── Orange ── */
+  --kd-color-orange-1: 254, 241, 234;
+  --kd-color-orange-2: 253, 224, 207;
+  --kd-color-orange-3: 252, 196, 162;
+  --kd-color-orange-4: 251, 164, 113;
+  --kd-color-orange-5: 251, 126, 51;
+  --kd-color-orange-6: 226, 101, 26;
+  --kd-color-orange-7: 194, 80, 16;
+  --kd-color-orange-8: 159, 64, 9;
+  --kd-color-orange-9: 123, 48, 5;
+  --kd-color-orange-10: 88, 34, 2;
+
+  /* ── Yellow ── */
+  --kd-color-yellow-1: 252, 242, 224;
+  --kd-color-yellow-2: 248, 228, 187;
+  --kd-color-yellow-3: 248, 214, 144;
+  --kd-color-yellow-4: 249, 201, 107;
+  --kd-color-yellow-5: 248, 185, 56;
+  --kd-color-yellow-6: 233, 157, 0;
+  --kd-color-yellow-7: 196, 130, 0;
+  --kd-color-yellow-8: 154, 102, 0;
+  --kd-color-yellow-9: 112, 74, 0;
+  --kd-color-yellow-10: 72, 48, 0;
+
+  /* ── Verdure ── */
+  --kd-color-verdure-1: 239, 246, 212;
+  --kd-color-verdure-2: 224, 236, 174;
+  --kd-color-verdure-3: 200, 216, 136;
+  --kd-color-verdure-4: 176, 195, 99;
+  --kd-color-verdure-5: 151, 175, 61;
+  --kd-color-verdure-6: 123, 153, 0;
+  --kd-color-verdure-7: 102, 127, 0;
+  --kd-color-verdure-8: 82, 101, 0;
+  --kd-color-verdure-9: 61, 77, 0;
+  --kd-color-verdure-10: 44, 55, 0;
+
+  /* ── Green ── */
+  --kd-color-green-1: 233, 246, 227;
+  --kd-color-green-2: 202, 241, 185;
+  --kd-color-green-3: 169, 222, 146;
+  --kd-color-green-4: 134, 197, 107;
+  --kd-color-green-5: 101, 171, 72;
+  --kd-color-green-6: 65, 143, 31;
+  --kd-color-green-7: 52, 115, 23;
+  --kd-color-green-8: 39, 91, 16;
+  --kd-color-green-9: 30, 72, 11;
+  --kd-color-green-10: 22, 58, 7;
+
+  /* ── Teal ── */
+  --kd-color-teal-1: 228, 246, 240;
+  --kd-color-teal-2: 188, 241, 222;
+  --kd-color-teal-3: 143, 224, 195;
+  --kd-color-teal-4: 104, 205, 170;
+  --kd-color-teal-5: 63, 182, 140;
+  --kd-color-teal-6: 16, 153, 104;
+  --kd-color-teal-7: 5, 124, 82;
+  --kd-color-teal-8: 2, 98, 64;
+  --kd-color-teal-9: 0, 79, 51;
+  --kd-color-teal-10: 0, 60, 39;
+
+  /* ── Azure ── */
+  --kd-color-azure-1: 230, 246, 248;
+  --kd-color-azure-2: 196, 238, 243;
+  --kd-color-azure-3: 131, 222, 234;
+  --kd-color-azure-4: 95, 200, 214;
+  --kd-color-azure-5: 59, 179, 195;
+  --kd-color-azure-6: 0, 155, 176;
+  --kd-color-azure-7: 0, 130, 148;
+  --kd-color-azure-8: 0, 106, 121;
+  --kd-color-azure-9: 0, 82, 93;
+  --kd-color-azure-10: 0, 59, 67;
+
+  /* ── Blue ── */
+  --kd-color-blue-1: 237, 244, 255;
+  --kd-color-blue-2: 214, 230, 255;
+  --kd-color-blue-3: 166, 200, 255;
+  --kd-color-blue-4: 116, 169, 253;
+  --kd-color-blue-5: 69, 139, 250;
+  --kd-color-blue-6: 31, 105, 224;
+  --kd-color-blue-7: 30, 95, 199;
+  --kd-color-blue-8: 23, 76, 160;
+  --kd-color-blue-9: 15, 58, 128;
+  --kd-color-blue-10: 10, 48, 108;
+
+  /* ── Navy ── */
+  --kd-color-navy-1: 244, 243, 253;
+  --kd-color-navy-2: 229, 227, 250;
+  --kd-color-navy-3: 197, 191, 243;
+  --kd-color-navy-4: 165, 156, 236;
+  --kd-color-navy-5: 137, 124, 235;
+  --kd-color-navy-6: 108, 90, 251;
+  --kd-color-navy-7: 86, 69, 236;
+  --kd-color-navy-8: 72, 52, 214;
+  --kd-color-navy-9: 60, 47, 166;
+  --kd-color-navy-10: 49, 40, 119;
+
+  /* ── Indigo ── */
+  --kd-color-indigo-1: 247, 242, 254;
+  --kd-color-indigo-2: 236, 225, 252;
+  --kd-color-indigo-3: 212, 186, 246;
+  --kd-color-indigo-4: 187, 148, 238;
+  --kd-color-indigo-5: 167, 112, 240;
+  --kd-color-indigo-6: 147, 72, 243;
+  --kd-color-indigo-7: 128, 45, 240;
+  --kd-color-indigo-8: 111, 38, 208;
+  --kd-color-indigo-9: 90, 38, 160;
+  --kd-color-indigo-10: 66, 33, 109;
+
+  /* ── Violet ── */
+  --kd-color-violet-1: 251, 238, 254;
+  --kd-color-violet-2: 246, 222, 252;
+  --kd-color-violet-3: 240, 192, 251;
+  --kd-color-violet-4: 231, 156, 248;
+  --kd-color-violet-5: 219, 111, 242;
+  --kd-color-violet-6: 195, 67, 224;
+  --kd-color-violet-7: 157, 49, 182;
+  --kd-color-violet-8: 128, 39, 149;
+  --kd-color-violet-9: 103, 30, 120;
+  --kd-color-violet-10: 83, 23, 97;
+
+  /* ── Purple ── */
+  --kd-color-purple-1: 252, 239, 247;
+  --kd-color-purple-2: 254, 221, 240;
+  --kd-color-purple-3: 254, 180, 223;
+  --kd-color-purple-4: 249, 143, 205;
+  --kd-color-purple-5: 242, 102, 182;
+  --kd-color-purple-6: 225, 67, 160;
+  --kd-color-purple-7: 196, 50, 134;
+  --kd-color-purple-8: 165, 35, 111;
+  --kd-color-purple-9: 134, 22, 88;
+  --kd-color-purple-10: 100, 9, 62;
+
+  /* ── Red ── */
+  --kd-color-red-1: 254, 241, 241;
+  --kd-color-red-2: 253, 223, 223;
+  --kd-color-red-3: 250, 193, 193;
+  --kd-color-red-4: 245, 143, 143;
+  --kd-color-red-5: 241, 92, 91;
+  --kd-color-red-6: 221, 51, 50;
+  --kd-color-red-7: 187, 39, 38;
+  --kd-color-red-8: 157, 28, 28;
+  --kd-color-red-9: 131, 19, 19;
+  --kd-color-red-10: 106, 11, 10;
+
+  /* ── Gray ── */
+  --kd-color-gray-1: 245, 245, 245;
+  --kd-color-gray-2: 240, 240, 240;
+  --kd-color-gray-3: 230, 230, 230;
+  --kd-color-gray-4: 219, 219, 219;
+  --kd-color-gray-5: 194, 194, 194;
+  --kd-color-gray-6: 145, 145, 145;
+  --kd-color-gray-7: 107, 107, 107;
+  --kd-color-gray-8: 87, 87, 87;
+  --kd-color-gray-9: 51, 51, 51;
+  --kd-color-gray-10: 13, 13, 13;
+
+  /* ── Special ── */
+  --kd-color-white: 255, 255, 255;
+  --kd-color-black: 0, 0, 0;
+
+  /* ── Brand (default = WPS Blue, same as blue palette) ── */
+  --kd-color-brand-1: 237, 244, 255;
+  --kd-color-brand-2: 214, 230, 255;
+  --kd-color-brand-3: 166, 200, 255;
+  --kd-color-brand-4: 116, 169, 253;
+  --kd-color-brand-5: 69, 139, 250;
+  --kd-color-brand-6: 31, 105, 224;
+  --kd-color-brand-7: 30, 95, 199;
+  --kd-color-brand-8: 23, 76, 160;
+  --kd-color-brand-9: 15, 58, 128;
+  --kd-color-brand-10: 10, 48, 108;
+
+  /* ══ Semantic Colors ═════════════════════════════════════════════ */
+
+  /* ── Public (global action color) ── */
+  --kd-color-public-normal:  rgba(var(--kd-color-blue-6), 1);
+  --kd-color-public-hover:   rgba(var(--kd-color-blue-5), 1);
+  --kd-color-public-pressed: rgba(var(--kd-color-blue-7), 1);
+  --kd-color-public-light:   rgba(var(--kd-color-blue-1), 1);
+
+  /* ── Brand ── */
+  --kd-color-brand-normal:  rgba(var(--kd-color-brand-6), 1);
+  --kd-color-brand-hover:   rgba(var(--kd-color-brand-5), 1);
+  --kd-color-brand-pressed: rgba(var(--kd-color-brand-7), 1);
+  --kd-color-brand-light:   rgba(var(--kd-color-brand-1), 1);
+
+  /* ── AI ── */
+  --kd-color-ai-normal:         rgba(131, 80, 242, 1);
+  --kd-color-ai-hover:          rgba(156, 117, 240, 1);
+  --kd-color-ai-pressed:        rgba(104, 42, 239, 1);
+  --kd-color-ai-light:          rgba(244, 239, 253, 1);
+  --kd-color-ai-light-gradient: linear-gradient(90deg, rgba(237, 225, 253, 1) 0%, rgba(224, 212, 250, 1) 100%);
+
+  /* ── Member ── */
+  --kd-color-member-primary-normal:  rgba(50, 35, 14, 1);
+  --kd-color-member-primary-hover:   rgba(77, 55, 22, 1);
+  --kd-color-member-primary-pressed: rgba(36, 25, 10, 1);
+  --kd-color-text-member-primary:    rgba(250, 198, 125, 1);
+  --kd-color-icon-member-primary:    rgba(250, 198, 125, 1);
+
+  /* ── Text ── */
+  --kd-color-text-primary:   rgba(var(--kd-color-gray-10), 1);
+  --kd-color-text-secondary: rgba(var(--kd-color-gray-7), 1);
+  --kd-color-text-tertiary:  rgba(var(--kd-color-gray-10), 0.46);
+  --kd-color-text-public:    rgba(var(--kd-color-blue-7), 1);
+  --kd-color-text-white:     rgba(var(--kd-color-white), 1);
+  --kd-color-text-brand:     rgba(var(--kd-color-brand-7), 1);
+  --kd-color-text-ai:        rgba(104, 42, 239, 1);
+  --kd-color-text-success:   rgba(var(--kd-color-green-7), 1);
+  --kd-color-text-info:      rgba(var(--kd-color-blue-7), 1);
+  --kd-color-text-error:     rgba(var(--kd-color-red-7), 1);
+  --kd-color-text-warning:   rgba(var(--kd-color-orange-7), 1);
+  --kd-color-text-highlight: rgba(var(--kd-color-yellow-7), 1);
+
+  /* ── Icon ── */
+  --kd-color-icon-primary:            rgba(var(--kd-color-gray-9), 1);
+  --kd-color-icon-secondary:          rgba(var(--kd-color-gray-7), 1);
+  --kd-color-icon-tertiary:           rgba(var(--kd-color-gray-5), 1);
+  --kd-color-icon-quaternary:         rgba(var(--kd-color-gray-3), 1);
+  --kd-color-icon-public:             rgba(var(--kd-color-blue-7), 1);
+  --kd-color-icon-white:              rgba(var(--kd-color-white), 1);
+  --kd-color-icon-brand:              rgba(var(--kd-color-brand-7), 1);
+  --kd-color-icon-ai:                 rgba(104, 42, 239, 1);
+  --kd-color-icon-success:            rgba(var(--kd-color-green-6), 1);
+  --kd-color-icon-info:               rgba(var(--kd-color-blue-6), 1);
+  --kd-color-icon-error:              rgba(var(--kd-color-red-6), 1);
+  --kd-color-icon-warning:            rgba(var(--kd-color-orange-6), 1);
+  --kd-color-icon-highlight:          rgba(var(--kd-color-yellow-6), 1);
+  --kd-color-icon-blue-primary:       rgba(31, 105, 224, 1);
+  --kd-color-icon-blue-quaternary:    rgba(214, 230, 255, 1);
+  --kd-color-icon-green-primary:      rgba(32, 128, 78, 1);
+  --kd-color-icon-green-quaternary:   rgba(206, 243, 228, 1);
+  --kd-color-icon-orange-primary:     rgba(225, 105, 28, 1);
+  --kd-color-icon-orange-quaternary:  rgba(253, 224, 206, 1);
+  --kd-color-icon-red-primary:        rgba(216, 54, 66, 1);
+  --kd-color-icon-red-quaternary:     rgba(253, 222, 224, 1);
+
+  /* ── State ── */
+  --kd-color-state-normal:         rgba(var(--kd-color-gray-10), 0);
+  --kd-color-state-hover:          rgba(var(--kd-color-gray-10), 0.06);
+  --kd-color-state-pressed:        rgba(var(--kd-color-gray-10), 0.1);
+  --kd-color-state-pressed-public: rgba(var(--kd-color-blue-6), 0.1);
+  --kd-color-state-pressed-brand:  rgba(var(--kd-color-brand-6), 0.1);
+  --kd-color-state-pressed-ai:     rgba(131, 80, 242, 0.10);
+
+  /* ── Background (7-layer system, from top surface to deepest base) ── */
+  --kd-color-background-top:    rgba(var(--kd-color-white), 1);
+  --kd-color-background-middle: rgba(var(--kd-color-white), 1);
+  --kd-color-background-bottom: rgba(var(--kd-color-white), 1);
+  --kd-color-background-group:  rgba(250, 250, 250, 1);
+  --kd-color-background-plate:  rgba(var(--kd-color-gray-1), 1);
+  --kd-color-background-base:   rgba(var(--kd-color-gray-2), 1);
+  --kd-color-background-frame:  rgba(var(--kd-color-gray-3), 1);
+  --kd-color-background-ai:     rgba(246, 249, 255, 1);
+
+  /* ── Line ── */
+  --kd-color-line-heavy:     rgba(var(--kd-color-gray-10), 0.48);
+  --kd-color-line-medium:    rgba(var(--kd-color-gray-10), 0.24);
+  --kd-color-line-regular:   rgba(var(--kd-color-gray-10), 0.12);
+  --kd-color-line-light:     rgba(var(--kd-color-gray-10), 0.06);
+  --kd-color-line-public:    rgba(var(--kd-color-blue-7), 1);
+  --kd-color-line-white:     rgba(var(--kd-color-white), 1);
+  --kd-color-line-brand:     rgba(var(--kd-color-brand-7), 1);
+  --kd-color-line-ai:        rgba(104, 42, 239, 1);
+  --kd-color-line-success:   rgba(var(--kd-color-green-6), 1);
+  --kd-color-line-info:      rgba(var(--kd-color-blue-6), 1);
+  --kd-color-line-error:     rgba(var(--kd-color-red-6), 1);
+  --kd-color-line-warning:   rgba(var(--kd-color-orange-6), 1);
+  --kd-color-line-highlight: rgba(var(--kd-color-yellow-6), 1);
+
+  /* ── Fill (solid) ── */
+  --kd-color-fill-extra-heavy: rgba(var(--kd-color-gray-5), 1);
+  --kd-color-fill-heavy:       rgba(var(--kd-color-gray-4), 1);
+  --kd-color-fill-medium:      rgba(var(--kd-color-gray-3), 1);
+  --kd-color-fill-regular:     rgba(var(--kd-color-gray-2), 1);
+  --kd-color-fill-light:       rgba(var(--kd-color-gray-1), 1);
+  --kd-color-fill-base:        rgba(var(--kd-color-white), 1);
+
+  /* ── Fill (alpha overlay) ── */
+  --kd-color-fill-alpha-extra-heavy: rgba(var(--kd-color-gray-10), 0.4);
+  --kd-color-fill-alpha-heavy:       rgba(var(--kd-color-gray-10), 0.16);
+  --kd-color-fill-alpha-medium:      rgba(var(--kd-color-gray-10), 0.12);
+  --kd-color-fill-alpha-regular:     rgba(var(--kd-color-gray-10), 0.08);
+  --kd-color-fill-alpha-light:       rgba(var(--kd-color-gray-10), 0.04);
+
+  /* ── Mask ── */
+  --kd-color-mask-regular: rgba(var(--kd-color-gray-10), 0.5);
+  --kd-color-mask-heavy:   rgba(var(--kd-color-gray-10), 0.8);
+
+  /* ── Feedback / Inverse ── */
+  --kd-color-feedback-regular: rgba(var(--kd-color-gray-8), 1);
+  --kd-color-inverse-base:     rgba(var(--kd-color-white), 1);
+
+  /* ── Functional: Info ── */
+  --kd-color-info-normal:  rgba(var(--kd-color-blue-6), 1);
+  --kd-color-info-hover:   rgba(var(--kd-color-blue-5), 1);
+  --kd-color-info-pressed: rgba(var(--kd-color-blue-7), 1);
+  --kd-color-info-light:   rgba(var(--kd-color-blue-1), 1);
+
+  /* ── Functional: Success ── */
+  --kd-color-success-normal:  rgba(var(--kd-color-green-6), 1);
+  --kd-color-success-hover:   rgba(var(--kd-color-green-5), 1);
+  --kd-color-success-pressed: rgba(var(--kd-color-green-7), 1);
+  --kd-color-success-light:   rgba(var(--kd-color-green-1), 1);
+
+  /* ── Functional: Error ── */
+  --kd-color-error-normal:  rgba(var(--kd-color-red-6), 1);
+  --kd-color-error-hover:   rgba(var(--kd-color-red-5), 1);
+  --kd-color-error-pressed: rgba(var(--kd-color-red-7), 1);
+  --kd-color-error-light:   rgba(var(--kd-color-red-1), 1);
+
+  /* ── Functional: Highlight ── */
+  --kd-color-highlight-normal:  rgba(var(--kd-color-yellow-6), 1);
+  --kd-color-highlight-hover:   rgba(var(--kd-color-yellow-5), 1);
+  --kd-color-highlight-pressed: rgba(var(--kd-color-yellow-7), 1);
+  --kd-color-highlight-light:   rgba(var(--kd-color-yellow-1), 1);
+
+  /* ── Functional: Warning ── */
+  --kd-color-warning-normal:  rgba(var(--kd-color-orange-6), 1);
+  --kd-color-warning-hover:   rgba(var(--kd-color-orange-5), 1);
+  --kd-color-warning-pressed: rgba(var(--kd-color-orange-7), 1);
+  --kd-color-warning-light:   rgba(var(--kd-color-orange-1), 1);
+
+  /* ══ Shadows ═════════════════════════════════════════════════════ */
+
+  --kd-box-shadow-extra-small: 0px 0px 0px 1px rgba(var(--kd-color-gray-10), 0.1), 0px 1px 0px rgba(var(--kd-color-gray-10), 0.14);
+  --kd-box-shadow-small:       0px 1px 4px rgba(var(--kd-color-gray-10), 0.1);
+  --kd-box-shadow-middle:      0px 1px 4px rgba(var(--kd-color-gray-10), 0.14);
+  --kd-box-shadow-large:       0px 12px 32px rgba(var(--kd-color-gray-10), 0.08);
+  --kd-box-shadow-extra-large: 0px 32px 48px rgba(var(--kd-color-gray-10), 0.2);
+  --kd-box-shadow-glow:        0px 0px 4px rgba(var(--kd-color-blue-6), 1);
+
+  /* ══ Typography ══════════════════════════════════════════════════ */
+
+  --kd-font-family:    "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", "Noto Sans SC", "Noto Sans CJK SC", "sans-serif";
+  --kd-font-family-tw: "Helvetica Neue", "Helvetica", "Segoe UI", "Roboto", "Arial", "PingFang TC", "Microsoft JhengHei", "微軟正黑體", "Noto Sans TC", "Noto Sans CJK TC", "sans-serif";
+  --kd-font-family-hk: "Helvetica Neue", "Helvetica", "Segoe UI", "Roboto", "Arial", "PingFang HK", "Microsoft JhengHei", "微軟正黑體", "Noto Sans HK", "Noto Sans CJK HK", "sans-serif";
+  --kd-font-family-ja: "Helvetica Neue", "Helvetica", "Segoe UI", "Roboto", "Arial", "Noto Sans JP", "Noto Sans CJK JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "BIZ UDPGothic", "Meiryo", "MS PGothic";
+
+  --kd-font-size-extra-small: 10px;
+  --kd-font-size-small:       12px;
+  --kd-font-size-sub-base:    13px;
+  --kd-font-size-base:        14px;
+  --kd-font-size-middle:      16px;
+  --kd-font-size-large:       18px;
+  --kd-font-size-extra-large: 20px;
+  --kd-font-size-xx-large:    24px;
+  --kd-font-size-xxx-large:   28px;
+
+  --kd-font-weight-regular: 400;
+  --kd-font-weight-bold:    600;
+
+  --kd-font-line-height-extra-small: calc(var(--kd-font-size-extra-small) + 8px);
+  --kd-font-line-height-small:       calc(var(--kd-font-size-small) + 8px);
+  --kd-font-line-height-base:        calc(var(--kd-font-size-base) + 8px);
+  --kd-font-line-height-middle:      calc(var(--kd-font-size-middle) + 8px);
+  --kd-font-line-height-large:       calc(var(--kd-font-size-large) + 12px);
+  --kd-font-line-height-extra-large: calc(var(--kd-font-size-extra-large) + 12px);
+  --kd-font-line-height-xx-large:    calc(var(--kd-font-size-xx-large) + 12px);
+  --kd-font-line-height-xxx-large:   calc(var(--kd-font-size-xxx-large) + 12px);
+  --kd-font-line-height-reset:       1;
+  --kd-font-line-height-text:        1.625;
+
+  /* ══ Border Radius ═══════════════════════════════════════════════ */
+
+  --kd-border-radius-none:        0;
+  --kd-border-radius-extra-small: 2px;
+  --kd-border-radius-small:       4px;
+  --kd-border-radius-middle:      6px;
+  --kd-border-radius-large:       8px;
+  --kd-border-radius-extra-large: 12px;
+  --kd-border-radius-circle:      999px;
+
+  /* ══ Icon Stroke ═════════════════════════════════════════════════ */
+
+  --kd-stroke-width-icon-regular: 1;
+  --kd-stroke-width-icon-bold:    1.2;
+
+  /* ══ Transitions ═════════════════════════════════════════════════ */
+
+  --kd-all-transition:          all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  --kd-fade-transition:         opacity 300ms cubic-bezier(0.23, 1, 0.32, 1);
+  --kd-fade-linear-transition:  opacity 200ms linear;
+  --kd-md-fade-transition:      transform 300ms cubic-bezier(0.23, 1, 0.32, 1) 100ms, opacity 300ms cubic-bezier(0.23, 1, 0.32, 1) 100ms;
+  --kd-border-transition-base:  border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+  --kd-color-transition-base:   color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+
+  /* ══ Z-Index ═════════════════════════════════════════════════════ */
+
+  --kd-z-index-invisible: -100;
+  --kd-z-index-default:   1;
+  --kd-z-index-float:     10;
+  --kd-z-index-mask:      999;
+  --kd-z-index-dialog:    1000;
+  --kd-z-index-reminder:  1020;
+  --kd-z-index-popover:   1030;
+  --kd-z-index-popupmenu: 1040;
+  --kd-z-index-tip:       1050;
+
+  /* ══ Opacity & Custom ════════════════════════════════════════════ */
+
+  --kd-opacity-disabled:   0.4;
+  --kd-opacity-icon:       1;
+  --kd-opacity-icon-hover:  0.48;
+  --kd-opacity-icon-active: 0.72;
+  --kd-opacity-icon-mode:   1;
+
+  --kd-color-brand-disable: rgba(var(--kd-color-brand-6), var(--kd-opacity-disabled));
+  --kd-color-text-disable:  rgba(var(--kd-color-gray-10), 0.27);
+
+  /* ══ Backward-Compatible Aliases ═════════════════════════════════
+     旧版 token 名 → 新版名映射，保证已有组件 CSS 不破坏 */
+
+  --kd-font-size-xs:  var(--kd-font-size-extra-small);
+  --kd-font-size-xl:  var(--kd-font-size-extra-large);
+  --kd-font-size-xxl: var(--kd-font-size-xx-large);
+
+  --kd-line-height-xs:     var(--kd-font-line-height-extra-small);
+  --kd-line-height-small:  var(--kd-font-line-height-small);
+  --kd-line-height-base:   var(--kd-font-line-height-base);
+  --kd-line-height-middle: var(--kd-font-line-height-middle);
+  --kd-line-height-large:  var(--kd-font-line-height-large);
+  --kd-line-height-xl:     var(--kd-font-line-height-extra-large);
+  --kd-line-height-xxl:    var(--kd-font-line-height-xx-large);
+
+  --kd-time-fast:   120ms;
+  --kd-time-normal: 240ms;
+  --kd-easing-ease: cubic-bezier(.25, .10, .25, 1.00);
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   DARK THEME
+   Only overrides: base palette + tokens with explicitly different values.
+   Semantic tokens referencing palette vars (e.g. rgba(var(--kd-color-blue-6), 1))
+   adapt automatically through the palette swap.
+   ══════════════════════════════════════════════════════════════════════ */
+
+[data-theme="dark"] {
+
+  /* ══ Dark Base Palette ═══════════════════════════════════════════ */
+
+  /* ── Orange ── */
+  --kd-color-orange-1: 66, 49, 45;
+  --kd-color-orange-2: 95, 57, 46;
+  --kd-color-orange-3: 124, 67, 45;
+  --kd-color-orange-4: 153, 77, 42;
+  --kd-color-orange-5: 181, 85, 36;
+  --kd-color-orange-6: 208, 96, 29;
+  --kd-color-orange-7: 245, 109, 28;
+  --kd-color-orange-8: 254, 147, 76;
+  --kd-color-orange-9: 255, 188, 148;
+  --kd-color-orange-10: 255, 230, 215;
+
+  /* ── Yellow ── */
+  --kd-color-yellow-1: 60, 52, 35;
+  --kd-color-yellow-2: 87, 71, 41;
+  --kd-color-yellow-3: 117, 93, 45;
+  --kd-color-yellow-4: 149, 115, 49;
+  --kd-color-yellow-5: 183, 138, 51;
+  --kd-color-yellow-6: 218, 163, 57;
+  --kd-color-yellow-7: 247, 187, 67;
+  --kd-color-yellow-8: 254, 208, 109;
+  --kd-color-yellow-9: 254, 224, 157;
+  --kd-color-yellow-10: 255, 233, 184;
+
+  /* ── Verdure ── */
+  --kd-color-verdure-1: 51, 55, 35;
+  --kd-color-verdure-2: 63, 70, 36;
+  --kd-color-verdure-3: 75, 85, 34;
+  --kd-color-verdure-4: 89, 103, 31;
+  --kd-color-verdure-5: 105, 126, 25;
+  --kd-color-verdure-6: 127, 152, 27;
+  --kd-color-verdure-7: 151, 176, 47;
+  --kd-color-verdure-8: 176, 199, 86;
+  --kd-color-verdure-9: 203, 221, 128;
+  --kd-color-verdure-10: 228, 241, 175;
+
+  /* ── Green ── */
+  --kd-color-green-1: 45, 57, 40;
+  --kd-color-green-2: 48, 67, 39;
+  --kd-color-green-3: 52, 82, 39;
+  --kd-color-green-4: 57, 101, 38;
+  --kd-color-green-5: 62, 121, 36;
+  --kd-color-green-6: 69, 144, 37;
+  --kd-color-green-7: 92, 171, 57;
+  --kd-color-green-8: 123, 197, 91;
+  --kd-color-green-9: 160, 220, 131;
+  --kd-color-green-10: 214, 243, 200;
+
+  /* ── Teal ── */
+  --kd-color-teal-1: 40, 56, 50;
+  --kd-color-teal-2: 39, 70, 59;
+  --kd-color-teal-3: 38, 85, 69;
+  --kd-color-teal-4: 32, 105, 79;
+  --kd-color-teal-5: 20, 123, 87;
+  --kd-color-teal-6: 0, 148, 96;
+  --kd-color-teal-7: 12, 175, 118;
+  --kd-color-teal-8: 59, 201, 154;
+  --kd-color-teal-9: 117, 227, 189;
+  --kd-color-teal-10: 198, 244, 230;
+
+  /* ── Azure ── */
+  --kd-color-azure-1: 36, 56, 58;
+  --kd-color-azure-2: 37, 70, 74;
+  --kd-color-azure-3: 36, 86, 93;
+  --kd-color-azure-4: 31, 103, 112;
+  --kd-color-azure-5: 18, 121, 134;
+  --kd-color-azure-6: 0, 141, 159;
+  --kd-color-azure-7: 16, 166, 185;
+  --kd-color-azure-8: 58, 196, 213;
+  --kd-color-azure-9: 117, 221, 234;
+  --kd-color-azure-10: 213, 240, 244;
+
+  /* ── Blue ── */
+  --kd-color-blue-1: 40, 53, 74;
+  --kd-color-blue-2: 39, 61, 97;
+  --kd-color-blue-3: 37, 71, 126;
+  --kd-color-blue-4: 34, 85, 169;
+  --kd-color-blue-5: 24, 99, 218;
+  --kd-color-blue-6: 30, 116, 255;
+  --kd-color-blue-7: 66, 137, 255;
+  --kd-color-blue-8: 104, 161, 255;
+  --kd-color-blue-9: 148, 189, 255;
+  --kd-color-blue-10: 223, 235, 255;
+
+  /* ── Navy ── */
+  --kd-color-navy-1: 53, 49, 82;
+  --kd-color-navy-2: 59, 50, 121;
+  --kd-color-navy-3: 66, 52, 171;
+  --kd-color-navy-4: 76, 57, 211;
+  --kd-color-navy-5: 91, 70, 232;
+  --kd-color-navy-6: 109, 92, 244;
+  --kd-color-navy-7: 135, 120, 250;
+  --kd-color-navy-8: 168, 156, 253;
+  --kd-color-navy-9: 199, 190, 255;
+  --kd-color-navy-10: 235, 232, 255;
+
+  /* ── Indigo ── */
+  --kd-color-indigo-1: 60, 47, 76;
+  --kd-color-indigo-2: 74, 48, 106;
+  --kd-color-indigo-3: 87, 50, 136;
+  --kd-color-indigo-4: 104, 53, 171;
+  --kd-color-indigo-5: 122, 53, 213;
+  --kd-color-indigo-6: 144, 75, 233;
+  --kd-color-indigo-7: 168, 110, 242;
+  --kd-color-indigo-8: 193, 150, 249;
+  --kd-color-indigo-9: 217, 189, 253;
+  --kd-color-indigo-10: 241, 231, 254;
+
+  /* ── Violet ── */
+  --kd-color-violet-1: 66, 46, 70;
+  --kd-color-violet-2: 87, 51, 95;
+  --kd-color-violet-3: 111, 55, 123;
+  --kd-color-violet-4: 135, 60, 151;
+  --kd-color-violet-5: 162, 67, 183;
+  --kd-color-violet-6: 192, 74, 219;
+  --kd-color-violet-7: 209, 109, 233;
+  --kd-color-violet-8: 224, 150, 241;
+  --kd-color-violet-9: 234, 187, 245;
+  --kd-color-violet-10: 246, 229, 250;
+
+  /* ── Purple ── */
+  --kd-color-purple-1: 69, 47, 60;
+  --kd-color-purple-2: 100, 50, 79;
+  --kd-color-purple-3: 126, 53, 96;
+  --kd-color-purple-4: 152, 58, 113;
+  --kd-color-purple-5: 182, 66, 133;
+  --kd-color-purple-6: 215, 76, 158;
+  --kd-color-purple-7: 235, 110, 182;
+  --kd-color-purple-8: 243, 150, 204;
+  --kd-color-purple-9: 249, 186, 223;
+  --kd-color-purple-10: 254, 227, 243;
+
+  /* ── Red ── */
+  --kd-color-red-1: 74, 45, 45;
+  --kd-color-red-2: 101, 45, 45;
+  --kd-color-red-3: 129, 47, 47;
+  --kd-color-red-4: 155, 50, 50;
+  --kd-color-red-5: 184, 54, 54;
+  --kd-color-red-6: 214, 61, 61;
+  --kd-color-red-7: 237, 75, 75;
+  --kd-color-red-8: 244, 120, 120;
+  --kd-color-red-9: 250, 169, 169;
+  --kd-color-red-10: 254, 229, 229;
+
+  /* ── Gray (reversed: 1=darkest, 10=lightest) ── */
+  --kd-color-gray-1: 51, 51, 51;
+  --kd-color-gray-2: 56, 56, 56;
+  --kd-color-gray-3: 64, 64, 64;
+  --kd-color-gray-4: 71, 71, 71;
+  --kd-color-gray-5: 87, 87, 87;
+  --kd-color-gray-6: 102, 102, 102;
+  --kd-color-gray-7: 138, 138, 138;
+  --kd-color-gray-8: 153, 153, 153;
+  --kd-color-gray-9: 199, 199, 199;
+  --kd-color-gray-10: 245, 245, 245;
+
+  /* ── Brand (dark) ── */
+  --kd-color-brand-1: 40, 53, 74;
+  --kd-color-brand-2: 39, 61, 97;
+  --kd-color-brand-3: 37, 71, 126;
+  --kd-color-brand-4: 34, 85, 169;
+  --kd-color-brand-5: 24, 99, 218;
+  --kd-color-brand-6: 30, 116, 255;
+  --kd-color-brand-7: 66, 137, 255;
+  --kd-color-brand-8: 104, 161, 255;
+  --kd-color-brand-9: 148, 189, 255;
+  --kd-color-brand-10: 223, 235, 255;
+
+  /* ══ Dark-specific Semantic Overrides ════════════════════════════
+     Only tokens whose CSS expression differs from Light.
+     Palette-referencing tokens (e.g. rgba(var(--kd-color-blue-6), 1))
+     need no override — they adapt through the palette swap above. */
+
+  /* ── AI (different values in dark) ── */
+  --kd-color-ai-normal:         rgba(136, 87, 242, 1);
+  --kd-color-ai-hover:          rgba(113, 61, 225, 1);
+  --kd-color-ai-pressed:        rgba(158, 117, 245, 1);
+  --kd-color-ai-light:          rgba(58, 48, 85, 1);
+  --kd-color-ai-light-gradient: linear-gradient(90deg, rgba(63, 60, 95, 1) 0%, rgba(110, 70, 163, 1) 100%);
+
+  /* ── Member (light/dark values swap) ── */
+  --kd-color-member-primary-normal:  rgba(250, 198, 125, 1);
+  --kd-color-member-primary-hover:   rgba(221, 170, 95, 1);
+  --kd-color-member-primary-pressed: rgba(251, 212, 156, 1);
+  --kd-color-text-member-primary:    rgba(52, 35, 6, 1);
+  --kd-color-icon-member-primary:    rgba(52, 35, 6, 1);
+
+  /* ── Text AI ── */
+  --kd-color-text-ai: rgba(158, 117, 245, 1);
+
+  /* ── Icon (AI + colored variants differ) ── */
+  --kd-color-icon-ai:                rgba(158, 117, 245, 1);
+  --kd-color-icon-blue-primary:      rgba(85, 143, 236, 1);
+  --kd-color-icon-blue-quaternary:   rgba(36, 71, 127, 1);
+  --kd-color-icon-green-primary:     rgba(48, 171, 128, 1);
+  --kd-color-icon-green-quaternary:  rgba(28, 84, 64, 1);
+  --kd-color-icon-orange-primary:    rgba(224, 128, 66, 1);
+  --kd-color-icon-orange-quaternary: rgba(119, 67, 34, 1);
+  --kd-color-icon-red-primary:       rgba(231, 85, 96, 1);
+  --kd-color-icon-red-quaternary:    rgba(122, 41, 47, 1);
+
+  /* ── State (different opacities in dark) ── */
+  --kd-color-state-pressed-public: rgba(var(--kd-color-blue-6), 0.16);
+  --kd-color-state-pressed-brand:  rgba(var(--kd-color-brand-6), 0.16);
+  --kd-color-state-pressed-ai:     rgba(136, 87, 242, 0.16);
+
+  /* ── Background (explicit dark values) ── */
+  --kd-color-background-top:    rgba(46, 46, 46, 1);
+  --kd-color-background-middle: rgba(41, 41, 41, 1);
+  --kd-color-background-bottom: rgba(36, 36, 36, 1);
+  --kd-color-background-group:  rgba(31, 31, 31, 1);
+  --kd-color-background-plate:  rgba(25, 25, 25, 1);
+  --kd-color-background-base:   rgba(18, 18, 18, 1);
+  --kd-color-background-frame:  rgba(0, 0, 0, 1);
+  --kd-color-background-ai:     rgba(31, 33, 36, 1);
+
+  /* ── Line AI ── */
+  --kd-color-line-ai: rgba(158, 117, 245, 1);
+
+  /* ── Fill (different opacity for fill-base in dark) ── */
+  --kd-color-fill-base: rgba(var(--kd-color-white), 0.08);
+
+  /* ── Fill Alpha (different opacities in dark) ── */
+  --kd-color-fill-alpha-heavy:   rgba(var(--kd-color-gray-10), 0.18);
+  --kd-color-fill-alpha-medium:  rgba(var(--kd-color-gray-10), 0.14);
+  --kd-color-fill-alpha-regular: rgba(var(--kd-color-gray-10), 0.1);
+  --kd-color-fill-alpha-light:   rgba(var(--kd-color-gray-10), 0.06);
+
+  /* ── Mask (use gray-1 in dark, different opacity) ── */
+  --kd-color-mask-regular: rgba(var(--kd-color-gray-1), 0.6);
+  --kd-color-mask-heavy:   rgba(var(--kd-color-gray-1), 0.8);
+
+  /* ── Inverse (white → black in dark) ── */
+  --kd-color-inverse-base: rgba(var(--kd-color-black), 1);
+
+  /* ── Shadows (use white/black instead of gray-10) ── */
+  --kd-box-shadow-extra-small: 0px 0px 0px 1px rgba(var(--kd-color-white), 0.14);
+  --kd-box-shadow-small:       0px 1px 4px rgba(var(--kd-color-black), 0.24);
+  --kd-box-shadow-middle:      0px 1px 4px rgba(var(--kd-color-black), 0.32);
+  --kd-box-shadow-large:       0px 12px 32px rgba(var(--kd-color-black), 0.32);
+  --kd-box-shadow-extra-large: 0px 32px 48px rgba(var(--kd-color-black), 0.48);
+  --kd-box-shadow-glow:        0px 0px 4px rgba(var(--kd-color-blue-6), 1);
+
+  /* ── Opacity ── */
+  --kd-opacity-icon-mode: 0.85;
+}
+
+/* @kd-registry: reset v2.0 */
+/* ══════════════════════════════════════════════════════════════
+   KDesign 全局重置
+   ══════════════════════════════════════════════════════════════ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+               "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  font-size: var(--kd-font-size-base);
+  color: var(--kd-color-text-primary);
+  background: var(--kd-color-background-base);
+  -webkit-font-smoothing: antialiased;
+}
+
+a { text-decoration: none; color: inherit; }
+button { border: none; background: transparent; font: inherit; color: inherit; cursor: pointer; }
+input, textarea, select { min-width: 0; max-width: 100%; }
+img, video, canvas, svg { max-width: 100%; }
+
+/* @kd-registry: button v2.0 */
+/* ══ Button 按钮 ══ */
+
+.kd-button {
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: inherit; font-weight: var(--kd-font-weight-regular);
+  line-height: var(--kd-line-height-base);
+  border: 1px solid transparent; border-radius: var(--kd-border-radius-middle);
+  cursor: pointer; white-space: nowrap; user-select: none; outline: none;
+  transition: background var(--kd-time-fast) var(--kd-easing-ease),
+              border-color var(--kd-time-fast) var(--kd-easing-ease),
+              color var(--kd-time-fast) var(--kd-easing-ease);
+}
+.kd-button-children { display: inline-flex; align-items: center; }
+.kd-button-prefix-icon { margin-right: 4px; font-size: 16px; display: inline-flex; }
+.kd-button-suffix-icon { margin-left: 4px; font-size: 16px; display: inline-flex; }
+
+/* Size */
+.kd-button-sm { height: 24px; padding: 0 5px;    font-size: var(--kd-font-size-sub-base); border-radius: var(--kd-border-radius-small); }
+.kd-button-m  { height: 28px; padding: 2px 11px; font-size: var(--kd-font-size-sub-base); }
+.kd-button-lg { height: 32px; padding: 4px 15px; font-size: var(--kd-font-size-sub-base); }
+.kd-button-xl { height: 36px; padding: 6px 19px; font-size: var(--kd-font-size-middle); }
+.kd-button-light.kd-button-m { padding: 2px 8px; }
+
+/* Primary */
+.kd-button-primary { background: var(--kd-color-public-normal); color: var(--kd-color-text-white); }
+.kd-button-primary:hover:not(:disabled) { background: var(--kd-color-public-hover); }
+.kd-button-primary:active:not(:disabled) { background: var(--kd-color-public-pressed); }
+
+/* Secondary */
+.kd-button-secondary { background: var(--kd-color-fill-base); color: var(--kd-color-text-primary); border-color: var(--kd-color-fill-heavy); }
+.kd-button-secondary:hover:not(:disabled)  { background: var(--kd-color-fill-light); }
+.kd-button-secondary:active:not(:disabled) { background: var(--kd-color-fill-regular); }
+
+/* Light */
+.kd-button-light { background: transparent; color: var(--kd-color-text-primary); }
+.kd-button-light:hover:not(:disabled)  { background: var(--kd-color-state-hover); }
+.kd-button-light:active:not(:disabled) { background: var(--kd-color-state-pressed); }
+
+/* Danger */
+.kd-button-light.kd-button-danger  { color: var(--kd-color-error-normal); }
+.kd-button-primary.kd-button-danger { background: var(--kd-color-error-normal); }
+.kd-button-primary.kd-button-danger:hover:not(:disabled)  { background: var(--kd-color-error-hover); }
+.kd-button-primary.kd-button-danger:active:not(:disabled) { background: var(--kd-color-error-pressed); }
+
+/* Disabled */
+.kd-button:disabled { opacity: var(--kd-opacity-disabled); cursor: not-allowed; pointer-events: none; }
+
+/* Icon-only */
+.kd-button-icon.kd-button-sm { min-width: 24px; padding: 3px; }
+.kd-button-icon.kd-button-m  { min-width: 28px; padding: 5px; }
+.kd-button-icon.kd-button-lg { min-width: 32px; padding: 7px; }
+.kd-button-icon.kd-button-xl { min-width: 36px; padding: 9px; }
+
+/* @kd-registry: input v2.0 */
+/* ══ Input 输入框 ══ */
+
+.kd-input-wrap {
+  display: inline-flex; align-items: center; width: 100%;
+  background: var(--kd-color-fill-base);
+  border: 1px solid var(--kd-color-line-regular);
+  border-radius: var(--kd-border-radius-middle);
+  padding: 0 4px 0 8px;
+  transition: border-color var(--kd-time-fast);
+  box-sizing: border-box;
+}
+.kd-input-wrap > * + * { margin-left: 8px; }
+
+/* Hover / Focus / Error / Disabled */
+.kd-input:hover:not(.is-disabled):not(.kd-input-status-error) .kd-input-wrap { border-color: var(--kd-color-line-medium); }
+.kd-input.is-focus .kd-input-wrap,
+.kd-input-wrap:focus-within { border-color: var(--kd-color-line-public) !important; }
+.kd-input-status-error .kd-input-wrap { border-color: var(--kd-color-error-normal) !important; box-shadow: none; }
+.kd-input.is-disabled .kd-input-wrap { background: var(--kd-color-fill-regular); border-color: var(--kd-color-line-heavy); opacity: var(--kd-opacity-disabled); }
+
+/* Size — min-height on wrap guarantees height even if .kd-input-inner is missing */
+.kd-input-small .kd-input-wrap  { border-radius: var(--kd-border-radius-small); min-height: 24px; }
+.kd-input-medium .kd-input-wrap { min-height: 28px; }
+.kd-input-large .kd-input-wrap  { min-height: 32px; }
+.kd-input-x-large .kd-input-wrap { min-height: 36px; }
+.kd-input-small .kd-input-inner { height: 22px; padding: 0; }
+.kd-input-medium .kd-input-inner { padding: 2px 0; }
+.kd-input-large .kd-input-inner  { padding: 4px 0; }
+.kd-input-x-large .kd-input-inner { padding: 6px 0; }
+
+/* Inner */
+.kd-input-inner {
+  flex: 1; border: none; outline: none; background: transparent;
+  font-size: var(--kd-font-size-sub-base); color: var(--kd-color-text-primary);
+  line-height: var(--kd-line-height-base); padding: 4px 0; min-width: 0;
+}
+.kd-input-inner::placeholder { color: var(--kd-color-text-tertiary); }
+.kd-input-inner:disabled { cursor: not-allowed; color: var(--kd-color-text-tertiary); }
+
+/* Prefix / Suffix (decorative) */
+.kd-input-prefix,
+.kd-input-suffix {
+  flex-shrink: 0; display: flex; align-items: center;
+  color: var(--kd-color-icon-secondary);
+}
+.kd-input-prefix svg,
+.kd-input-suffix svg { display: block; width: 16px; height: 16px; }
+
+/* Icon button inside Input (clickable) */
+.kd-input-icon {
+  flex-shrink: 0; color: var(--kd-color-icon-secondary);
+  font-size: var(--kd-font-size-base);
+  display: flex; align-items: center;
+  border: none; background: transparent;
+  padding: 4px; border-radius: var(--kd-border-radius-small); cursor: pointer;
+}
+.kd-input-icon:hover { color: var(--kd-color-text-secondary); }
+
+/* @kd-registry: progress v2.0 */
+/* ══ Progress 进度条 ══ */
+
+.kd-progress { display: flex; align-items: center; }
+.kd-progress-line-outer {
+  flex: 1; height: 6px;
+  background: var(--kd-color-state-hover);
+  border-radius: var(--kd-border-radius-circle);
+  overflow: hidden;
+}
+.kd-progress-line-inner {
+  height: 100%;
+  background: var(--kd-color-public-normal);
+  border-radius: var(--kd-border-radius-circle);
+  transition: width .3s ease;
+}
+.kd-progress-text {
+  margin-left: 10px;
+  font-size: var(--kd-font-size-sub-base); line-height: 20px;
+  white-space: nowrap;
+}
+
+/* Status */
+.kd-progress-success .kd-progress-line-inner { background: var(--kd-color-success-normal); }
+.kd-progress-error   .kd-progress-line-inner { background: var(--kd-color-error-normal); }
+
+/* @kd-registry: modal v2.0 */
+/* ══ Modal 弹窗 ══ */
+
+/* Mask */
+.kd-modal-mask {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.45); z-index: 999;
+}
+.kd-modal-wrap {
+  position: fixed; inset: 0; z-index: 1000;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* Shell sizes */
+.kd-modal-sm .kd-modal-content { width: 480px; }
+.kd-modal-md .kd-modal-content { width: 640px; }
+.kd-modal-lg .kd-modal-content { width: 800px; }
+
+/* Content shell (底板色) */
+.kd-modal-content {
+  background: var(--kd-color-background-plate);
+  border: 1px solid var(--kd-color-line-regular);
+  border-radius: var(--kd-border-radius-extra-large);
+  box-shadow: var(--kd-box-shadow-extra-large);
+  box-sizing: border-box;
+  animation: kd-modal-in .3s ease forwards;
+}
+@keyframes kd-modal-in {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Header */
+.kd-modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 44px; padding: 10px 12px 0 16px; gap: 4px;
+}
+.kd-modal-title {
+  font-size: var(--kd-font-size-base); font-weight: var(--kd-font-weight-bold);
+  line-height: var(--kd-line-height-base); color: var(--kd-color-text-primary);
+}
+.kd-modal-close {
+  width: 24px; height: 24px;
+  display: flex; align-items: center; justify-content: center;
+  border: none; background: transparent;
+  border-radius: var(--kd-border-radius-small); cursor: pointer;
+  color: var(--kd-color-icon-secondary);
+  transition: background var(--kd-time-fast);
+}
+.kd-modal-close:hover { background: var(--kd-color-state-hover); }
+
+/* ── C1/C2：内容区直接在底板上 ── */
+.kd-modal-body-wrap { padding: 4px 16px 8px; }
+
+/* ── C3：wrap padding 更窄（留给白卡片自身 padding） ── */
+.kd-modal-body-wrap-c3 { padding: 0 16px; }
+
+/* Tabs 置于 Header 和白卡片之间（仅 C3b） */
+.kd-modal-body-wrap .kd-tabs { padding-bottom: 8px; }
+
+/* ── C3 白色内容卡片 ── */
+.kd-modal-body-card {
+  background: var(--kd-color-background-bottom);
+  border-radius: var(--kd-border-radius-extra-large);
+  padding: 12px;
+}
+
+/* C3a 多卡片容器 */
+.kd-modal-body-multi { display: flex; flex-direction: column; gap: 8px; }
+.kd-modal-body-card-c3 { padding: 12px; }
+
+/* Sections */
+.kd-modal-section { display: flex; flex-direction: column; gap: 4px; }
+.kd-modal-section + .kd-modal-section { margin-top: 16px; }
+.kd-modal-section-title {
+  font-size: var(--kd-font-size-sub-base); font-weight: var(--kd-font-weight-bold);
+  line-height: 20px; color: var(--kd-color-text-primary);
+}
+
+/* Field label (400, not bold) */
+.kd-field-label {
+  font-size: var(--kd-font-size-sub-base); font-weight: var(--kd-font-weight-regular);
+  line-height: 20px; color: var(--kd-color-text-primary);
+}
+
+/* Footer */
+.kd-modal-footer {
+  display: flex; align-items: center;
+  gap: 16px; padding: 16px;
+  justify-content: flex-end;
+}
+.kd-modal-footer.has-left { justify-content: space-between; }
+.kd-modal-footer-left,
+.kd-modal-footer-right { display: flex; align-items: center; gap: 8px; }
+.kd-modal-footer-left:empty { display: none; }
+
+/* @kd-registry: navigation-sidebar v2.0 */
+/* ══ Navigation 侧边导航（垂直） ══ */
+
+.kd-navigation-vertical .kd-navigation-item {
+  display: flex; align-items: center; gap: 8px;
+  height: 32px; padding: 0 4px 0 8px; margin-top: 4px;
+  border-radius: var(--kd-border-radius-small);
+  font-size: var(--kd-font-size-sub-base); font-weight: var(--kd-font-weight-regular);
+  line-height: 32px; color: var(--kd-color-text-primary);
+  text-decoration: none; border: none; background: transparent;
+  cursor: pointer; user-select: none;
+  transition: background var(--kd-time-fast);
+}
+.kd-navigation-vertical .kd-navigation-item:first-child { margin-top: 0; }
+.kd-navigation-vertical .kd-navigation-item:hover  { background: var(--kd-color-state-hover); }
+.kd-navigation-vertical .kd-navigation-item:active { background: var(--kd-color-state-pressed); }
+
+.kd-navigation-vertical .kd-navigation-item.is-active {
+  font-weight: var(--kd-font-weight-bold);
+  color: var(--kd-color-public-normal);
+  background: var(--kd-color-state-pressed-public);
+}
+
+.kd-navigation-vertical .kd-navigation-item.is-disabled {
+  cursor: not-allowed; opacity: 0.3;
+}
+
+.kd-navigation-item__icon {
+  width: 16px; height: 16px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.kd-navigation-item__label {
+  width: 100%; min-width: 0; text-align: left;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.kd-navigation-item__arrow {
+  width: 16px; height: 16px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  color: var(--kd-color-icon-secondary);
+  transition: transform var(--kd-time-fast);
+}
+
+.kd-navigation-vertical .kd-navigation-item--level2 { padding-left: 36px; }
+.kd-navigation-vertical .kd-navigation-item--level3 { padding-left: 48px; }
+.kd-navigation-vertical .kd-navigation-item--level4 { padding-left: 60px; }
+
+/* @kd-registry: table v2.0 */
+/* ══ Table 表格 ══ */
+
+.kd-table {
+  position: relative;
+  width: 100%; font-size: var(--kd-font-size-base);
+  color: var(--kd-color-text-primary); border-radius: 2px 2px 0 0;
+}
+.kd-table table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+
+/* ── Header ── */
+.kd-table-header-tr { height: 36px; background: var(--kd-color-fill-light); }
+.kd-table-header-th {
+  padding: 0 12px; font-size: var(--kd-font-size-sub-base);
+  font-weight: var(--kd-font-weight-regular); color: var(--kd-color-text-primary);
+  text-align: left; white-space: nowrap;
+}
+
+/* ── Cell ── */
+.kd-table-cell {
+  padding: 16px 12px; line-height: 24px;
+  border-bottom: 1px solid var(--kd-color-fill-light);
+  max-height: 56px; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* ── Cell alignment ── */
+.kd-table-cell-center, .kd-table-header-th.kd-table-cell-center { text-align: center; }
+.kd-table-cell-right, .kd-table-header-th.kd-table-cell-right { text-align: right; }
+
+/* ── Row hover ── */
+.kd-table-row:hover .kd-table-cell { background: var(--kd-color-state-hover); }
+.kd-table-row:hover .kd-table-cell:first-child { border-radius: var(--kd-border-radius-large) 0 0 var(--kd-border-radius-large); }
+.kd-table-row:hover .kd-table-cell:last-child  { border-radius: 0 var(--kd-border-radius-large) var(--kd-border-radius-large) 0; }
+.kd-table-row:hover .kd-table-cell { border-bottom-color: var(--kd-color-fill-base); }
+
+/* ── Row selected ── */
+.kd-table-row.is-selected .kd-table-cell { background: var(--kd-color-state-pressed-public); }
+
+/* ── Row disabled ── */
+.kd-table-row.is-disabled { pointer-events: none; }
+.kd-table-row.is-disabled .kd-table-cell { opacity: var(--kd-opacity-disabled); color: var(--kd-color-text-secondary); }
+
+/* ══ Bordered variant ══ */
+.kd-table-bordered { border: 1px solid var(--kd-color-line-regular); border-radius: var(--kd-border-radius-large); overflow: hidden; }
+.kd-table-bordered .kd-table-header-th { border-right: 1px solid var(--kd-color-line-regular); border-bottom: 1px solid var(--kd-color-line-regular); }
+.kd-table-bordered .kd-table-header-th:last-child { border-right: none; }
+.kd-table-bordered .kd-table-cell { border-right: 1px solid var(--kd-color-fill-light); }
+.kd-table-bordered .kd-table-cell:last-child { border-right: none; }
+.kd-table-bordered .kd-table-row:hover .kd-table-cell:first-child { border-radius: 0; }
+.kd-table-bordered .kd-table-row:hover .kd-table-cell:last-child { border-radius: 0; }
+
+/* ══ Striped variant ══ */
+.kd-table-striped .kd-table-row:nth-child(even) .kd-table-cell { background: var(--kd-color-fill-light); }
+.kd-table-striped .kd-table-row:nth-child(even):hover .kd-table-cell { background: var(--kd-color-state-hover); }
+
+/* ══ Fixed header ══ */
+.kd-table-fixed-header { overflow-y: auto; }
+.kd-table-fixed-header .kd-table-header-tr { position: sticky; top: 0; z-index: 2; }
+.kd-table-fixed-header .kd-table-header-th { background: var(--kd-color-fill-light); }
+
+/* ══ Hidden header ══ */
+.kd-table-no-header thead { display: none; }
+
+/* ══ Selection column ══ */
+.kd-table-th-select, .kd-table-cell-select {
+  width: 48px; text-align: center; padding: 0 8px;
+}
+
+/* ══ Expand column ══ */
+.kd-table-cell-expand { width: 40px; text-align: center; padding: 0 8px; }
+.kd-table-expand-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 20px; height: 20px; cursor: pointer;
+  color: var(--kd-color-text-secondary); font-size: 12px;
+  border-radius: var(--kd-border-radius-small); transition: background var(--kd-time-fast);
+}
+.kd-table-expand-icon:hover { background: var(--kd-color-state-hover); }
+.kd-table-expand-icon.is-expanded { color: var(--kd-color-text-primary); }
+
+/* Expanded row */
+.kd-table-expanded-row .kd-table-expanded-cell { padding: 0; border-bottom: 1px solid var(--kd-color-fill-light); }
+.kd-table-expanded-content { padding: 12px 12px 12px 52px; background: var(--kd-color-fill-light); font-size: var(--kd-font-size-sub-base); line-height: 20px; color: var(--kd-color-text-secondary); }
+
+/* ══ Empty state ══ */
+.kd-table-row-empty .kd-table-cell { border-bottom: none; }
+.kd-table-empty {
+  display: flex; align-items: center; justify-content: center; flex-direction: column;
+  padding: 40px 0; color: var(--kd-color-text-placeholder); font-size: var(--kd-font-size-sub-base);
+}
+
+/* ══ Loading overlay ══ */
+.kd-table-loading { position: relative; }
+.kd-table-loading table { opacity: 0.4; pointer-events: none; }
+.kd-table-loading-overlay {
+  position: absolute; inset: 0; z-index: 10;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255, 255, 255, 0.6); border-radius: inherit;
+}
+
+/* @kd-registry: message v2.0 */
+/* ══ Message 全局提示 ══ */
+
+.kd-message-root {
+  position: fixed; top: 88px; left: 50%; transform: translateX(-50%);
+  z-index: 9000; display: flex; flex-direction: column; align-items: center;
+  gap: 8px; pointer-events: none;
+}
+.kd-message {
+  display: inline-flex; align-items: center;
+  padding: 9px 20px; border-radius: var(--kd-border-radius-large);
+  border: 1px solid; box-shadow: var(--kd-box-shadow-large);
+  font-size: var(--kd-font-size-sub-base); line-height: var(--kd-line-height-base);
+  pointer-events: auto;
+  animation: kd-toast-in .3s ease forwards;
+}
+@keyframes kd-toast-in {
+  from { opacity: 0; transform: translateY(-90%); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.kd-message-icon { flex-shrink: 0; display: inline-flex; align-items: center; line-height: 1; }
+.kd-message-text { margin-left: 8px; color: var(--kd-color-text-primary); line-height: var(--kd-line-height-base); }
+
+.kd-message-success { background: var(--kd-color-success-light); border-color: var(--kd-color-success-normal); }
+.kd-message-error   { background: var(--kd-color-error-light);   border-color: var(--kd-color-error-normal); }
+.kd-message-warning { background: var(--kd-color-warning-light); border-color: var(--kd-color-warning-normal); }
+.kd-message-info,
+.kd-message-loading { background: var(--kd-color-info-light);    border-color: var(--kd-color-public-normal); }
+
+/* @kd-registry: tooltip v3.0 */
+/* ══ Tooltip 文字提示 ══ */
+
+.kd-tooltip {
+  position: relative; display: inline-flex;
+}
+
+.kd-tooltip-content {
+  position: absolute; z-index: 1050;
+  padding: 6px 12px; border-radius: var(--kd-border-radius-middle);
+  border: 1px solid var(--kd-color-line-regular);
+  background: var(--kd-color-fill-base);
+  box-shadow: var(--kd-box-shadow-large);
+  font-size: var(--kd-font-size-sub-base); line-height: 20px;
+  color: var(--kd-color-text-primary); max-width: 300px; word-break: break-word;
+  white-space: nowrap;
+}
+
+/* Arrow: 旋转方块，作为 .kd-tooltip-content 的子元素 */
+.kd-tooltip-arrow {
+  position: absolute;
+  width: 8px; height: 8px;
+  background: var(--kd-color-fill-base);
+  border: 1px solid var(--kd-color-line-regular);
+  transform: rotate(45deg);
+}
+
+/* ── Placement: top（箭头在内容框底部） ── */
+.kd-tooltip-top .kd-tooltip-content {
+  bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+}
+.kd-tooltip-top .kd-tooltip-arrow {
+  bottom: -5px; left: 50%; margin-left: -4px;
+  border-top-color: transparent; border-left-color: transparent;
+}
+
+/* ── Placement: bottom（箭头在内容框顶部） ── */
+.kd-tooltip-bottom .kd-tooltip-content {
+  top: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+}
+.kd-tooltip-bottom .kd-tooltip-arrow {
+  top: -5px; left: 50%; margin-left: -4px;
+  border-bottom-color: transparent; border-right-color: transparent;
+}
+
+/* ── Placement: left（箭头在内容框右侧，尖端朝右） ── */
+.kd-tooltip-left .kd-tooltip-content {
+  right: calc(100% + 6px); top: 50%; transform: translateY(-50%);
+}
+.kd-tooltip-left .kd-tooltip-arrow {
+  right: -5px; top: 50%; margin-top: -4px;
+  border-bottom-color: transparent; border-left-color: transparent;
+}
+
+/* ── Placement: right（箭头在内容框左侧，尖端朝左） ── */
+.kd-tooltip-right .kd-tooltip-content {
+  left: calc(100% + 6px); top: 50%; transform: translateY(-50%);
+}
+.kd-tooltip-right .kd-tooltip-arrow {
+  left: -5px; top: 50%; margin-top: -4px;
+  border-top-color: transparent; border-right-color: transparent;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--kd-color-background-base);
+}
+
+.top-info-bar {
+  height: 64px;
+  padding: 0 16px 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--kd-color-background-base);
+}
+
+.top-info-left,
+.top-info-right {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.top-search-shell {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.top-search-wrap {
+  width: 367px;
+  max-width: 100%;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  line-height: 30px;
+  font-weight: 600;
+  color: var(--kd-color-text-primary);
+}
+
+.brand-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--kd-color-public-normal);
+  color: var(--kd-color-text-white);
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 600;
+}
+
+.user-chip {
+  padding: 8px 8px 4px 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--kd-radius-md);
+}
+
+.user-chip:hover {
+  background: var(--kd-color-state-hover);
+}
+
+.avatar {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--kd-color-public-light);
+  color: var(--kd-color-text-public);
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 600;
+}
+
+.base {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+}
+
+.navigation-shell {
+  width: 212px;
+  flex: 0 0 212px;
+  min-height: 0;
+  padding: 0 0 12px;
+  display: flex;
+  background: var(--kd-color-background-base);
+}
+
+.navigation-shell .kd-navigation-vertical {
+  width: 180px;
+  margin: 0 16px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.navigation-shell .kd-navigation-item {
+  width: 100%;
+  min-height: 32px;
+  border-radius: var(--kd-radius-md);
+}
+
+.navigation-shell .kd-navigation-item .kd-icon svg,
+.navigation-shell [data-nav-sidebar-toggle-icon] svg {
+  stroke-width: 1;
+}
+
+.nav-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.nav-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.nav-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+}
+
+.nav-item-text {
+  min-width: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-align: left;
+}
+
+.nav-caret {
+  flex: 0 0 auto;
+  margin-right: 8px;
+  color: var(--kd-color-icon-secondary);
+}
+
+.kd-navigation-item.is-active .nav-caret {
+  color: currentColor;
+}
+
+.nav-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.navigation-shell .nav-group[hidden] {
+  display: none;
+}
+
+.navigation-shell .nav-group > .kd-navigation-item:first-child {
+  margin-top: 4px;
+}
+
+.nav-level-2 {
+  padding-left: 36px;
+}
+
+.nav-level-3 {
+  padding-left: 48px;
+}
+
+.nav-level-4 {
+  padding-left: 60px;
+}
+
+.nav-footer {
+  padding-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.nav-footer-tooltip.kd-tooltip-right .kd-tooltip-content {
+  left: calc(100% + 10px);
+}
+
+.nav-footer-tooltip.is-tooltip-suppressed .kd-tooltip-content {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.navigation-shell.is-collapsed {
+  width: 64px;
+  flex-basis: 64px;
+}
+
+.navigation-shell.is-collapsed .kd-navigation-vertical {
+  width: 32px;
+  margin: 0 16px;
+}
+
+.navigation-shell.is-collapsed .kd-navigation-item {
+  padding-left: 0;
+  padding-right: 0;
+  justify-content: center;
+}
+
+.navigation-shell.is-collapsed .nav-label {
+  justify-content: center;
+}
+
+.navigation-shell.is-collapsed .kd-navigation-item__icon {
+  margin-right: 0;
+}
+
+.navigation-shell.is-collapsed .nav-item-text,
+.navigation-shell.is-collapsed .nav-item-row > .kd-icon:last-child,
+.navigation-shell.is-collapsed .nav-group,
+.navigation-shell.is-collapsed .nav-footer .kd-navigation-item:first-child {
+  display: none;
+}
+
+.navigation-shell.is-collapsed .nav-footer {
+  justify-content: center;
+}
+
+.navigation-shell.is-collapsed .nav-footer .kd-button-icon.kd-button-m {
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  padding: 0;
+}
+
+.content-shell {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  padding-right: 16px;
+  display: flex;
+}
+
+.content-stack {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--kd-color-background-bottom);
+  border-radius: 8px 8px 0 0;
+  box-shadow: var(--kd-shadow-sm);
+}
+
+.breadcrumb-bar {
+  height: 40px;
+  padding: 8px 20px 0;
+  display: flex;
+  align-items: flex-end;
+}
+
+.breadcrumb {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.breadcrumb .kd-icon {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  color: var(--kd-color-icon-secondary);
+}
+
+.breadcrumb-current {
+  color: var(--kd-color-text-primary);
+}
+
+.description-bar {
+  height: 32px;
+  padding: 0 20px;
+  display: flex;
+  align-items: flex-end;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--kd-color-text-secondary);
+}
+
+/* @kd-registry: link v2.0 */
+/* ══ Link 链接 ══ */
+
+.kd-link {
+  display: inline-flex; align-items: center;
+  height: 22px; line-height: 22px;
+  font-size: var(--kd-font-size-sub-base); color: var(--kd-color-text-primary);
+  text-decoration: none; cursor: pointer;
+  transition: color var(--kd-time-fast);
+}
+.kd-link:hover:not(.is-disabled)  { color: var(--kd-color-public-normal); }
+.kd-link:active:not(.is-disabled) { color: var(--kd-color-public-normal); }
+
+.kd-link-primary { color: var(--kd-color-public-normal); }
+.kd-link.is-underline { text-decoration: underline; }
+.kd-link.is-disabled { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+.kd-link-icon { width: 14px; height: 14px; margin-left: 5px; }
+/* @kd-registry: tag v2.0 */
+/* ══ Tag 标签 ══ */
+
+.kd-tag {
+  display: inline-flex; align-items: center;
+  height: 24px; line-height: 22px; padding: 0 5px;
+  border: 1px solid var(--kd-color-state-hover);
+  border-radius: var(--kd-border-radius-small);
+  font-size: var(--kd-font-size-sub-base);
+  background: var(--kd-color-state-hover);
+  color: var(--kd-color-text-primary); gap: 4px;
+}
+.kd-tag--small { height: 20px; line-height: 18px; }
+.kd-tag--large { height: 28px; line-height: 26px; }
+
+.kd-tag--success { background: var(--kd-color-success-light); border-color: var(--kd-color-success-normal); color: #347317; }
+.kd-tag--error   { background: var(--kd-color-error-light);   border-color: var(--kd-color-error-normal);   color: var(--kd-color-error-pressed); }
+.kd-tag--warning { background: var(--kd-color-warning-light); border-color: var(--kd-color-warning-normal); color: #C25010; }
+.kd-tag--info    { background: var(--kd-color-info-light);     border-color: var(--kd-color-public-normal);  color: var(--kd-color-public-pressed); }
+
+.kd-tag-close {
+  display: flex; align-items: center; justify-content: center;
+  width: 16px; height: 16px; border: none; background: transparent;
+  cursor: pointer; border-radius: var(--kd-border-radius-extra-small);
+  color: var(--kd-color-icon-secondary); padding: 0;
+}
+.kd-tag-close:hover { background: var(--kd-color-state-pressed); }
+
+</style>
+  <style>
+    /* ══ 页面布局样式 ══ */
+    .app {
+      --kd-radius-md: var(--kd-border-radius-middle);
+      --kd-shadow-sm: var(--kd-box-shadow-small);
+    }
+
+    .kd-icon {
+      display: inline-flex;
+      width: 16px;
+      height: 16px;
+      flex: 0 0 16px;
+      color: var(--kd-color-icon-primary);
+    }
+    .kd-icon svg { display: block; width: 16px; height: 16px; }
+
+    .brand-logo {
+      border-radius: var(--kd-border-radius-circle);
+    }
+    .brand-logo .kd-color-icon-primary {
+      fill: var(--kd-color-text-white);
+      stroke: var(--kd-color-text-white);
+    }
+    .brand-name {
+      font-size: var(--kd-font-size-large);
+      font-weight: var(--kd-font-weight-bold);
+      line-height: var(--kd-font-line-height-large);
+      color: var(--kd-color-text-primary);
+    }
+    .brand .kd-tag {
+      font-weight: var(--kd-font-weight-regular);
+    }
+    .brand .kd-tag .kd-icon,
+    .brand .kd-tag .kd-icon svg {
+      width: 14px;
+      height: 14px;
+      flex-basis: 14px;
+    }
+
+    .navigation-shell .kd-navigation-item.is-active .kd-color-icon-primary {
+      fill: var(--kd-color-icon-public);
+      stroke: var(--kd-color-icon-public);
+    }
+    .navigation-shell .kd-navigation-item:focus-visible {
+      outline: 2px solid var(--kd-color-line-public);
+      outline-offset: 1px;
+    }
+
+    .breadcrumb-bar {
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .page-actions {
+      display: inline-flex;
+      align-items: flex-end;
+      gap: 8px;
+    }
+    .page-actions > * { min-width: 0; }
+
+    .content-body {
+      flex: 1 1 auto;
+      min-height: 0;
+      min-width: 0;
+      overflow: auto;
+      padding: 12px 20px 32px;
+    }
+
+    .quota-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .quota-grid > * { min-width: 0; }
+
+    .description-bar:empty {
+      display: none;
+      height: 0;
+      padding: 0;
+    }
+
+    .page-tip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+      background: var(--kd-color-info-light);
+      border: none;
+      border-radius: var(--kd-border-radius-large);
+    }
+    .page-tip-icon {
+      width: 16px;
+      height: 16px;
+      flex: 0 0 16px;
+      display: inline-flex;
+    }
+    .page-tip-icon svg { display: block; width: 16px; height: 16px; }
+    .page-tip-text {
+      flex: 0 1 auto;
+      min-width: 0;
+      font-size: var(--kd-font-size-sub-base);
+      font-weight: var(--kd-font-weight-regular);
+      line-height: 20px;
+      color: var(--kd-color-text-primary);
+    }
+    .page-tip-action {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: 12px;
+    }
+    .page-tip-action .kd-link {
+      border: none;
+      background: transparent;
+    }
+
+    .quota-card {
+      min-width: 0;
+      min-height: 196px;
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+      background: var(--kd-color-fill-base);
+      border: 1px solid var(--kd-color-line-regular);
+      border-radius: var(--kd-border-radius-large);
+    }
+    .quota-card-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .quota-card-title {
+      font-size: var(--kd-font-size-base);
+      font-weight: var(--kd-font-weight-bold);
+      line-height: var(--kd-line-height-base);
+      color: var(--kd-color-text-primary);
+    }
+    .quota-card-label {
+      margin-top: 12px;
+      font-size: var(--kd-font-size-sub-base);
+      font-weight: var(--kd-font-weight-regular);
+      line-height: 20px;
+      color: var(--kd-color-text-secondary);
+    }
+    .quota-card-metric {
+      margin-top: 4px;
+      font-size: var(--kd-font-size-extra-large);
+      font-weight: var(--kd-font-weight-bold);
+      line-height: var(--kd-font-line-height-extra-large);
+      color: var(--kd-color-text-primary);
+    }
+    .quota-card-progress { margin-top: 12px; }
+    .navigation-shell .nav-item-row { width: 100%; }
+
+    .quota-card-actions {
+      margin-top: auto;
+      padding-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .quota-card-actions > * { min-width: 0; }
+
+    .stub-text {
+      font-size: var(--kd-font-size-sub-base);
+      line-height: 20px;
+      color: var(--kd-color-text-secondary);
+    }
+
+    .kd-modal-mask[hidden],
+    .kd-modal-wrap[hidden] {
+      display: none;
+    }
+    .kd-modal-footer .kd-button { min-width: 72px; }
+
+    .usage-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      height: 96px;
+    }
+    .usage-bars > * { min-width: 0; flex: 1 1 0; }
+    .usage-col {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+    }
+    .usage-col-bar {
+      width: 100%;
+      max-width: 16px;
+      background: var(--kd-color-public-normal);
+      border-radius: var(--kd-border-radius-extra-small) var(--kd-border-radius-extra-small) 0 0;
+    }
+    .usage-col-label {
+      font-size: var(--kd-font-size-small);
+      line-height: var(--kd-font-line-height-small);
+      color: var(--kd-color-text-tertiary);
+    }
+    .buy-desc {
+      margin-top: 4px;
+      font-size: var(--kd-font-size-sub-base);
+      font-weight: var(--kd-font-weight-regular);
+      line-height: 20px;
+      color: var(--kd-color-text-secondary);
+    }
+    .buy-price {
+      margin-top: 8px;
+      font-size: var(--kd-font-size-base);
+      color: var(--kd-color-text-public);
+    }
+
+    .nav-footer-tooltip .kd-tooltip-content {
+      opacity: 0;
+      visibility: hidden;
+    }
+    .nav-footer-tooltip:hover .kd-tooltip-content,
+    .nav-footer-tooltip:focus-within .kd-tooltip-content {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .kd-message-root:empty { display: none; }
+
+    @media (max-width: 1279px) {
+      .quota-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <!-- [Page: WPS 365 企业管理后台 · 权益数据] -->
+  <div class="app">
+    <!-- [TopInfoBar] -->
+    <header class="top-info-bar">
+      <div class="top-info-left">
+        <div class="brand">
+          <span class="brand-logo" aria-hidden="true"><span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>建筑16_企业助手_enterprise</desc><style>
+    .kd-stroke-width-icon-regular { 
+       stroke-width: var(--kd-stroke-width-icon-regular, 1px)
+    }
+    .kd-color-icon-primary {
+       fill: var(--kd-color-icon-primary, #333333);
+       stroke: var(--kd-color-icon-primary, #333333);
+       km_fill: #333333;
+       km_stroke: #333333;
+       km_darkmode_fill: #C7C7C7;
+       km_darkmode_stroke: #C7C7C7; 
+    }</style><g id="building_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="building_Vector 1916" d="M8.5 4.5L14.0822 5.43037C14.3233 5.47055 14.5 5.67914 14.5 5.92356V14C14.5 14.2761 14.2761 14.5 14 14.5H8.5M8.5 14.5H2C1.72386 14.5 1.5 14.2761 1.5 14V3.37715C1.5 3.15391 1.64799 2.95772 1.86264 2.89639L7.86264 1.1821C8.18205 1.09084 8.5 1.33068 8.5 1.66286V14.5Z" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g></svg></span></span>
+          <span class="brand-name">金小萌科技公司</span>
+          <!-- [Tag: default small] -->
+          <span class="kd-tag kd-tag--small"><span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme"><desc>认证</desc><style>
+
+    .c333333 { fill: #333333; stroke: #333333; }
+    .cFB7E33 { fill: #FB7E33; stroke: #FB7E33; }
+    .cFFFFFF { fill: #FFFFFF; stroke: #FFFFFF; }</style><g class="kd-opacity-icon-mode" id="cert_normal_cert_normal"><g class="c333333"><path id="cert_normal_åºæ¿ (Stroke)" opacity="0.06" d="M15.1915 10.8845C15.1915 11.6878 14.7634 12.4308 14.0684 12.8337L9.11665 15.7043C8.41832 16.1089 7.55665 16.1088 6.85829 15.7043L1.90653 12.8337C1.21155 12.4308 0.78347 11.6878 0.783463 10.8845V5.12986C0.783611 4.3267 1.21166 3.58472 1.90653 3.1819L6.85829 0.311296C7.55683 -0.0934852 8.41813 -0.0935378 9.11665 0.311296L14.0684 3.1819C14.7633 3.58472 15.1913 4.3267 15.1915 5.12986V10.8845Z" stroke="none"/></g><g class="cFB7E33"><path id="cert_normal_åºæ¿" d="M7.06461 1.03163C7.64538 0.696325 8.36092 0.696325 8.94169 1.03163L13.567 3.70205C14.1478 4.03736 14.5055 4.65703 14.5055 5.32765V10.6685C14.5055 11.3391 14.1478 11.9588 13.567 12.2941L8.94169 14.9645C8.36092 15.2998 7.64538 15.2998 7.06461 14.9645L2.43931 12.2941C1.85854 11.9588 1.50077 11.3391 1.50077 10.6685V5.32765C1.50077 4.65703 1.85854 4.03736 2.43931 3.70205L7.06461 1.03163Z" stroke="none"/></g><g class="cFFFFFF"><path id="cert_normal_V" d="M8.7373 12.1198H7.269L3.80081 5.18246H5.63664L8.00315 9.9164L10.3697 5.18246H12.2055L8.7373 12.1198Z" stroke="none"/></g></g></svg></span>未认证</span>
+        </div>
+      </div>
+      <div class="top-search-shell">
+        <div class="top-search-wrap">
+          <!-- [Input: large prefix magnifier] -->
+          <div class="kd-input kd-input-large" data-kd-component="Text Field / KDTextField">
+            <div class="kd-input-wrap">
+              <span class="kd-input-prefix"><span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>放大镜_搜索_查看_查找</desc><style>
+    .kd-stroke-width-icon-regular { 
+       stroke-width: var(--kd-stroke-width-icon-regular, 1px)
+    }
+    .kd-color-icon-primary {
+       fill: var(--kd-color-icon-primary, #333333);
+       stroke: var(--kd-color-icon-primary, #333333);
+       km_fill: #333333;
+       km_stroke: #333333;
+       km_darkmode_fill: #C7C7C7;
+       km_darkmode_stroke: #C7C7C7; 
+    }</style><g id="magnifier_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="magnifier_line" d="M13 7C13 10.3137 10.3137 13 7 13C3.68629 13 1 10.3137 1 7C1 3.68629 3.68629 1 7 1C10.3137 1 13 3.68629 13 7Z" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path id="magnifier_line_2" d="M11.5 11.5L15 15" stroke-linecap="round" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g></svg></span></span>
+              <input class="kd-input-inner" type="search" placeholder="搜索功能 / 应用" aria-label="搜索功能或应用">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="top-info-right">
+        <!-- [Button: light icon large] -->
+        <button class="kd-button kd-button-light kd-button-icon kd-button-lg" type="button" aria-label="帮助"><span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" km_stroke-width="1" km_darkmode="true" kd_rtl="mirror" requiredCustomFeatures="data-kd-color-scheme,data-kd-polymorphism,data-kd-rtl-mirror-scheme"><desc>问号16_帮助_question_mark_help</desc><style>
+    .kd-stroke-width-icon-regular { 
+       stroke-width: var(--kd-stroke-width-icon-regular, 1px)
+    }
+    .kd-stroke-width-icon-bold { 
+       stroke-width: var(--kd-stroke-width-icon-bold, 1.2px)
+    }
+    .kd-color-icon-primary {
+       fill: var(--kd-color-icon-primary, #333333);
+       stroke: var(--kd-color-icon-primary, #333333);
+       km_fill: #333333;
+       km_stroke: #333333;
+       km_darkmode_fill: #C7C7C7;
+       km_darkmode_stroke: #C7C7C7; 
+    }
+.kd-opacity-icon { opacity: var(--kd-opacity-icon, 1) }
+.kd-opacity-icon:hover { opacity: var(--kd-opacity-icon-hover, 0.72) }
+.kd-opacity-icon:active { opacity: var(--kd-opacity-icon-active, 0.48) }
+</style><g class="kd-opacity-icon"><rect width="16" height="16" fill="transparent" pointer-events="all"/><g id="question_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="question_line" d="M14.75 8C14.75 11.7279 11.7279 14.75 8 14.75C4.27208 14.75 1.25 11.7279 1.25 8C1.25 4.27208 4.27208 1.25 8 1.25C11.7279 1.25 14.75 4.27208 14.75 8Z" stroke-linecap="round" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g><g id="question_group-1" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="question_fill" d="M8.89961 11.4996C8.89961 11.9967 8.49667 12.3996 7.99961 12.3996C7.50255 12.3996 7.09961 11.9967 7.09961 11.4996C7.09961 11.0026 7.50255 10.5996 7.99961 10.5996C8.49667 10.5996 8.89961 11.0026 8.89961 11.4996Z" stroke="none"/></g><g id="question_group-2" class="kd-color-icon-primary kd-stroke-width-icon-bold"><path id="question_line_2" d="M8 9V8.00995C8 8.00446 8.00445 8 8.00995 8C9.10902 8 10 7.10406 10 6.00499C10 4.90042 9.10457 4 8 4C6.89543 4 6 4.89543 6 6" stroke-linecap="round" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g></g></svg></span></button>
+        <!-- [Button: light icon large] -->
+        <button class="kd-button kd-button-light kd-button-icon kd-button-lg" type="button" aria-label="通知"><span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>铃_铃铛_通知_消息_提醒</desc><style>
+    .kd-stroke-width-icon-regular { 
+       stroke-width: var(--kd-stroke-width-icon-regular, 1px)
+    }
+    .kd-color-icon-primary {
+       fill: var(--kd-color-icon-primary, #333333);
+       stroke: var(--kd-color-icon-primary, #333333);
+       km_fill: #333333;
+       km_stroke: #333333;
+       km_darkmode_fill: #C7C7C7;
+       km_darkmode_stroke: #C7C7C7; 
+    }</style><g id="bell_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="bell_line" d="M3.5 10L1.513 12.4838C1.50776 12.4903 1.51242 12.5 1.52081 12.5H14.4792C14.4876 12.5 14.4922 12.4903 14.487 12.4838L12.5 10V6C12.5 3.51472 10.4853 1.5 8 1.5C5.51472 1.5 3.5 3.51472 3.5 6V10Z" stroke-linecap="round" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g><g id="bell_group-1" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="bell_fill" d="M8 15.5C8.82843 15.5 9.5 14.8284 9.5 14H6.5C6.5 14.8284 7.17157 15.5 8 15.5Z" stroke="none"/></g></svg></span></button>
+        <button class="user-chip" type="button" aria-label="当前用户 金小萌">
+          <span class="avatar">萌</span>
+          <span>欢迎，金小萌</span>
+          <span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>下箭头16_大_Pdf_spin_down</desc><style>
+    .kd-stroke-width-icon-bold { 
+       stroke-width: var(--kd-stroke-width-icon-bold, 1.2px)
+    }
+    .kd-color-icon-secondary {
+       fill: var(--kd-color-icon-secondary, #757575);
+       stroke: var(--kd-color-icon-secondary, #757575);
+       km_fill: #757575;
+       km_stroke: #757575;
+       km_darkmode_fill: #C7C7C7;
+       km_darkmode_stroke: #C7C7C7; 
+    }</style><g id="arrow_down_s_group-0" class="kd-color-icon-secondary kd-stroke-width-icon-bold"><path id="arrow_down_s_area1" d="M12 6.5L8.00718 10H7.99262L4 6.5" stroke-linecap="round" stroke-linejoin="round" fill="none" vector-effect="non-scaling-stroke"/></g></svg></span>
+        </button>
+      </div>
+    </header>
+
+    <div class="base">
+      <aside class="navigation-shell">
+        <!-- [Navigation: vertical sidebar] -->
+        <nav class="kd-navigation kd-navigation-vertical" data-kd-component="Navigation" aria-label="管理后台导航">
+          <div class="nav-list">
+            <a class="kd-navigation-item" href="#overview" data-page="overview">
+              <span class="kd-navigation-item__icon"><span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" km_stroke-width="1" km_darkmode="true" requiredCustomFeatures="data-kd-color-scheme"><desc>首页_主页_开始</desc><style>
+    .kd-stroke-width-icon-regular { 
+       stroke-width: var(--kd-stroke-width-icon-regular, 1px)
+    }
+    .kd-color-icon-primary {
+       fill: var(--kd-color-icon-primary, #333333);
+       stroke: var(--kd-color-icon-primary, #333333);
+       km_fill: #333333;
+       km_stroke: #333333;
+       km_darkmode_fill: #C7C7C7;
+       km_darkmode_stroke: #C7C7C7; 
+    }</style><g id="home_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="home_line" d="M8.30887 1.74234C8.12756 1.60011 7.87252 1.60022 7.69133 1.7426L2.69107 5.67172C2.57044 5.76651 2.5 5.91144 2.5 6.06487V14.0001C2.5 14.2762 2.72386 14.5001 3 14.5001H13C13.2761 14.5001 13.5 14.2762 13.5 14.0001V5.81459L8.30887 1.74234ZM7.69133 1.7426L1 7.00045M8.30887 1.74234L15 7.00045" stroke-linecap="round" stroke-linejoin="round" fill="none" vector-effect="non-scaling-stroke"/><path id="home_line_2" d="M9 9.5H7C6.72386 9.5 6.5 9.72386 6.5 10V14C6.5 14.2761 6.72386 14.5 7 14.5H9C9.27614 14.5 9.5 14.2761 9.5 14V10C9.5 9.72386 9.27614 9.5 9 9.5Z" stroke-linecap="round" stroke-linejoin="round" fill="none" vector-effect="non-scaling-stroke"/></g></svg></span></span>
+              <span class="nav-label"><span class="nav-item-text">企业概览</span></span>
+            </a>
+
+            <button class="kd-navigation-item" type="button" data-nav-toggle="addr" aria-expanded="false" aria-controls="nav-group-addr">
+              <span class="nav-item-row">
+                <span class="kd-navigation-item__icon"><span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>双人16_people_double__多人_团队_协作_协作者_参与者_联系人</desc><style>
+    .kd-stroke-width-icon-regular { 
+       stroke-width: var(--kd-stroke-width-icon-regular, 1px)
+    }
+    .kd-color-icon-primary {
+       fill: var(--kd-color-icon-primary, #333333);
+       stroke: var(--kd-color-icon-primary, #333333);
+       km_fill: #333333;
+       km_stroke: #333333;
+       km_darkmode_fill: #C7C7C7;
+       km_darkmode_stroke: #C7C7C7; 
+    }</style><g id="people_double_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="people_double_line" d="M7.5 3.5C7.5 4.60457 6.60457 5.5 5.5 5.5C4.39543 5.5 3.5 4.60457 3.5 3.5C3.5 2.39543 4.39543 1.5 5.5 1.5C6.60457 1.5 7.5 2.39543 7.5 3.5Z" stroke-linecap="round" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path id="people_double_line_2" d="M12.5 4C12.5 4.82843 11.8284 5.5 11 5.5C10.1716 5.5 9.5 4.82843 9.5 4C9.5 3.17157 10.1716 2.5 11 2.5C11.8284 2.5 12.5 3.17157 12.5 4Z" stroke-linecap="round" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path id="people_double_line_3" d="M9.5 14V11.5C9.5 9.29086 7.70914 7.5 5.5 7.5C3.29086 7.5 1.5 9.29086 1.5 11.5V14C1.5 14.2761 1.72386 14.5 2 14.5H9C9.27614 14.5 9.5 14.2761 9.5 14Z" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path id="people_double_line_4" d="M8.40234 8.65357C9.04282 7.94513 9.9691 7.5 10.9994 7.5C12.9323 7.5 14.4994 9.067 14.4994 11V13C14.4994 13.2761 14.2755 13.5 13.9994 13.5H9.49935" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g></svg></span></span>
+                <span class="nav-label"><span class="nav-item-text">通讯录</span></span>
+                <span class="nav-caret kd-icon" data-nav-caret><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>下箭头16_大_Pdf_spin_down</desc><style>
+    .kd-stroke-width-icon-bold { 
+       stroke-width: var(--kd-stroke-width-icon-bold, 1.2px)
+    }
+    .kd-color-icon-secondary {
+       fill: var(--kd-color-icon-secondary, #757575);
+       stroke: var(--kd-color-icon-secondary, #757575);
+       km_fill: #757575;
+       km_stroke: #757575;
+       km_darkmode_fill: #C7C7C7;
+       km_darkmode_stroke: #C7C7C7; 
+    }</style><g id="arrow_down_s_group-0" class="kd-color-icon-secondary kd-stroke-width-icon-bold"><path id="arrow_down_s_area1" d="M12 6.5L8.00718 10H7.99262L4 6.5" stroke-linecap="round" stroke-linejoin="round" fill="none" vector-effect="non-scaling-stroke"/></g></svg></span>
+              </span>
+            </button>
+            <div class="nav-group" id="nav-group-addr" data-nav-group="addr" hidden>
+              <a class="kd-navigation-item nav-level-2" href="#members" data-page="members"><span class="nav-label"><span class="nav-item-text">成员管理</span></span></a>
+              <a class="kd-navigation-item nav-level-2" href="#depts" data-page="depts"><span class="nav-label"><span class="nav-item-text">部门管理</span></span></a>
+            </div>
+
+            <button class="kd-navigation-item" type="button" data-nav-toggle="sec" aria-expanded="false" aria-controls="nav-group-sec">
+              <span class="nav-item-row">
+                <span class="kd-navigation-item__icon"><span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>宏安全性16_Security</desc><style>
+    .kd-stroke-width-icon-regular { 
+       stroke-width: var(--kd-stroke-width-icon-regular, 1px)
+    }
+    .kd-color-icon-primary {
+       fill: var(--kd-color-icon-primary, #333333);
+       stroke: var(--kd-color-icon-primary, #333333);
+       km_fill: #333333;
+       km_stroke: #333333;
+       km_darkmode_fill: #C7C7C7;
+       km_darkmode_stroke: #C7C7C7; 
+    }
+    .kd-color-icon-green-primary {
+       fill: var(--kd-color-icon-green-primary, #20804E);
+       stroke: var(--kd-color-icon-green-primary, #20804E);
+       km_fill: #20804E;
+       km_stroke: #20804E;
+       km_darkmode_fill: #C7C7C7;
+       km_darkmode_stroke: #C7C7C7; 
+    }</style><g id="security_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="security_line" d="M13.5 2.5H4.5C3.39543 2.5 2.5 3.39543 2.5 4.5V11.5" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path id="security_line_2" d="M13 4.5H14.49C14.4955 4.5 14.5 4.49555 14.5 4.49005V3.5C14.5 2.94772 14.0523 2.5 13.5 2.5V2.5C12.9477 2.5 12.5 2.94772 12.5 3.5V6" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path id="security_line_3" d="M7 11.5H2C1.72386 11.5 1.5 11.7239 1.5 12V12.5C1.5 13.0523 1.94772 13.5 2.5 13.5H7" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g><g id="security_group-1" class="kd-color-icon-green-primary kd-stroke-width-icon-regular"><path id="security_line_4" d="M11.36 7.54083L8.86 8.27C8.64667 8.33222 8.5 8.52778 8.5 8.75V11.0269C8.5 12.0939 9.06673 13.0806 9.98839 13.6182L11.2481 14.353C11.4037 14.4439 11.5963 14.4439 11.7519 14.353L13.0116 13.6182C13.9333 13.0806 14.5 12.0939 14.5 11.0269V8.75C14.5 8.52778 14.3533 8.33222 14.14 8.27L11.64 7.54083C11.5486 7.51417 11.4514 7.51417 11.36 7.54083Z" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g></svg></span></span>
+                <span class="nav-label"><span class="nav-item-text">安全管控</span></span>
+                <span class="nav-caret kd-icon" data-nav-caret><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>下箭头16_大_Pdf_spin_down</desc><style>
+    .kd-stroke-width-icon-bold { 
+       stroke-width: var(--kd-stroke-width-icon-bold, 1.2px)
+    }
+    .kd-color-icon-secondary {
+       fill: var(--kd-color-icon-secondary, #757575);
+       stroke: var(--kd-color-icon-secondary, #757575);
+       km_fill: #757575;
+       km_stroke: #757575;
+       km_darkmode_fill: #C7C7C7;
+       km_darkmode_stroke: #C7C7C7; 
+    }</style><g id="arrow_down_s_group-0" class="kd-color-icon-secondary kd-stroke-width-icon-bold"><path id="arrow_down_s_area1" d="M12 6.5L8.00718 10H7.99262L4 6.5" stroke-linecap="round" stroke-linejoin="round" fill="none" vector-effect="non-scaling-stroke"/></g></svg></span>
+              </span>
+            </button>
+            <div class="nav-group" id="nav-group-sec" data-nav-group="sec" hidden>
+              <a class="kd-navigation-item nav-level-2" href="#policy" data-page="policy"><span class="nav-label"><span class="nav-item-text">安全策略</span></span></a>
+            </div>
+
+            <a class="kd-navigation-item" href="#audit" data-page="audit">
+              <span class="kd-navigation-item__icon"><span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>锁16_保密_未公开_私密_隐私_lock_wpPreserveDesign_EditingLimited_限制编辑_RestrictEditing</desc><style>
+    .kd-stroke-width-icon-regular { 
+       stroke-width: var(--kd-stroke-width-icon-regular, 1px)
+    }
+    .kd-color-icon-primary {
+       fill: var(--kd-color-icon-primary, #333333);
+       stroke: var(--kd-color-icon-primary, #333333);
+       km_fill: #333333;
+       km_stroke: #333333;
+       km_darkmode_fill: #C7C7C7;
+       km_darkmode_stroke: #C7C7C7; 
+    }</style><g id="lock_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="lock_line" d="M2.5 8C2.5 7.72386 2.72386 7.5 3 7.5H13C13.2761 7.5 13.5 7.72386 13.5 8V14C13.5 14.2761 13.2761 14.5 13 14.5H3C2.72386 14.5 2.5 14.2761 2.5 14V8Z" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path id="lock_line_2" d="M4.5 7.5V5C4.5 3.067 6.067 1.5 8 1.5V1.5C9.933 1.5 11.5 3.067 11.5 5V7.5" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g></svg></span></span>
+              <span class="nav-label"><span class="nav-item-text">审计合规</span></span>
+            </a>
+            <a class="kd-navigation-item" href="#report" data-page="report">
+              <span class="kd-navigation-item__icon"><span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>图表16_幻灯片编号_SaveAsChartTemplate_InsertChart</desc><style>
+    .kd-stroke-width-icon-regular { 
+       stroke-width: var(--kd-stroke-width-icon-regular, 1px)
+    }
+    .kd-color-icon-primary {
+       fill: var(--kd-color-icon-primary, #333333);
+       stroke: var(--kd-color-icon-primary, #333333);
+       km_fill: #333333;
+       km_stroke: #333333;
+       km_darkmode_fill: #C7C7C7;
+       km_darkmode_stroke: #C7C7C7; 
+    }</style><g id="chart_column_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="chart_column_line" d="M5.5 8.5H2C1.72386 8.5 1.5 8.72386 1.5 9V14C1.5 14.2761 1.72386 14.5 2 14.5H14C14.2761 14.5 14.5 14.2761 14.5 14V6C14.5 5.72386 14.2761 5.5 14 5.5H10.5M5.5 8.5V14M5.5 8.5V2C5.5 1.72386 5.72386 1.5 6 1.5H10C10.2761 1.5 10.5 1.72386 10.5 2V5.5M10.5 5.5V14" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g></svg></span></span>
+              <span class="nav-label"><span class="nav-item-text">数据报表</span></span>
+            </a>
+            <a class="kd-navigation-item" href="#ai" data-page="ai">
+              <span class="kd-navigation-item__icon"><span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>AI16_人工智能_ai</desc><style>
+    .kd-stroke-width-icon-regular { 
+       stroke-width: var(--kd-stroke-width-icon-regular, 1px)
+    }
+    .kd-color-icon-primary {
+       fill: var(--kd-color-icon-primary, #333333);
+       stroke: var(--kd-color-icon-primary, #333333);
+       km_fill: #333333;
+       km_stroke: #333333;
+       km_darkmode_fill: #C7C7C7;
+       km_darkmode_stroke: #C7C7C7; 
+    }</style><g id="ai_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="ai_line" d="M5.73355 3.0862C5.89582 2.7292 6.25177 2.5 6.64391 2.5H10.4845C10.4917 2.5 10.4966 2.50752 10.4936 2.51414L5.76645 12.9138C5.60418 13.2708 5.24823 13.5 4.85609 13.5H1.01553C1.00826 13.5 1.00342 13.4925 1.00643 13.4859L5.73355 3.0862Z" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path id="ai_line_2" d="M8.3 7.5H11.7435C12.1421 7.5 12.5026 7.73668 12.661 8.10239L14.9939 13.486C14.9968 13.4926 14.992 13.5 14.9848 13.5H11.1594C10.7594 13.5 10.3978 13.2616 10.2403 12.8939L6 3" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g></svg></span></span>
+              <span class="nav-label"><span class="nav-item-text">AI 管理</span></span>
+            </a>
+            <a class="kd-navigation-item" href="#advanced" data-page="advanced">
+              <span class="kd-navigation-item__icon"><span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>更多_more</desc><style>
+    .kd-stroke-width-icon-regular { 
+       stroke-width: var(--kd-stroke-width-icon-regular, 1px)
+    }
+    .kd-color-icon-primary {
+       fill: var(--kd-color-icon-primary, #333333);
+       stroke: var(--kd-color-icon-primary, #333333);
+       km_fill: #333333;
+       km_stroke: #333333;
+       km_darkmode_fill: #C7C7C7;
+       km_darkmode_stroke: #C7C7C7; 
+    }</style><g id="more_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="more_Ellipse 545" d="M9.25 8C9.25 8.69036 8.69036 9.25 8 9.25C7.30964 9.25 6.75 8.69036 6.75 8C6.75 7.30964 7.30964 6.75 8 6.75C8.69036 6.75 9.25 7.30964 9.25 8Z" stroke="none"/><path id="more_Ellipse 547" d="M14.75 8C14.75 8.69036 14.1904 9.25 13.5 9.25C12.8096 9.25 12.25 8.69036 12.25 8C12.25 7.30964 12.8096 6.75 13.5 6.75C14.1904 6.75 14.75 7.30964 14.75 8Z" stroke="none"/><path id="more_Ellipse 546" d="M3.75 8C3.75 8.69036 3.19036 9.25 2.5 9.25C1.80964 9.25 1.25 8.69036 1.25 8C1.25 7.30964 1.80964 6.75 2.5 6.75C3.19036 6.75 3.75 7.30964 3.75 8Z" stroke="none"/></g></svg></span></span>
+              <span class="nav-label"><span class="nav-item-text">高级功能</span></span>
+            </a>
+            <a class="kd-navigation-item" href="#approval" data-page="approval">
+              <span class="kd-navigation-item__icon"><span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>章_审批_盖章_印章_图章</desc><style>
+    .kd-stroke-width-icon-regular { 
+       stroke-width: var(--kd-stroke-width-icon-regular, 1px)
+    }
+    .kd-color-icon-primary {
+       fill: var(--kd-color-icon-primary, #333333);
+       stroke: var(--kd-color-icon-primary, #333333);
+       km_fill: #333333;
+       km_stroke: #333333;
+       km_darkmode_fill: #C7C7C7;
+       km_darkmode_stroke: #C7C7C7; 
+    }</style><g id="stamp_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="stamp_line" d="M2.5 14.5H13.5" stroke-linecap="round" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path id="stamp_line_2" d="M14.49 12.4998H1.51C1.50448 12.4998 1.5 12.4953 1.5 12.4898V10.4998C1.5 9.94749 1.94772 9.49978 2.5 9.49978H6.5V7.09865C6.32079 6.99499 6.1533 6.87331 6 6.73611C5.38625 6.18679 5 5.3885 5 4.5C5 2.84315 6.34315 1.5 8 1.5C9.65685 1.5 11 2.84315 11 4.5C11 5.3885 10.6137 6.18679 10 6.73611C9.8467 6.87331 9.67921 6.99499 9.5 7.09865V9.49978H13.5C14.0523 9.49978 14.5 9.94749 14.5 10.4998V12.4898C14.5 12.4953 14.4955 12.4998 14.49 12.4998Z" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g></svg></span></span>
+              <span class="nav-label"><span class="nav-item-text">审批管理</span></span>
+            </a>
+            <a class="kd-navigation-item" href="#settings" data-page="settings">
+              <span class="kd-navigation-item__icon"><span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>管理16_管理后台_配置项_参数设置_全局设置</desc><style>
+    .kd-stroke-width-icon-regular { 
+       stroke-width: var(--kd-stroke-width-icon-regular, 1px)
+    }
+    .kd-color-icon-primary {
+       fill: var(--kd-color-icon-primary, #333333);
+       stroke: var(--kd-color-icon-primary, #333333);
+       km_fill: #333333;
+       km_stroke: #333333;
+       km_darkmode_fill: #C7C7C7;
+       km_darkmode_stroke: #C7C7C7; 
+    }</style><g id="admin_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="admin_line" d="M1.5 4.5L3 4.5M14.5 4.5L7 4.5" stroke-linecap="round" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path id="admin_line_2" d="M1.5 12.5H9M14.5 12.5H13" stroke-linecap="round" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path id="admin_Ellipse 1" d="M13 12.5C13 13.6046 12.1046 14.5 11 14.5C9.89543 14.5 9 13.6046 9 12.5C9 11.3954 9.89543 10.5 11 10.5C12.1046 10.5 13 11.3954 13 12.5Z" stroke-linecap="round" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path id="admin_Ellipse 2" d="M7 4.5C7 5.60457 6.10457 6.5 5 6.5C3.89543 6.5 3 5.60457 3 4.5C3 3.39543 3.89543 2.5 5 2.5C6.10457 2.5 7 3.39543 7 4.5Z" stroke-linecap="round" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g></svg></span></span>
+              <span class="nav-label"><span class="nav-item-text">企业设置</span></span>
+            </a>
+
+            <button class="kd-navigation-item" type="button" data-nav-toggle="order" aria-expanded="true" aria-controls="nav-group-order">
+              <span class="nav-item-row">
+                <span class="kd-navigation-item__icon"><span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredcustomfeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>钱包_wallet</desc><style>
+    .kd-stroke-width-icon-regular { 
+       stroke-width: var(--kd-stroke-width-icon-regular, 1px)
+    }
+    .kd-color-icon-primary {
+       fill: var(--kd-color-icon-primary, #333333);
+       stroke: var(--kd-color-icon-primary, #333333);
+       km_fill: #333333;
+       km_stroke: #333333;
+       km_darkmode_fill: #C7C7C7;
+       km_darkmode_stroke: #C7C7C7; 
+    }</style>
+
+<g id="wallet_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular">
+<path id="wallet_Vector 4159" d="M1.5 14V2C1.5 1.72386 1.72386 1.5 2 1.5H14C14.2761 1.5 14.5 1.72386 14.5 2V5.5H10C8.61929 5.5 7.5 6.61929 7.5 8C7.5 9.38071 8.61929 10.5 10 10.5H14.5V14C14.5 14.2761 14.2761 14.5 14 14.5H2C1.72386 14.5 1.5 14.2761 1.5 14Z" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>
+<path id="wallet_Ellipse 639" d="M11 8C11 8.55228 10.5523 9 10 9C9.44772 9 9 8.55228 9 8C9 7.44772 9.44772 7 10 7C10.5523 7 11 7.44772 11 8Z" stroke="none"/>
+</g>
+
+</svg></span></span>
+                <span class="nav-label"><span class="nav-item-text">订单权益</span></span>
+                <span class="nav-caret kd-icon" data-nav-caret><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>下箭头16_大_Pdf_spin_down</desc><style>
+    .kd-stroke-width-icon-bold { 
+       stroke-width: var(--kd-stroke-width-icon-bold, 1.2px)
+    }
+    .kd-color-icon-secondary {
+       fill: var(--kd-color-icon-secondary, #757575);
+       stroke: var(--kd-color-icon-secondary, #757575);
+       km_fill: #757575;
+       km_stroke: #757575;
+       km_darkmode_fill: #C7C7C7;
+       km_darkmode_stroke: #C7C7C7; 
+    }</style><g id="arrow_down_s_group-0" class="kd-color-icon-secondary kd-stroke-width-icon-bold"><path id="arrow_down_s_area1" d="M12 6.5L8.00718 10H7.99262L4 6.5" stroke-linecap="round" stroke-linejoin="round" fill="none" vector-effect="non-scaling-stroke"/></g></svg></span>
+              </span>
+            </button>
+            <div class="nav-group" id="nav-group-order" data-nav-group="order">
+              <a class="kd-navigation-item nav-level-2" href="#orders" data-page="orders"><span class="nav-label"><span class="nav-item-text">订单管理</span></span></a>
+              <a class="kd-navigation-item nav-level-2 is-active" href="#benefits" data-page="benefits" aria-current="page"><span class="nav-label"><span class="nav-item-text">权益数据</span></span></a>
+              <a class="kd-navigation-item nav-level-2" href="#invoice" data-page="invoice"><span class="nav-label"><span class="nav-item-text">发票合同</span></span></a>
+              <a class="kd-navigation-item nav-level-2" href="#coupon" data-page="coupon"><span class="nav-label"><span class="nav-item-text">优惠券码</span></span></a>
+              <a class="kd-navigation-item nav-level-2" href="#alloc" data-page="alloc"><span class="nav-label"><span class="nav-item-text">权益分配</span></span></a>
+              <a class="kd-navigation-item nav-level-2" href="#auth" data-page="auth"><span class="nav-label"><span class="nav-item-text">授权与保障</span></span></a>
+            </div>
+          </div>
+
+          <div class="nav-footer">
+            <a class="kd-navigation-item" href="#all" data-page="all">
+              <span class="kd-navigation-item__icon"><span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>更多_more</desc><style>
+    .kd-stroke-width-icon-regular { 
+       stroke-width: var(--kd-stroke-width-icon-regular, 1px)
+    }
+    .kd-color-icon-primary {
+       fill: var(--kd-color-icon-primary, #333333);
+       stroke: var(--kd-color-icon-primary, #333333);
+       km_fill: #333333;
+       km_stroke: #333333;
+       km_darkmode_fill: #C7C7C7;
+       km_darkmode_stroke: #C7C7C7; 
+    }</style><g id="more_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="more_Ellipse 545" d="M9.25 8C9.25 8.69036 8.69036 9.25 8 9.25C7.30964 9.25 6.75 8.69036 6.75 8C6.75 7.30964 7.30964 6.75 8 6.75C8.69036 6.75 9.25 7.30964 9.25 8Z" stroke="none"/><path id="more_Ellipse 547" d="M14.75 8C14.75 8.69036 14.1904 9.25 13.5 9.25C12.8096 9.25 12.25 8.69036 12.25 8C12.25 7.30964 12.8096 6.75 13.5 6.75C14.1904 6.75 14.75 7.30964 14.75 8Z" stroke="none"/><path id="more_Ellipse 546" d="M3.75 8C3.75 8.69036 3.19036 9.25 2.5 9.25C1.80964 9.25 1.25 8.69036 1.25 8C1.25 7.30964 1.80964 6.75 2.5 6.75C3.19036 6.75 3.75 7.30964 3.75 8Z" stroke="none"/></g></svg></span></span>
+              <span class="nav-label"><span class="nav-item-text">查看全部</span></span>
+            </a>
+            <div class="kd-tooltip kd-tooltip-right nav-footer-tooltip">
+              <button class="kd-button kd-button-light kd-button-icon kd-button-m" type="button" data-nav-sidebar-toggle aria-expanded="true" aria-label="收起侧栏">
+                <span data-nav-sidebar-toggle-icon><span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" kd_rtl="mirror" requiredCustomFeatures="data-kd-color-scheme,data-kd-rtl-mirror-scheme" km_stroke-width="1" km_darkmode="true"><desc>双左箭头_小_双线</desc><style>
+    .kd-stroke-width-icon-bold { 
+       stroke-width: var(--kd-stroke-width-icon-bold, 1.2px)
+    }
+    .kd-color-icon-primary {
+       fill: var(--kd-color-icon-primary, #333333);
+       stroke: var(--kd-color-icon-primary, #333333);
+       km_fill: #333333;
+       km_stroke: #333333;
+       km_darkmode_fill: #C7C7C7;
+       km_darkmode_stroke: #C7C7C7; 
+    }</style><g id="arrow_left_double_s_group-0" class="kd-color-icon-primary kd-stroke-width-icon-bold"><path id="arrow_left_double_s_area1" d="M7 12L3 8.00718V7.99262L7 4" stroke-linecap="round" stroke-linejoin="round" fill="none" vector-effect="non-scaling-stroke"/><path id="arrow_left_double_s_area1_2" d="M12 12L8 8.00718V7.99262L12 4" stroke-linecap="round" stroke-linejoin="round" fill="none" vector-effect="non-scaling-stroke"/></g></svg></span></span>
+              </button>
+              <div class="kd-tooltip-content">
+                <span data-nav-sidebar-tooltip-label>收起导航</span>
+                <div class="kd-tooltip-arrow"></div>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </aside>
+
+      <div class="content-shell">
+        <div class="content-stack">
+          <div class="breadcrumb-bar">
+            <!-- [Breadcrumb: medium] -->
+            <nav class="breadcrumb" aria-label="面包屑" id="breadcrumb"></nav>
+            <div class="page-actions" id="page-actions"></div>
+          </div>
+          <div class="description-bar" id="description-bar"></div>
+          <main class="content-body" id="content-body"></main>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kd-modal-mask" id="modal-mask" hidden></div>
+  <div class="kd-modal-wrap" id="modal-wrap" hidden>
+    <div class="kd-modal kd-modal-md" id="modal-root" role="dialog" aria-modal="true" aria-labelledby="modal-title"></div>
+  </div>
+
+  <div class="kd-message-root" id="message-root"></div>
+
+  <script>
+/**
+ * KDesign 组件交互脚本
+ * 为 Tabs、Navigation、Select、Checkbox、Radio、Switch 提供点击切换能力
+ * 无依赖，事件委托，自动发现组件
+ */
+;(function () {
+  'use strict';
+
+  // ── Tabs 交互 ──
+  document.addEventListener('click', function (e) {
+    var tabBar = e.target.closest('.kd-tabs-tab-bar');
+    if (!tabBar || tabBar.classList.contains('kd-tabs-tab-bar-disabled')) return;
+
+    var nav = tabBar.closest('.kd-tabs-nav-list');
+    if (!nav) return;
+
+    var siblings = nav.querySelectorAll('.kd-tabs-tab-bar');
+    siblings.forEach(function (t) { t.classList.remove('kd-tabs-tab-bar-active'); });
+    tabBar.classList.add('kd-tabs-tab-bar-active');
+
+    var tabsRoot = nav.closest('.kd-tabs');
+    if (!tabsRoot) return;
+
+    var index = Array.prototype.indexOf.call(siblings, tabBar);
+    var panes = tabsRoot.querySelectorAll('.kd-tabs-pane');
+    panes.forEach(function (p, i) {
+      p.classList.toggle('kd-tabs-pane-active', i === index);
+    });
+  });
+
+  // ── Checkbox 交互 ──
+  document.addEventListener('change', function (e) {
+    var input = e.target;
+    if (!input.classList.contains('kd-checkbox-original')) return;
+    var wrapper = input.closest('.kd-checkbox-input');
+    if (!wrapper) return;
+    wrapper.classList.toggle('is-checked', input.checked);
+  });
+
+  // ── Radio 交互 ──
+  document.addEventListener('change', function (e) {
+    var input = e.target;
+    if (!input.classList.contains('kd-radio-original')) return;
+    var name = input.getAttribute('name');
+    if (name) {
+      document.querySelectorAll('.kd-radio-original[name="' + name + '"]').forEach(function (r) {
+        var w = r.closest('.kd-radio-input');
+        if (w) w.classList.remove('is-checked');
+      });
+    }
+    var wrapper = input.closest('.kd-radio-input');
+    if (wrapper) wrapper.classList.add('is-checked');
+  });
+
+  // ── Switch 交互 ──
+  document.addEventListener('change', function (e) {
+    var input = e.target;
+    if (!input.classList.contains('kd-switch-original')) return;
+    var wrapper = input.closest('.kd-switch');
+    if (!wrapper) return;
+    wrapper.classList.toggle('is-checked', input.checked);
+  });
+
+  // ── Navigation 侧边导航交互 ──
+  document.addEventListener('click', function (e) {
+    var item = e.target.closest('.kd-navigation-item');
+    if (!item || item.classList.contains('is-disabled')) return;
+
+    var nav = item.closest('.kd-navigation-vertical');
+    if (!nav) return;
+
+    var siblings = nav.querySelectorAll('.kd-navigation-item');
+    siblings.forEach(function (n) { n.classList.remove('is-active'); });
+    item.classList.add('is-active');
+  });
+
+  // ── Select 下拉选择交互 ──
+
+  var CLOSE_SVG = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 4L12 12M12 4L4 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+  var TICK_SVG = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="#0A6CFF" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  function getSelectRoot(el) {
+    return el.closest('[data-select-mode]');
+  }
+
+  function getMode(root) {
+    return root.getAttribute('data-select-mode') || 'single';
+  }
+
+  function getTrigger(root) {
+    return root.querySelector('.kd-select-trigger');
+  }
+
+  function getDropdown(root) {
+    return root.querySelector('.kd-select-dropdown');
+  }
+
+  function getInput(root) {
+    return root.querySelector('.kd-input-inner');
+  }
+
+  function openSelect(root) {
+    var trigger = getTrigger(root);
+    var dropdown = getDropdown(root);
+    if (!trigger || !dropdown) return;
+    trigger.classList.add('is-open');
+    dropdown.style.display = '';
+  }
+
+  function closeSelect(root) {
+    var trigger = getTrigger(root);
+    var dropdown = getDropdown(root);
+    if (!trigger || !dropdown) return;
+    trigger.classList.remove('is-open');
+    dropdown.style.display = 'none';
+  }
+
+  function closeAllSelects(except) {
+    document.querySelectorAll('[data-select-mode]').forEach(function (root) {
+      if (root !== except) closeSelect(root);
+    });
+  }
+
+  function createTag(label, value) {
+    var tag = document.createElement('span');
+    tag.className = 'kd-select-tag';
+    tag.setAttribute('data-tag-value', value);
+    tag.textContent = label;
+    var btn = document.createElement('button');
+    btn.className = 'kd-select-tag-close';
+    btn.innerHTML = CLOSE_SVG;
+    tag.appendChild(btn);
+    return tag;
+  }
+
+  function getSelectedValues(root) {
+    var tags = root.querySelectorAll('.kd-select-tag');
+    var values = [];
+    tags.forEach(function (t) { values.push(t.getAttribute('data-tag-value')); });
+    return values;
+  }
+
+  function syncTicks(root) {
+    var selected = getSelectedValues(root);
+    var items = root.querySelectorAll('.kd-menu-item');
+    items.forEach(function (item) {
+      var val = item.getAttribute('data-value');
+      var tick = item.querySelector('.kd-menu-item-tick');
+      if (selected.indexOf(val) !== -1) {
+        item.classList.add('kd-menu-item-selected');
+        if (!tick) {
+          var span = document.createElement('span');
+          span.className = 'kd-menu-item-tick';
+          span.innerHTML = TICK_SVG;
+          item.insertBefore(span, item.firstChild);
+        }
+      } else {
+        item.classList.remove('kd-menu-item-selected');
+        if (tick) tick.remove();
+      }
+    });
+  }
+
+  // 点击触发器 toggle
+  document.addEventListener('click', function (e) {
+    // 跳过 tag-close 和 clear 按钮的点击
+    if (e.target.closest('.kd-select-tag-close') || e.target.closest('.kd-select-clear')) return;
+
+    var trigger = e.target.closest('.kd-select-trigger');
+    if (!trigger || trigger.classList.contains('is-disabled')) return;
+
+    var root = getSelectRoot(trigger);
+    if (!root) return;
+
+    // 如果点击了 menu-item，不在此处处理 toggle
+    if (e.target.closest('.kd-menu-item')) return;
+
+    var dropdown = getDropdown(root);
+    if (!dropdown) return;
+
+    var isOpen = trigger.classList.contains('is-open');
+    closeAllSelects(root);
+    if (isOpen) {
+      closeSelect(root);
+    } else {
+      openSelect(root);
+      // 搜索模式：聚焦 input
+      if (root.hasAttribute('data-select-searchable')) {
+        var input = getInput(root);
+        if (input) { input.removeAttribute('readonly'); input.focus(); }
+      }
+    }
+  });
+
+  // 点击外部关闭
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('[data-select-mode]')) {
+      closeAllSelects(null);
+    }
+  });
+
+  // 点击选项
+  document.addEventListener('click', function (e) {
+    var item = e.target.closest('.kd-menu-item');
+    if (!item || item.classList.contains('kd-menu-item-disabled')) return;
+
+    var root = getSelectRoot(item);
+    if (!root) return;
+
+    var mode = getMode(root);
+    var value = item.getAttribute('data-value') || '';
+    var label = item.textContent.trim();
+    var input = getInput(root);
+
+    if (mode === 'single') {
+      // 清除旧 ticks
+      root.querySelectorAll('.kd-menu-item').forEach(function (mi) {
+        mi.classList.remove('kd-menu-item-selected');
+        var tick = mi.querySelector('.kd-menu-item-tick');
+        if (tick) tick.remove();
+      });
+      // 设置选中
+      item.classList.add('kd-menu-item-selected');
+      var tickSpan = document.createElement('span');
+      tickSpan.className = 'kd-menu-item-tick';
+      tickSpan.innerHTML = TICK_SVG;
+      item.insertBefore(tickSpan, item.firstChild);
+      // 更新 input
+      if (input) input.value = label;
+      closeSelect(root);
+      // 标记有值（CSS 控制 hover 时显示 clear、隐藏 arrow）
+      root.classList.add('has-value');
+    } else {
+      // 多选 toggle
+      var existing = root.querySelector('.kd-select-tag[data-tag-value="' + value + '"]');
+      if (existing) {
+        existing.remove();
+      } else {
+        var tag = createTag(label, value);
+        var inputEl = getInput(root);
+        if (inputEl) inputEl.parentNode.insertBefore(tag, inputEl);
+      }
+      syncTicks(root);
+    }
+  });
+
+  // 点击 Tag 关闭按钮
+  document.addEventListener('click', function (e) {
+    var closeBtn = e.target.closest('.kd-select-tag-close');
+    if (!closeBtn) return;
+
+    var tag = closeBtn.closest('.kd-select-tag');
+    if (!tag) return;
+
+    var root = getSelectRoot(tag);
+    tag.remove();
+    if (root) syncTicks(root);
+  });
+
+  // 点击 Clear 按钮
+  document.addEventListener('click', function (e) {
+    var clearBtn = e.target.closest('.kd-select-clear');
+    if (!clearBtn) return;
+
+    var root = getSelectRoot(clearBtn);
+    if (!root) return;
+
+    var mode = getMode(root);
+    var input = getInput(root);
+
+    if (mode === 'single') {
+      if (input) { input.value = ''; }
+      root.querySelectorAll('.kd-menu-item').forEach(function (mi) {
+        mi.classList.remove('kd-menu-item-selected');
+        var tick = mi.querySelector('.kd-menu-item-tick');
+        if (tick) tick.remove();
+      });
+      root.classList.remove('has-value');
+    } else {
+      root.querySelectorAll('.kd-select-tag').forEach(function (t) { t.remove(); });
+      syncTicks(root);
+    }
+    closeSelect(root);
+  });
+
+  // 搜索过滤
+  document.addEventListener('input', function (e) {
+    var input = e.target;
+    if (!input.classList.contains('kd-input-inner')) return;
+
+    var root = getSelectRoot(input);
+    if (!root || !root.hasAttribute('data-select-searchable')) return;
+
+    var keyword = input.value.toLowerCase();
+    var items = root.querySelectorAll('.kd-menu-item');
+    items.forEach(function (item) {
+      var text = item.textContent.toLowerCase();
+      item.style.display = text.indexOf(keyword) !== -1 ? '' : 'none';
+    });
+
+    // 如果面板未打开则打开
+    var trigger = getTrigger(root);
+    if (trigger && !trigger.classList.contains('is-open')) {
+      openSelect(root);
+    }
+  });
+
+})();
+
+</script>
+  <script>
+(function initAdminConsoleNavigationSidebar() {
+  var shell = document.querySelector('.navigation-shell');
+  if (!shell) return;
+
+  var collapsedClass = 'is-collapsed';
+
+  function syncNavGroups() {
+    var toggleButtons = Array.from(shell.querySelectorAll('[data-nav-toggle]'));
+    toggleButtons.forEach(function(toggleBtn) {
+      var groupName = toggleBtn.getAttribute('data-nav-toggle');
+      var expanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+      var group = shell.querySelector('[data-nav-group="' + groupName + '"]');
+      var caret = toggleBtn.querySelector('[data-nav-caret]');
+      if (group) {
+        group.hidden = !expanded || shell.classList.contains(collapsedClass);
+      }
+      if (caret) {
+        caret.style.transform = expanded ? 'rotate(180deg)' : 'rotate(0deg)';
+      }
+    });
+  }
+
+  function syncSidebarToggle() {
+    var toggleBtn = shell.querySelector('[data-nav-sidebar-toggle]');
+    if (!toggleBtn) return;
+    var toggleIcon = toggleBtn.querySelector('[data-nav-sidebar-toggle-icon]');
+    var tooltipLabel = shell.querySelector('[data-nav-sidebar-tooltip-label]');
+    var collapsed = shell.classList.contains(collapsedClass);
+
+    toggleBtn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+    toggleBtn.setAttribute('aria-label', collapsed ? '展开侧栏' : '收起侧栏');
+
+    if (toggleIcon) {
+      toggleIcon.style.transform = collapsed ? 'rotate(180deg)' : 'rotate(0deg)';
+    }
+
+    if (tooltipLabel) {
+      tooltipLabel.textContent = collapsed ? '展开导航' : '收起导航';
+    }
+  }
+
+  function hideTooltipOnClick() {
+    var tooltipWrap = shell.querySelector('.nav-footer-tooltip');
+    var toggleBtn = shell.querySelector('[data-nav-sidebar-toggle]');
+    if (!tooltipWrap || !toggleBtn) return;
+
+    tooltipWrap.classList.add('is-tooltip-suppressed');
+    toggleBtn.blur();
+
+    window.setTimeout(function() {
+      tooltipWrap.classList.remove('is-tooltip-suppressed');
+    }, 120);
+  }
+
+  function bindNavGroups() {
+    var toggleButtons = Array.from(shell.querySelectorAll('[data-nav-toggle]'));
+    toggleButtons.forEach(function(toggleBtn) {
+      toggleBtn.addEventListener('click', function() {
+        if (shell.classList.contains(collapsedClass)) return;
+        var expanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+        toggleBtn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+        syncNavGroups();
+      });
+    });
+  }
+
+  function bindSidebarToggle() {
+    var toggleBtn = shell.querySelector('[data-nav-sidebar-toggle]');
+    if (!toggleBtn) return;
+
+    toggleBtn.addEventListener('click', function() {
+      hideTooltipOnClick();
+      shell.classList.toggle(collapsedClass);
+      syncSidebarToggle();
+      syncNavGroups();
+    });
+  }
+
+  syncSidebarToggle();
+  syncNavGroups();
+  bindNavGroups();
+  bindSidebarToggle();
+})();
+
+</script>
+  <script>
+    (function () {
+      var arrowRight = '<span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" kd_rtl="mirror" requiredCustomFeatures="data-kd-color-scheme,data-kd-rtl-mirror-scheme" km_stroke-width="1" km_darkmode="true"><desc>右箭头_小</desc><style>\n    .kd-stroke-width-icon-bold { \n       stroke-width: var(--kd-stroke-width-icon-bold, 1.2px)\n    }\n    .kd-color-icon-secondary {\n       fill: var(--kd-color-icon-secondary, #757575);\n       stroke: var(--kd-color-icon-secondary, #757575);\n       km_fill: #757575;\n       km_stroke: #757575;\n       km_darkmode_fill: #C7C7C7;\n       km_darkmode_stroke: #C7C7C7; \n    }</style><g id="arrow_right_s_group-0" class="kd-color-icon-secondary kd-stroke-width-icon-bold"><path id="arrow_right_s_area1" d="M6.5 4L10 7.99282V8.00738L6.5 12" stroke-linecap="round" stroke-linejoin="round" fill="none" vector-effect="non-scaling-stroke"/></g></svg></span>';
+      var closeIcon = '<span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>关闭16_CloseWindow_EndShow_乘以_乘号_EtToolbox_BatchMul_symbol_multiply_关闭_close</desc><style>\n    .kd-stroke-width-icon-regular { \n       stroke-width: var(--kd-stroke-width-icon-regular, 1px)\n    }\n    .kd-color-icon-primary {\n       fill: var(--kd-color-icon-primary, #333333);\n       stroke: var(--kd-color-icon-primary, #333333);\n       km_fill: #333333;\n       km_stroke: #333333;\n       km_darkmode_fill: #C7C7C7;\n       km_darkmode_stroke: #C7C7C7; \n    }\n    .kd-color-icon-red-primary {\n       fill: var(--kd-color-icon-red-primary, #BF3942);\n       stroke: var(--kd-color-icon-red-primary, #BF3942);\n       km_fill: #BF3942;\n       km_stroke: #BF3942;\n       km_darkmode_fill: #C7C7C7;\n       km_darkmode_stroke: #C7C7C7; \n    }</style><g id="close_window_group-1" class="kd-color-icon-red-primary kd-stroke-width-icon-regular"><path id="close_window_line" d="M11.5 4.5L4.5 11.5" stroke-linecap="round" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path id="close_window_line_2" d="M4.5 4.5L11.5 11.5" stroke-linecap="round" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g><g id="close_window_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="close_window_line_3" d="M14.5 14V2C14.5 1.72386 14.2761 1.5 14 1.5H2C1.72386 1.5 1.5 1.72386 1.5 2V14C1.5 14.2761 1.72386 14.5 2 14.5H14C14.2761 14.5 14.5 14.2761 14.5 14Z" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g></svg></span>';
+      var infoIcon = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">\n<g clip-path="url(#msg_info_clip)">\n<path d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16Z" fill="#1F69E0"/>\n<path fill-rule="evenodd" clip-rule="evenodd" d="M8 13C8.55228 13 9 12.5523 9 12V7C9 6.44772 8.55228 6 8 6C7.44772 6 7 6.44772 7 7V12C7 12.5523 7.44772 13 8 13ZM7 4C7 4.55228 7.44772 5 8 5C8.55228 5 9 4.55228 9 4C9 3.44772 8.55228 3 8 3C7.44772 3 7 3.44772 7 4Z" fill="white"/>\n</g>\n<defs>\n<clipPath id="msg_info_clip">\n<rect width="16" height="16" fill="white"/>\n</clipPath>\n</defs>\n</svg>';
+      var cloudIcon = '<span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" km_stroke-width="1" km_darkmode="true" requiredCustomFeatures="data-kd-color-scheme"><desc>云_网盘_云端</desc><style>\n    .kd-stroke-width-icon-regular { \n       stroke-width: var(--kd-stroke-width-icon-regular, 1px)\n    }\n    .kd-color-icon-primary {\n       fill: var(--kd-color-icon-primary, #333333);\n       stroke: var(--kd-color-icon-primary, #333333);\n       km_fill: #333333;\n       km_stroke: #333333;\n       km_darkmode_fill: #C7C7C7;\n       km_darkmode_stroke: #C7C7C7; \n    }</style><g id="cloud_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="cloud_Vector" d="M12.4859 6.64077C12.1732 6.54915 11.8423 6.5 11.5 6.5C10.5207 6.5 9.63526 6.90223 9 7.55051M12.4859 6.64077C13.9389 7.0665 15 8.40933 15 10C15 11.933 13.433 13.5 11.5 13.5H4.5C2.567 13.5 1 11.933 1 10C1 8.40933 2.06113 7.0665 3.51413 6.64077C3.69716 4.32344 5.63564 2.5 8 2.5C10.3644 2.5 12.3028 4.32344 12.4859 6.64077Z" stroke-linecap="round" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g></svg></span>';
+      var aiIcon = '<span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>AI16_人工智能_ai</desc><style>\n    .kd-stroke-width-icon-regular { \n       stroke-width: var(--kd-stroke-width-icon-regular, 1px)\n    }\n    .kd-color-icon-primary {\n       fill: var(--kd-color-icon-primary, #333333);\n       stroke: var(--kd-color-icon-primary, #333333);\n       km_fill: #333333;\n       km_stroke: #333333;\n       km_darkmode_fill: #C7C7C7;\n       km_darkmode_stroke: #C7C7C7; \n    }</style><g id="ai_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="ai_line" d="M5.73355 3.0862C5.89582 2.7292 6.25177 2.5 6.64391 2.5H10.4845C10.4917 2.5 10.4966 2.50752 10.4936 2.51414L5.76645 12.9138C5.60418 13.2708 5.24823 13.5 4.85609 13.5H1.01553C1.00826 13.5 1.00342 13.4925 1.00643 13.4859L5.73355 3.0862Z" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path id="ai_line_2" d="M8.3 7.5H11.7435C12.1421 7.5 12.5026 7.73668 12.661 8.10239L14.9939 13.486C14.9968 13.4926 14.992 13.5 14.9848 13.5H11.1594C10.7594 13.5 10.3978 13.2616 10.2403 12.8939L6 3" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g></svg></span>';
+      var magnifierIcon = '<span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>放大镜_搜索_查看_查找</desc><style>\n    .kd-stroke-width-icon-regular { \n       stroke-width: var(--kd-stroke-width-icon-regular, 1px)\n    }\n    .kd-color-icon-primary {\n       fill: var(--kd-color-icon-primary, #333333);\n       stroke: var(--kd-color-icon-primary, #333333);\n       km_fill: #333333;\n       km_stroke: #333333;\n       km_darkmode_fill: #C7C7C7;\n       km_darkmode_stroke: #C7C7C7; \n    }</style><g id="magnifier_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="magnifier_line" d="M13 7C13 10.3137 10.3137 13 7 13C3.68629 13 1 10.3137 1 7C1 3.68629 3.68629 1 7 1C10.3137 1 13 3.68629 13 7Z" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path id="magnifier_line_2" d="M11.5 11.5L15 15" stroke-linecap="round" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g></svg></span>';
+      var videoIcon = '<span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>视频16_插入视频_video_录制视频_OpeningVideo</desc><style>\n    .kd-stroke-width-icon-regular { \n       stroke-width: var(--kd-stroke-width-icon-regular, 1px)\n    }\n    .kd-color-icon-primary {\n       fill: var(--kd-color-icon-primary, #333333);\n       stroke: var(--kd-color-icon-primary, #333333);\n       km_fill: #333333;\n       km_stroke: #333333;\n       km_darkmode_fill: #C7C7C7;\n       km_darkmode_stroke: #C7C7C7; \n    }\n    .kd-color-icon-orange-primary {\n       fill: var(--kd-color-icon-orange-primary, #BF5513);\n       stroke: var(--kd-color-icon-orange-primary, #BF5513);\n       km_fill: #BF5513;\n       km_stroke: #BF5513;\n       km_darkmode_fill: #C7C7C7;\n       km_darkmode_stroke: #C7C7C7; \n    }\n    .kd-color-icon-orange-quaternary {\n       fill: var(--kd-color-icon-orange-quaternary, #FDE0CE);\n       stroke: var(--kd-color-icon-orange-quaternary, #FDE0CE);\n       km_fill: #FDE0CE;\n       km_stroke: #FDE0CE;\n       km_darkmode_fill: #C7C7C7;\n       km_darkmode_stroke: #C7C7C7; \n    }</style><g id="video_group-2" class="kd-color-icon-orange-quaternary kd-stroke-width-icon-regular"><path id="video_fill" d="M6.5 10.482V5.51804C6.5 5.51019 6.50864 5.5054 6.5153 5.50956L10.4864 7.99152C10.4927 7.99544 10.4927 8.00456 10.4864 8.00848L6.5153 10.4904C6.50864 10.4946 6.5 10.4898 6.5 10.482Z" stroke="none"/></g><g id="video_group-1" class="kd-color-icon-orange-primary kd-stroke-width-icon-regular"><path id="video_line" d="M6.5 10.482V5.51804C6.5 5.51019 6.50864 5.5054 6.5153 5.50956L10.4864 7.99152C10.4927 7.99544 10.4927 8.00456 10.4864 8.00848L6.5153 10.4904C6.50864 10.4946 6.5 10.4898 6.5 10.482Z" stroke-linecap="round" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g><g id="video_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="video_line_2" d="M1.5 2C1.5 1.72386 1.72386 1.5 2 1.5H14C14.2761 1.5 14.5 1.72386 14.5 2V14C14.5 14.2761 14.2761 14.5 14 14.5H2C1.72386 14.5 1.5 14.2761 1.5 14V2Z" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g></svg></span>';
+      var securityIcon = '<span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>宏安全性16_Security</desc><style>\n    .kd-stroke-width-icon-regular { \n       stroke-width: var(--kd-stroke-width-icon-regular, 1px)\n    }\n    .kd-color-icon-primary {\n       fill: var(--kd-color-icon-primary, #333333);\n       stroke: var(--kd-color-icon-primary, #333333);\n       km_fill: #333333;\n       km_stroke: #333333;\n       km_darkmode_fill: #C7C7C7;\n       km_darkmode_stroke: #C7C7C7; \n    }\n    .kd-color-icon-green-primary {\n       fill: var(--kd-color-icon-green-primary, #20804E);\n       stroke: var(--kd-color-icon-green-primary, #20804E);\n       km_fill: #20804E;\n       km_stroke: #20804E;\n       km_darkmode_fill: #C7C7C7;\n       km_darkmode_stroke: #C7C7C7; \n    }</style><g id="security_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="security_line" d="M13.5 2.5H4.5C3.39543 2.5 2.5 3.39543 2.5 4.5V11.5" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path id="security_line_2" d="M13 4.5H14.49C14.4955 4.5 14.5 4.49555 14.5 4.49005V3.5C14.5 2.94772 14.0523 2.5 13.5 2.5V2.5C12.9477 2.5 12.5 2.94772 12.5 3.5V6" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path id="security_line_3" d="M7 11.5H2C1.72386 11.5 1.5 11.7239 1.5 12V12.5C1.5 13.0523 1.94772 13.5 2.5 13.5H7" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g><g id="security_group-1" class="kd-color-icon-green-primary kd-stroke-width-icon-regular"><path id="security_line_4" d="M11.36 7.54083L8.86 8.27C8.64667 8.33222 8.5 8.52778 8.5 8.75V11.0269C8.5 12.0939 9.06673 13.0806 9.98839 13.6182L11.2481 14.353C11.4037 14.4439 11.5963 14.4439 11.7519 14.353L13.0116 13.6182C13.9333 13.0806 14.5 12.0939 14.5 11.0269V8.75C14.5 8.52778 14.3533 8.33222 14.14 8.27L11.64 7.54083C11.5486 7.51417 11.4514 7.51417 11.36 7.54083Z" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g></svg></span>';
+      var watermarkIcon = '<span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>水印16_Pdf_Watermark_WaterMark</desc><style>\n    .kd-stroke-width-icon-regular { \n       stroke-width: var(--kd-stroke-width-icon-regular, 1px)\n    }\n    .kd-color-icon-primary {\n       fill: var(--kd-color-icon-primary, #333333);\n       stroke: var(--kd-color-icon-primary, #333333);\n       km_fill: #333333;\n       km_stroke: #333333;\n       km_darkmode_fill: #C7C7C7;\n       km_darkmode_stroke: #C7C7C7; \n    }</style><g id="watermark_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="watermark_line" d="M1.5 5.5L2.49484 6.0969C3.4323 6.65938 4.59215 6.70392 5.56999 6.215V6.215C6.4702 5.7649 7.5298 5.7649 8.43001 6.215L9 6.5" stroke-linecap="round" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path id="watermark_line_2" d="M1.5 9L2.49484 9.5969C3.4323 10.1594 4.59215 10.2039 5.56999 9.715V9.715C6.4702 9.2649 7.5298 9.2649 8.43001 9.715L9 10" stroke-linecap="round" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path id="watermark_Ellipse 44" d="M13.9694 9.43836C13.9694 12.51 11.5587 15 8.58481 15C5.61097 15 3.2002 12.51 3.2002 9.43836C3.2002 9.04385 3.23996 8.65894 3.31558 8.28767C3.73534 6.22676 6.80447 2.66119 8.06287 1.43155V1.43155C8.35738 1.14378 8.81122 1.14481 9.10671 1.43157C9.11225 1.43695 9.1178 1.44236 9.12337 1.44783C10.392 2.69237 13.4361 6.23578 13.854 8.28767C13.9297 8.65894 13.9694 9.04385 13.9694 9.43836Z" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g></svg></span>';
+
+      var currentPage = "benefits";
+      var buyUrl = "https://plus.wps.cn/buy?utm_source=web&privilegeName=当前权益&utm_buysource=privilegeusedetail&utm_medium=work";
+      var upgradeUrl = "https://plus.wps.cn/buy?serviceVal=wps365_business_application&utm_source=work";
+
+      var pages = {
+        benefits: {
+          crumbs: ["订单权益", "权益数据"],
+          desc: "",
+          action: false,
+          render: renderBenefits
+        },
+        overview: stub("企业概览", "企业使用概况与待办入口。"),
+        members: stub("通讯录", "成员管理"),
+        depts: stub("通讯录", "部门管理"),
+        policy: stub("安全管控", "安全策略"),
+        audit: stub("审计合规", "操作日志与合规报告。"),
+        report: stub("数据报表", "企业使用数据与活跃分析。"),
+        ai: stub("AI 管理", "企业 AI 能力与额度策略。"),
+        advanced: stub("高级功能", "企业高级能力入口。"),
+        approval: stub("审批管理", "审批流与待办。"),
+        settings: stub("企业设置", "企业信息与基础配置。"),
+        orders: stub("订单权益", "订单管理"),
+        invoice: stub("订单权益", "发票合同"),
+        coupon: stub("订单权益", "优惠券码"),
+        alloc: stub("订单权益", "权益分配"),
+        auth: stub("订单权益", "授权与保障"),
+        all: stub("全部功能", "查看全部管理功能。")
+      };
+
+      function stub(parent, title) {
+        return {
+          crumbs: [parent, title],
+          desc: title + "为导航占位，本次原型聚焦订单权益下的权益数据。",
+          action: false,
+          render: function () {
+            return '<p class="stub-text">此为导航占位页，本次原型聚焦「订单权益 · 权益数据」。</p>';
+          }
+        };
+      }
+
+      var quotas = [
+        {
+          id: "space", title: "空间大小", label: "已用量 / 总量",
+          display: "349.5 MB / 4 GB", percent: 8.5, icon: cloudIcon,
+          actions: [
+            { label: "空间来源", act: "spaceSource" },
+            { label: "用量分析", href: "https://work.wps.cn/base/space/report/usage?tab=usage" },
+            { label: "前往购买", href: buyUrl }
+          ]
+        },
+        {
+          id: "ai", title: "AI智点额度", label: "当前周期已用 / 当前周期总额度",
+          display: "1,860 智点 / 3,000 智点", percent: 62, icon: aiIcon,
+          actions: [
+            { label: "用量分析", href: "https://work.wps.cn/base/ai-data" },
+            { label: "前往购买", href: buyUrl }
+          ]
+        },
+        {
+          id: "audit", title: "合同审查次数", label: "本月已用 / 本月额度",
+          display: "72 次 / 100 次", percent: 72, icon: magnifierIcon,
+          actions: [{ label: "前往购买", href: buyUrl }]
+        },
+        {
+          id: "meeting", title: "会议时长", label: "本月已用 / 本月额度",
+          display: "128 分钟 / 500 分钟", percent: 25.6, icon: videoIcon,
+          actions: [{ label: "前往购买", href: buyUrl }]
+        },
+        {
+          id: "security", title: "开启加密团队数量", label: "已开启 / 可开启上限",
+          display: "2 个 / 5 个", percent: 40, icon: securityIcon,
+          actions: [{ label: "前往购买", href: buyUrl }]
+        },
+        {
+          id: "watermark", title: "开启水印团队数量", label: "已开启 / 可开启上限",
+          display: "3 个 / 10 个", percent: 30, icon: watermarkIcon,
+          actions: [{ label: "前往购买", href: buyUrl }]
+        }
+      ];
+
+      function renderBenefits() {
+        var tip =
+          '<!-- [MessageBanner: info full] -->' +
+          '<div class="page-tip" data-kd-component="MessageBanner" role="status">' +
+            '<span class="page-tip-icon">' + infoIcon + "</span>" +
+            '<p class="page-tip-text">近期已有 2 名成员自费购买权益，建议升级商业高级版，统一为其他成员开通所需权益</p>' +
+            '<div class="page-tip-action">' +
+              '<!-- [Link: primary] -->' +
+              '<button class="kd-link kd-link-primary" type="button" data-act="selfPayDetail">查看详情</button>' +
+              '<!-- [Button: primary medium] -->' +
+              '<a class="kd-button kd-button-primary kd-button-m" href="' + upgradeUrl + '" target="_blank" rel="noopener noreferrer">立即升级</a>' +
+            "</div>" +
+          "</div>";
+        return tip + '<section class="quota-grid" data-kd-pattern="quota-cards">' + quotas.map(function (q) {
+          var status = q.percent >= 90 ? " kd-progress-error" : "";
+          var btns = q.actions.map(function (a) {
+            if (a.href) {
+              return '<a class="kd-button kd-button-secondary kd-button-m" href="' + a.href + '" target="_blank" rel="noopener noreferrer">' + a.label + "</a>";
+            }
+            return '<button class="kd-button kd-button-secondary kd-button-m" type="button" data-act="' + a.act + '" data-sku="' + (a.sku || q.id) + '">' + a.label + "</button>";
+          }).join("");
+          return (
+            '<article class="quota-card">' +
+              '<div class="quota-card-head">' + q.icon + '<div class="quota-card-title">' + q.title + "</div></div>" +
+              '<div class="quota-card-label">' + q.label + "</div>" +
+              '<div class="quota-card-metric">' + q.display + "</div>" +
+              '<div class="quota-card-progress">' +
+                '<!-- [Progress: line ' + q.percent + '%] -->' +
+                '<div class="kd-progress kd-progress-line' + status + '">' +
+                  '<div class="kd-progress-line-outer"><div class="kd-progress-line-inner" style="width:' + q.percent + '%"></div></div>' +
+                "</div>" +
+              "</div>" +
+              '<div class="quota-card-actions">' + btns + "</div>" +
+            "</article>"
+          );
+        }).join("") + "</section>";
+      }
+
+      function renderCrumbs(items) {
+        var html = "";
+        items.forEach(function (text, i) {
+          if (i > 0) html += arrowRight;
+          if (i === items.length - 1) {
+            html += '<span class="breadcrumb-current">' + text + "</span>";
+          } else {
+            html += "<span>" + text + "</span>";
+          }
+        });
+        return html;
+      }
+
+      function setPage(name) {
+        var page = pages[name] || pages.benefits;
+        currentPage = pages[name] ? name : "benefits";
+        document.getElementById("breadcrumb").innerHTML = renderCrumbs(page.crumbs);
+        document.getElementById("description-bar").textContent = page.desc;
+        document.getElementById("page-actions").innerHTML = page.action
+          ? '<!-- [Button: primary large] --><a class="kd-button kd-button-primary kd-button-lg" href="' + upgradeUrl + '" target="_blank" rel="noopener noreferrer">立即升级</a>'
+          : "";
+        document.getElementById("content-body").innerHTML = page.render();
+
+        document.querySelectorAll(".kd-navigation-item").forEach(function (el) {
+          el.classList.remove("is-active");
+          el.removeAttribute("aria-current");
+        });
+        var target = document.querySelector('.kd-navigation-item[data-page="' + currentPage + '"]');
+        if (target) {
+          target.classList.add("is-active");
+          target.setAttribute("aria-current", "page");
+        }
+      }
+
+      function showMessage(text) {
+        var root = document.getElementById("message-root");
+        root.innerHTML =
+          '<!-- [Message: info] -->' +
+          '<div class="kd-message kd-message-info">' +
+            '<span class="kd-message-icon">' + infoIcon + "</span>" +
+            '<span class="kd-message-text">' + text + "</span>" +
+          "</div>";
+        clearTimeout(showMessage._t);
+        showMessage._t = setTimeout(function () { root.innerHTML = ""; }, 1800);
+      }
+
+      function openModal(inner, sizeClass, comment) {
+        var root = document.getElementById("modal-root");
+        root.className = "kd-modal " + sizeClass;
+        root.innerHTML = inner;
+        document.getElementById("modal-mask").hidden = false;
+        document.getElementById("modal-wrap").hidden = false;
+        var closeBtn = root.querySelector("[data-act=close]");
+        if (closeBtn) closeBtn.focus();
+      }
+
+      function closeModal() {
+        document.getElementById("modal-mask").hidden = true;
+        document.getElementById("modal-wrap").hidden = true;
+        document.getElementById("modal-root").innerHTML = "";
+      }
+
+      function modalChrome(title, body, footerRight, extraClass) {
+        return (
+          '<div class="kd-modal-content">' +
+            '<div class="kd-modal-header">' +
+              '<div class="kd-modal-title" id="modal-title">' + title + "</div>" +
+              '<button class="kd-modal-close" type="button" data-act="close" aria-label="关闭">' + closeIcon + "</button>" +
+            "</div>" +
+            '<div class="' + (extraClass || "kd-modal-body-wrap") + '">' + body + "</div>" +
+            '<div class="kd-modal-footer">' +
+              '<div class="kd-modal-footer-right">' + footerRight + "</div>" +
+            "</div>" +
+          "</div>"
+        );
+      }
+
+      function footerPair(cancel, confirm, confirmAct) {
+        return (
+          '<!-- [Button: secondary medium] -->' +
+          '<button class="kd-button kd-button-secondary kd-button-m" type="button" data-act="close">' + cancel + "</button>" +
+          '<!-- [Button: primary medium] -->' +
+          '<button class="kd-button kd-button-primary kd-button-m" type="button" data-act="' + confirmAct + '">' + confirm + "</button>"
+        );
+      }
+
+      function footerCloseAndBuy(cancel) {
+        return (
+          '<!-- [Button: secondary medium] -->' +
+          '<button class="kd-button kd-button-secondary kd-button-m" type="button" data-act="close">' + cancel + "</button>" +
+          '<a class="kd-button kd-button-primary kd-button-m" href="' + buyUrl + '" target="_blank" rel="noopener noreferrer">前往购买</a>'
+        );
+      }
+
+      function footerCloseAndUpgrade(cancel) {
+        return (
+          '<!-- [Button: secondary medium] -->' +
+          '<button class="kd-button kd-button-secondary kd-button-m" type="button" data-act="close">' + cancel + "</button>" +
+          '<a class="kd-button kd-button-primary kd-button-m" href="' + upgradeUrl + '" target="_blank" rel="noopener noreferrer">立即升级</a>'
+        );
+      }
+
+      function openSelfPayDetail() {
+        var body =
+          '<!-- [Table: default] -->' +
+          '<div class="kd-table">' +
+            "<table>" +
+              "<thead><tr class=\"kd-table-header-tr\">" +
+                '<th class="kd-table-header-th">成员</th>' +
+                '<th class="kd-table-header-th">自费权益</th>' +
+                '<th class="kd-table-header-th">购买时间</th>' +
+              "</tr></thead>" +
+              "<tbody>" +
+                '<tr class="kd-table-row"><td class="kd-table-cell">张晓晨</td><td class="kd-table-cell">WPS 365 个人超级会员</td><td class="kd-table-cell">2026-07-12</td></tr>' +
+                '<tr class="kd-table-row"><td class="kd-table-cell">李思远</td><td class="kd-table-cell">WPS AI 智点加油包</td><td class="kd-table-cell">2026-08-03</td></tr>' +
+              "</tbody>" +
+            "</table>" +
+          "</div>" +
+          '<p class="buy-desc">以上成员为个人付费，企业套餐覆盖后可减少重复支出。</p>';
+        openModal(
+          "<!-- [Modal: md C1] 纯字段型 / 无白卡片 / 自费成员明细 -->" +
+          modalChrome("自费购买权益的成员", body, footerCloseAndUpgrade("关闭")),
+          "kd-modal-md"
+        );
+      }
+
+      function openSpaceSource() {
+        var body =
+          '<!-- [Table: default] -->' +
+          '<div class="kd-table">' +
+            "<table>" +
+              "<thead><tr class=\"kd-table-header-tr\">" +
+                '<th class="kd-table-header-th">来源</th>' +
+                '<th class="kd-table-header-th">额度</th>' +
+                '<th class="kd-table-header-th">有效期</th>' +
+              "</tr></thead>" +
+              "<tbody>" +
+                '<tr class="kd-table-row"><td class="kd-table-cell">体验版套餐赠送</td><td class="kd-table-cell">4 GB</td><td class="kd-table-cell">至 2027-06-24</td></tr>' +
+                '<tr class="kd-table-row"><td class="kd-table-cell">加购空间包</td><td class="kd-table-cell">0 GB</td><td class="kd-table-cell">—</td></tr>' +
+              "</tbody>" +
+            "</table>" +
+          "</div>" +
+          '<p class="buy-desc">合计可用 4 GB，已使用 349.5 MB。</p>';
+        openModal(
+          "<!-- [Modal: md C1] 纯字段型 / 无白卡片 / 空间来源表 -->" +
+          modalChrome("空间来源", body, footerCloseAndBuy("关闭")),
+          "kd-modal-md"
+        );
+      }
+
+      document.addEventListener("click", function (e) {
+        var pageLink = e.target.closest("[data-page]");
+        if (pageLink) {
+          e.preventDefault();
+          setPage(pageLink.getAttribute("data-page"));
+          return;
+        }
+
+        var actBtn = e.target.closest("[data-act]");
+        if (!actBtn) {
+          if (e.target.id === "modal-mask" || e.target.id === "modal-wrap") closeModal();
+          return;
+        }
+        var act = actBtn.getAttribute("data-act");
+        if (act === "close") closeModal();
+        if (act === "selfPayDetail") openSelfPayDetail();
+        if (act === "spaceSource") openSpaceSource();
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") closeModal();
+      });
+
+      document.querySelector(".navigation-shell").addEventListener("click", function (e) {
+        if (!e.target.closest("[data-nav-toggle]")) return;
+        window.setTimeout(function () {
+          document.querySelectorAll(".kd-navigation-item").forEach(function (el) {
+            var on = el.getAttribute("data-page") === currentPage;
+            el.classList.toggle("is-active", on);
+            if (on) el.setAttribute("aria-current", "page");
+            else el.removeAttribute("aria-current");
+          });
+        }, 0);
+      });
+
+      setPage("benefits");
+    })();
+  </script>
+</body>
+</html>
