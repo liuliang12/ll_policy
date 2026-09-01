@@ -1622,6 +1622,12 @@ img, video, canvas, svg { max-width: 100%; }
     }
     .quota-grid > * { min-width: 0; }
 
+    .benefit-usage {
+      max-width: 960px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
     .description-bar:empty {
       display: none;
       height: 0;
@@ -1659,7 +1665,7 @@ img, video, canvas, svg { max-width: 100%; }
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      margin-left: 12px;
+      margin-left: auto;
     }
     .page-tip-action .kd-link {
       border: none;
@@ -1680,6 +1686,44 @@ img, video, canvas, svg { max-width: 100%; }
       display: flex;
       align-items: center;
       gap: 8px;
+    }
+    .quota-card-icon {
+      width: 28px;
+      height: 28px;
+      flex: 0 0 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--kd-border-radius-middle);
+    }
+    .quota-card-icon svg {
+      display: block;
+      width: 16px;
+      height: 16px;
+    }
+    .quota-card-icon.is-blue {
+      background: rgba(var(--kd-color-blue-1), 1);
+      color: rgba(var(--kd-color-blue-6), 1);
+    }
+    .quota-card-icon.is-violet {
+      background: rgba(var(--kd-color-violet-1), 1);
+      color: rgba(var(--kd-color-violet-6), 1);
+    }
+    .quota-card-icon.is-azure {
+      background: rgba(var(--kd-color-azure-1), 1);
+      color: rgba(var(--kd-color-azure-6), 1);
+    }
+    .quota-card-icon.is-orange {
+      background: rgba(var(--kd-color-orange-1), 1);
+      color: rgba(var(--kd-color-orange-6), 1);
+    }
+    .quota-card-icon.is-green {
+      background: rgba(var(--kd-color-green-1), 1);
+      color: rgba(var(--kd-color-green-6), 1);
+    }
+    .quota-card-icon.is-navy {
+      background: rgba(var(--kd-color-navy-1), 1);
+      color: rgba(var(--kd-color-navy-6), 1);
     }
     .quota-card-title {
       font-size: var(--kd-font-size-base);
@@ -1776,8 +1820,247 @@ img, video, canvas, svg { max-width: 100%; }
 
     .kd-message-root:empty { display: none; }
 
+    /* ── 权益明细区域 ── */
+    .benefit-detail {
+      margin-top: 24px;
+    }
+    .benefit-detail-title {
+      margin: 0 0 16px;
+      text-align: center;
+      font-size: var(--kd-font-size-large);
+      font-weight: var(--kd-font-weight-bold);
+      line-height: var(--kd-line-height-large);
+      color: var(--kd-color-text-primary);
+    }
+    .benefit-summary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      max-width: 960px;
+      width: 100%;
+      margin: 0 auto 16px;
+    }
+    .benefit-summary > * { min-width: 0; }
+    .benefit-summary-card {
+      display: flex;
+      min-height: 72px;
+      border: 1px solid var(--kd-color-line-regular);
+      border-radius: var(--kd-border-radius-large);
+      overflow: hidden;
+      background: var(--kd-color-fill-base);
+    }
+    .benefit-summary-label {
+      flex: 0 0 88px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 8px;
+      background: var(--kd-color-fill-light);
+      font-size: var(--kd-font-size-base);
+      font-weight: var(--kd-font-weight-bold);
+      line-height: var(--kd-line-height-base);
+      color: var(--kd-color-text-primary);
+      border-right: 1px solid var(--kd-color-line-regular);
+    }
+    .benefit-summary-body {
+      flex: 1 1 auto;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 16px;
+    }
+    .benefit-summary-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 4px 8px;
+      font-size: var(--kd-font-size-sub-base);
+      line-height: 20px;
+      color: var(--kd-color-text-primary);
+    }
+    .benefit-summary-row .kd-link {
+      border: none;
+      background: transparent;
+      padding: 0;
+      font-size: var(--kd-font-size-sub-base);
+      line-height: 20px;
+    }
+    .benefit-info-tip {
+      display: inline-flex;
+      width: 14px;
+      height: 14px;
+      flex: 0 0 14px;
+      color: var(--kd-color-icon-secondary);
+      vertical-align: middle;
+    }
+    .benefit-info-tip svg { display: block; width: 14px; height: 14px; }
+
+    .benefit-compare {
+      max-width: 960px;
+      width: 100%;
+      max-height: 560px;
+      margin: 0 auto;
+      border: 1px solid var(--kd-color-line-regular);
+      border-radius: var(--kd-border-radius-large);
+      overflow: auto;
+      background: var(--kd-color-fill-base);
+    }
+    .benefit-compare-table {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: separate;
+      border-spacing: 0;
+      table-layout: fixed;
+    }
+    .benefit-compare-table col.col-feature { width: 22%; }
+    .benefit-compare-table th,
+    .benefit-compare-table td {
+      padding: 14px 12px;
+      border-bottom: 1px solid var(--kd-color-line-light);
+      vertical-align: middle;
+      text-align: center;
+      font-size: var(--kd-font-size-sub-base);
+      line-height: 20px;
+      color: var(--kd-color-text-primary);
+      background: var(--kd-color-fill-base);
+    }
+    .benefit-compare-table th:first-child,
+    .benefit-compare-table td:first-child {
+      text-align: left;
+      padding-left: 20px;
+    }
+    .benefit-compare-table thead th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      padding-top: 20px;
+      padding-bottom: 16px;
+      background: var(--kd-color-fill-base);
+      font-weight: var(--kd-font-weight-bold);
+      color: var(--kd-color-text-primary);
+      vertical-align: top;
+      box-shadow: inset 0 -1px 0 var(--kd-color-line-light);
+    }
+    .benefit-compare-table thead th:first-child,
+    .benefit-compare-table thead th:nth-child(2) {
+      vertical-align: middle;
+      font-size: var(--kd-font-size-base);
+    }
+    .benefit-plan-head {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      min-height: 148px;
+    }
+    .benefit-plan-badge {
+      display: inline-flex;
+      align-items: center;
+      height: 20px;
+      padding: 0 6px;
+      border-radius: var(--kd-border-radius-extra-small);
+      font-size: var(--kd-font-size-small);
+      font-weight: var(--kd-font-weight-regular);
+      line-height: var(--kd-font-line-height-small);
+    }
+    .benefit-plan-badge.is-current {
+      background: rgba(var(--kd-color-green-1), 1);
+      color: rgba(var(--kd-color-green-7), 1);
+    }
+    .benefit-plan-badge.is-recommend {
+      background: rgba(250, 236, 210, 1);
+      color: rgba(166, 112, 18, 1);
+    }
+    .benefit-plan-badge.is-placeholder {
+      visibility: hidden;
+    }
+    .benefit-plan-name {
+      font-size: var(--kd-font-size-base);
+      font-weight: var(--kd-font-weight-bold);
+      line-height: var(--kd-line-height-base);
+      color: var(--kd-color-text-primary);
+    }
+    .benefit-plan-desc {
+      font-size: var(--kd-font-size-small);
+      line-height: var(--kd-font-line-height-small);
+      color: var(--kd-color-text-secondary);
+      font-weight: var(--kd-font-weight-regular);
+    }
+    .benefit-plan-price {
+      margin-top: 2px;
+      font-size: var(--kd-font-size-sub-base);
+      line-height: 20px;
+      color: var(--kd-color-text-primary);
+      font-weight: var(--kd-font-weight-regular);
+    }
+    .benefit-plan-cta {
+      margin-top: 8px;
+      min-height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .benefit-plan-cta .kd-button {
+      min-width: 88px;
+    }
+    .benefit-btn-recommend {
+      background: rgba(232, 201, 143, 1);
+      border-color: rgba(232, 201, 143, 1);
+      color: rgba(122, 78, 11, 1);
+    }
+    .benefit-btn-recommend:hover {
+      background: rgba(222, 186, 120, 1);
+      border-color: rgba(222, 186, 120, 1);
+      color: rgba(122, 78, 11, 1);
+    }
+    .benefit-compare-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+    .benefit-cat-row td {
+      background: var(--kd-color-public-light);
+      font-weight: var(--kd-font-weight-bold);
+      color: var(--kd-color-text-primary);
+    }
+    .benefit-cat-row.is-muted td {
+      background: var(--kd-color-fill-light);
+    }
+    .benefit-cat-count {
+      font-weight: var(--kd-font-weight-regular);
+      color: var(--kd-color-text-secondary);
+    }
+    .benefit-feature-name {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: var(--kd-font-weight-regular);
+    }
+    .benefit-cell-stack {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      max-width: 140px;
+    }
+    .benefit-cell-note {
+      font-size: var(--kd-font-size-small);
+      line-height: var(--kd-font-line-height-small);
+      color: var(--kd-color-text-secondary);
+      white-space: normal;
+    }
+    .benefit-status {
+      display: inline-flex;
+      width: 18px;
+      height: 18px;
+      flex: 0 0 18px;
+    }
+    .benefit-status svg { display: block; width: 18px; height: 18px; }
+
     @media (max-width: 1279px) {
       .quota-grid { grid-template-columns: repeat(2, 1fr); }
+      .benefit-summary { grid-template-columns: 1fr; }
+      .benefit-compare { max-width: 100%; }
     }
   </style>
 </head>
@@ -2580,12 +2863,12 @@ img, video, canvas, svg { max-width: 100%; }
       var arrowRight = '<span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" kd_rtl="mirror" requiredCustomFeatures="data-kd-color-scheme,data-kd-rtl-mirror-scheme" km_stroke-width="1" km_darkmode="true"><desc>右箭头_小</desc><style>\n    .kd-stroke-width-icon-bold { \n       stroke-width: var(--kd-stroke-width-icon-bold, 1.2px)\n    }\n    .kd-color-icon-secondary {\n       fill: var(--kd-color-icon-secondary, #757575);\n       stroke: var(--kd-color-icon-secondary, #757575);\n       km_fill: #757575;\n       km_stroke: #757575;\n       km_darkmode_fill: #C7C7C7;\n       km_darkmode_stroke: #C7C7C7; \n    }</style><g id="arrow_right_s_group-0" class="kd-color-icon-secondary kd-stroke-width-icon-bold"><path id="arrow_right_s_area1" d="M6.5 4L10 7.99282V8.00738L6.5 12" stroke-linecap="round" stroke-linejoin="round" fill="none" vector-effect="non-scaling-stroke"/></g></svg></span>';
       var closeIcon = '<span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>关闭16_CloseWindow_EndShow_乘以_乘号_EtToolbox_BatchMul_symbol_multiply_关闭_close</desc><style>\n    .kd-stroke-width-icon-regular { \n       stroke-width: var(--kd-stroke-width-icon-regular, 1px)\n    }\n    .kd-color-icon-primary {\n       fill: var(--kd-color-icon-primary, #333333);\n       stroke: var(--kd-color-icon-primary, #333333);\n       km_fill: #333333;\n       km_stroke: #333333;\n       km_darkmode_fill: #C7C7C7;\n       km_darkmode_stroke: #C7C7C7; \n    }\n    .kd-color-icon-red-primary {\n       fill: var(--kd-color-icon-red-primary, #BF3942);\n       stroke: var(--kd-color-icon-red-primary, #BF3942);\n       km_fill: #BF3942;\n       km_stroke: #BF3942;\n       km_darkmode_fill: #C7C7C7;\n       km_darkmode_stroke: #C7C7C7; \n    }</style><g id="close_window_group-1" class="kd-color-icon-red-primary kd-stroke-width-icon-regular"><path id="close_window_line" d="M11.5 4.5L4.5 11.5" stroke-linecap="round" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path id="close_window_line_2" d="M4.5 4.5L11.5 11.5" stroke-linecap="round" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g><g id="close_window_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="close_window_line_3" d="M14.5 14V2C14.5 1.72386 14.2761 1.5 14 1.5H2C1.72386 1.5 1.5 1.72386 1.5 2V14C1.5 14.2761 1.72386 14.5 2 14.5H14C14.2761 14.5 14.5 14.2761 14.5 14Z" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g></svg></span>';
       var infoIcon = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">\n<g clip-path="url(#msg_info_clip)">\n<path d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16Z" fill="#1F69E0"/>\n<path fill-rule="evenodd" clip-rule="evenodd" d="M8 13C8.55228 13 9 12.5523 9 12V7C9 6.44772 8.55228 6 8 6C7.44772 6 7 6.44772 7 7V12C7 12.5523 7.44772 13 8 13ZM7 4C7 4.55228 7.44772 5 8 5C8.55228 5 9 4.55228 9 4C9 3.44772 8.55228 3 8 3C7.44772 3 7 3.44772 7 4Z" fill="white"/>\n</g>\n<defs>\n<clipPath id="msg_info_clip">\n<rect width="16" height="16" fill="white"/>\n</clipPath>\n</defs>\n</svg>';
-      var cloudIcon = '<span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" km_stroke-width="1" km_darkmode="true" requiredCustomFeatures="data-kd-color-scheme"><desc>云_网盘_云端</desc><style>\n    .kd-stroke-width-icon-regular { \n       stroke-width: var(--kd-stroke-width-icon-regular, 1px)\n    }\n    .kd-color-icon-primary {\n       fill: var(--kd-color-icon-primary, #333333);\n       stroke: var(--kd-color-icon-primary, #333333);\n       km_fill: #333333;\n       km_stroke: #333333;\n       km_darkmode_fill: #C7C7C7;\n       km_darkmode_stroke: #C7C7C7; \n    }</style><g id="cloud_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="cloud_Vector" d="M12.4859 6.64077C12.1732 6.54915 11.8423 6.5 11.5 6.5C10.5207 6.5 9.63526 6.90223 9 7.55051M12.4859 6.64077C13.9389 7.0665 15 8.40933 15 10C15 11.933 13.433 13.5 11.5 13.5H4.5C2.567 13.5 1 11.933 1 10C1 8.40933 2.06113 7.0665 3.51413 6.64077C3.69716 4.32344 5.63564 2.5 8 2.5C10.3644 2.5 12.3028 4.32344 12.4859 6.64077Z" stroke-linecap="round" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g></svg></span>';
-      var aiIcon = '<span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>AI16_人工智能_ai</desc><style>\n    .kd-stroke-width-icon-regular { \n       stroke-width: var(--kd-stroke-width-icon-regular, 1px)\n    }\n    .kd-color-icon-primary {\n       fill: var(--kd-color-icon-primary, #333333);\n       stroke: var(--kd-color-icon-primary, #333333);\n       km_fill: #333333;\n       km_stroke: #333333;\n       km_darkmode_fill: #C7C7C7;\n       km_darkmode_stroke: #C7C7C7; \n    }</style><g id="ai_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="ai_line" d="M5.73355 3.0862C5.89582 2.7292 6.25177 2.5 6.64391 2.5H10.4845C10.4917 2.5 10.4966 2.50752 10.4936 2.51414L5.76645 12.9138C5.60418 13.2708 5.24823 13.5 4.85609 13.5H1.01553C1.00826 13.5 1.00342 13.4925 1.00643 13.4859L5.73355 3.0862Z" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path id="ai_line_2" d="M8.3 7.5H11.7435C12.1421 7.5 12.5026 7.73668 12.661 8.10239L14.9939 13.486C14.9968 13.4926 14.992 13.5 14.9848 13.5H11.1594C10.7594 13.5 10.3978 13.2616 10.2403 12.8939L6 3" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g></svg></span>';
-      var magnifierIcon = '<span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>放大镜_搜索_查看_查找</desc><style>\n    .kd-stroke-width-icon-regular { \n       stroke-width: var(--kd-stroke-width-icon-regular, 1px)\n    }\n    .kd-color-icon-primary {\n       fill: var(--kd-color-icon-primary, #333333);\n       stroke: var(--kd-color-icon-primary, #333333);\n       km_fill: #333333;\n       km_stroke: #333333;\n       km_darkmode_fill: #C7C7C7;\n       km_darkmode_stroke: #C7C7C7; \n    }</style><g id="magnifier_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="magnifier_line" d="M13 7C13 10.3137 10.3137 13 7 13C3.68629 13 1 10.3137 1 7C1 3.68629 3.68629 1 7 1C10.3137 1 13 3.68629 13 7Z" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path id="magnifier_line_2" d="M11.5 11.5L15 15" stroke-linecap="round" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g></svg></span>';
-      var videoIcon = '<span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>视频16_插入视频_video_录制视频_OpeningVideo</desc><style>\n    .kd-stroke-width-icon-regular { \n       stroke-width: var(--kd-stroke-width-icon-regular, 1px)\n    }\n    .kd-color-icon-primary {\n       fill: var(--kd-color-icon-primary, #333333);\n       stroke: var(--kd-color-icon-primary, #333333);\n       km_fill: #333333;\n       km_stroke: #333333;\n       km_darkmode_fill: #C7C7C7;\n       km_darkmode_stroke: #C7C7C7; \n    }\n    .kd-color-icon-orange-primary {\n       fill: var(--kd-color-icon-orange-primary, #BF5513);\n       stroke: var(--kd-color-icon-orange-primary, #BF5513);\n       km_fill: #BF5513;\n       km_stroke: #BF5513;\n       km_darkmode_fill: #C7C7C7;\n       km_darkmode_stroke: #C7C7C7; \n    }\n    .kd-color-icon-orange-quaternary {\n       fill: var(--kd-color-icon-orange-quaternary, #FDE0CE);\n       stroke: var(--kd-color-icon-orange-quaternary, #FDE0CE);\n       km_fill: #FDE0CE;\n       km_stroke: #FDE0CE;\n       km_darkmode_fill: #C7C7C7;\n       km_darkmode_stroke: #C7C7C7; \n    }</style><g id="video_group-2" class="kd-color-icon-orange-quaternary kd-stroke-width-icon-regular"><path id="video_fill" d="M6.5 10.482V5.51804C6.5 5.51019 6.50864 5.5054 6.5153 5.50956L10.4864 7.99152C10.4927 7.99544 10.4927 8.00456 10.4864 8.00848L6.5153 10.4904C6.50864 10.4946 6.5 10.4898 6.5 10.482Z" stroke="none"/></g><g id="video_group-1" class="kd-color-icon-orange-primary kd-stroke-width-icon-regular"><path id="video_line" d="M6.5 10.482V5.51804C6.5 5.51019 6.50864 5.5054 6.5153 5.50956L10.4864 7.99152C10.4927 7.99544 10.4927 8.00456 10.4864 8.00848L6.5153 10.4904C6.50864 10.4946 6.5 10.4898 6.5 10.482Z" stroke-linecap="round" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g><g id="video_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="video_line_2" d="M1.5 2C1.5 1.72386 1.72386 1.5 2 1.5H14C14.2761 1.5 14.5 1.72386 14.5 2V14C14.5 14.2761 14.2761 14.5 14 14.5H2C1.72386 14.5 1.5 14.2761 1.5 14V2Z" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g></svg></span>';
-      var securityIcon = '<span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>宏安全性16_Security</desc><style>\n    .kd-stroke-width-icon-regular { \n       stroke-width: var(--kd-stroke-width-icon-regular, 1px)\n    }\n    .kd-color-icon-primary {\n       fill: var(--kd-color-icon-primary, #333333);\n       stroke: var(--kd-color-icon-primary, #333333);\n       km_fill: #333333;\n       km_stroke: #333333;\n       km_darkmode_fill: #C7C7C7;\n       km_darkmode_stroke: #C7C7C7; \n    }\n    .kd-color-icon-green-primary {\n       fill: var(--kd-color-icon-green-primary, #20804E);\n       stroke: var(--kd-color-icon-green-primary, #20804E);\n       km_fill: #20804E;\n       km_stroke: #20804E;\n       km_darkmode_fill: #C7C7C7;\n       km_darkmode_stroke: #C7C7C7; \n    }</style><g id="security_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="security_line" d="M13.5 2.5H4.5C3.39543 2.5 2.5 3.39543 2.5 4.5V11.5" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path id="security_line_2" d="M13 4.5H14.49C14.4955 4.5 14.5 4.49555 14.5 4.49005V3.5C14.5 2.94772 14.0523 2.5 13.5 2.5V2.5C12.9477 2.5 12.5 2.94772 12.5 3.5V6" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path id="security_line_3" d="M7 11.5H2C1.72386 11.5 1.5 11.7239 1.5 12V12.5C1.5 13.0523 1.94772 13.5 2.5 13.5H7" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g><g id="security_group-1" class="kd-color-icon-green-primary kd-stroke-width-icon-regular"><path id="security_line_4" d="M11.36 7.54083L8.86 8.27C8.64667 8.33222 8.5 8.52778 8.5 8.75V11.0269C8.5 12.0939 9.06673 13.0806 9.98839 13.6182L11.2481 14.353C11.4037 14.4439 11.5963 14.4439 11.7519 14.353L13.0116 13.6182C13.9333 13.0806 14.5 12.0939 14.5 11.0269V8.75C14.5 8.52778 14.3533 8.33222 14.14 8.27L11.64 7.54083C11.5486 7.51417 11.4514 7.51417 11.36 7.54083Z" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g></svg></span>';
-      var watermarkIcon = '<span class="kd-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" requiredCustomFeatures="data-kd-color-scheme" km_stroke-width="1" km_darkmode="true"><desc>水印16_Pdf_Watermark_WaterMark</desc><style>\n    .kd-stroke-width-icon-regular { \n       stroke-width: var(--kd-stroke-width-icon-regular, 1px)\n    }\n    .kd-color-icon-primary {\n       fill: var(--kd-color-icon-primary, #333333);\n       stroke: var(--kd-color-icon-primary, #333333);\n       km_fill: #333333;\n       km_stroke: #333333;\n       km_darkmode_fill: #C7C7C7;\n       km_darkmode_stroke: #C7C7C7; \n    }</style><g id="watermark_group-0" class="kd-color-icon-primary kd-stroke-width-icon-regular"><path id="watermark_line" d="M1.5 5.5L2.49484 6.0969C3.4323 6.65938 4.59215 6.70392 5.56999 6.215V6.215C6.4702 5.7649 7.5298 5.7649 8.43001 6.215L9 6.5" stroke-linecap="round" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path id="watermark_line_2" d="M1.5 9L2.49484 9.5969C3.4323 10.1594 4.59215 10.2039 5.56999 9.715V9.715C6.4702 9.2649 7.5298 9.2649 8.43001 9.715L9 10" stroke-linecap="round" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><path id="watermark_Ellipse 44" d="M13.9694 9.43836C13.9694 12.51 11.5587 15 8.58481 15C5.61097 15 3.2002 12.51 3.2002 9.43836C3.2002 9.04385 3.23996 8.65894 3.31558 8.28767C3.73534 6.22676 6.80447 2.66119 8.06287 1.43155V1.43155C8.35738 1.14378 8.81122 1.14481 9.10671 1.43157C9.11225 1.43695 9.1178 1.44236 9.12337 1.44783C10.392 2.69237 13.4361 6.23578 13.854 8.28767C13.9297 8.65894 13.9694 9.04385 13.9694 9.43836Z" fill="none" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></g></svg></span>';
+      var cloudIcon = '<span class="quota-card-icon is-blue" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M12.486 6.641A3.99 3.99 0 0 0 11.5 6.5a3.5 3.5 0 0 0-2.5 1.05M12.486 6.641A4.5 4.5 0 0 1 15 10.5C15 12.433 13.433 14 11.5 14h-7A3.5 3.5 0 0 1 1 10.5a3.5 3.5 0 0 1 2.514-3.359A5.002 5.002 0 0 1 8 2.5c2.364 0 4.303 1.823 4.486 4.141Z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
+      var aiIcon = '<span class="quota-card-icon is-violet" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M5.734 3.086A1.25 1.25 0 0 1 6.644 2.5h3.84a.01.01 0 0 1 .01.014L5.766 12.914A1.25 1.25 0 0 1 4.856 13.5H1.016a.01.01 0 0 1-.01-.014L5.734 3.086Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M8.3 7.5h3.444a1.25 1.25 0 0 1 1.161.898l2.333 5.384a.01.01 0 0 1-.01.018H11.16a1.25 1.25 0 0 1-1.16-.894L6 3" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span>';
+      var magnifierIcon = '<span class="quota-card-icon is-azure" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5.4" stroke="currentColor" stroke-width="1.2"/><path d="M11.5 11.5 15 15" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>';
+      var videoIcon = '<span class="quota-card-icon is-orange" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1.5" y="1.5" width="13" height="13" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M6.5 5.5v5l4.5-2.5-4.5-2.5Z" fill="currentColor"/></svg></span>';
+      var securityIcon = '<span class="quota-card-icon is-green" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.8 13.2 4v3.6c0 3.2-2.1 5.4-5.2 6.6C4.9 13 2.8 10.8 2.8 7.6V4L8 1.8Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="m5.8 7.6 1.6 1.6 2.8-2.8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
+      var watermarkIcon = '<span class="quota-card-icon is-navy" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 5.2 3.1 5.9a3.6 3.6 0 0 0 3.6.1 3.2 3.2 0 0 1 2.6 0L10 6.4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M2 8.8 3.1 9.5a3.6 3.6 0 0 0 3.6.1 3.2 3.2 0 0 1 2.6 0L10 10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M8.3 1.8c.8.9 4.2 4.5 4.7 7.1a5 5 0 0 1-4.8 5.8A5 5 0 0 1 3.5 8.9C3.9 6.3 7.5 2.7 8.3 1.8Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span>';
 
       var currentPage = "benefits";
       var buyUrl = "https://plus.wps.cn/buy?utm_source=web&privilegeName=当前权益&utm_buysource=privilegeusedetail&utm_medium=work";
@@ -2667,6 +2950,223 @@ img, video, canvas, svg { max-width: 100%; }
         }
       ];
 
+      var tipInfoIcon =
+        '<span class="benefit-info-tip" aria-hidden="true">' +
+          '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">' +
+            '<circle cx="7" cy="7" r="6.25" stroke="currentColor" stroke-width="1.2" fill="none"/>' +
+            '<path d="M7 6.2V10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>' +
+            '<circle cx="7" cy="4.2" r="0.8" fill="currentColor"/>' +
+          "</svg>" +
+        "</span>";
+      var checkStatusIcon =
+        '<span class="benefit-status" aria-label="已开通">' +
+          '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">' +
+            '<circle cx="9" cy="9" r="9" fill="#1F69E0"/>' +
+            '<path d="M5.2 9.1L7.7 11.6L12.8 6.4" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>' +
+          "</svg>" +
+        "</span>";
+      var crossStatusIcon =
+        '<span class="benefit-status" aria-label="未开通">' +
+          '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">' +
+            '<circle cx="9" cy="9" r="9" fill="#D6D6D6"/>' +
+            '<path d="M6.2 6.2L11.8 11.8M11.8 6.2L6.2 11.8" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>' +
+          "</svg>" +
+        "</span>";
+
+      function featureName(text, withTip) {
+        return (
+          '<span class="benefit-feature-name">' +
+            text +
+            (withTip ? tipInfoIcon : "") +
+          "</span>"
+        );
+      }
+
+      function statusCell(on, note) {
+        var icon = on ? checkStatusIcon : crossStatusIcon;
+        if (!note) return icon;
+        return '<span class="benefit-cell-stack">' + icon + '<span class="benefit-cell-note">' + note + "</span></span>";
+      }
+
+      function renderBenefitDetail() {
+        var licenseNote = "Windows版和Linux版授权任选其一";
+        var rows = [
+          {
+            type: "cat",
+            name: "WPS Office 授权",
+            counts: ["0/2", "0/2", "1/2", "2/2"]
+          },
+          {
+            name: featureName("Windows 等多平台授权认证", true),
+            cells: [
+              statusCell(false),
+              statusCell(false),
+              statusCell(true, licenseNote),
+              statusCell(true)
+            ]
+          },
+          {
+            name: featureName("Linux 授权认证", true),
+            cells: [
+              statusCell(false),
+              statusCell(false),
+              statusCell(true, licenseNote),
+              statusCell(true)
+            ]
+          },
+          {
+            type: "cat",
+            muted: true,
+            name: "数字资产管控",
+            counts: ["9/31", "15/31", "25/31", "29/31"]
+          },
+          {
+            name: "企业储存空间",
+            cells: ["4GB", "50GB/人", "365GB/人", "2TB/人"]
+          },
+          {
+            name: featureName("空间自定义分配", true),
+            cells: [statusCell(false), statusCell(false), statusCell(true), statusCell(true)]
+          },
+          {
+            name: featureName("单文件上传大小", true),
+            cells: ["10MB", "4GB", "6GB", "10GB"]
+          },
+          {
+            name: featureName("音视频在线播放", true),
+            cells: [statusCell(false), statusCell(false), statusCell(true), statusCell(true)]
+          },
+          {
+            name: featureName("团队文档水印", true),
+            cells: ["3个团队/企业", "30个团队/企业", "50个团队/企业", "不限"]
+          },
+          {
+            name: featureName("团队文档加密保护", true),
+            cells: ["3个团队/企业", "30个团队/企业", "50个团队/企业", "不限"]
+          },
+          {
+            name: featureName("团队文档分享范围管控", true),
+            cells: ["3个团队/企业", "30个团队/企业", "50个团队/企业", "不限"]
+          },
+          {
+            name: featureName("离职员工文档交接", true),
+            cells: [statusCell(false), statusCell(false), statusCell(true), statusCell(true)]
+          }
+        ];
+
+        var body = rows.map(function (row) {
+          if (row.type === "cat") {
+            return (
+              '<tr class="benefit-cat-row' + (row.muted ? " is-muted" : "") + '">' +
+                "<td>" + row.name + "</td>" +
+                row.counts.map(function (c) {
+                  return '<td><span class="benefit-cat-count">权益项: ' + c + "</span></td>";
+                }).join("") +
+              "</tr>"
+            );
+          }
+          return (
+            "<tr>" +
+              "<td>" + row.name + "</td>" +
+              row.cells.map(function (c) { return "<td>" + c + "</td>"; }).join("") +
+            "</tr>"
+          );
+        }).join("");
+
+        function planHead(opts) {
+          var badgeClass = "benefit-plan-badge";
+          if (opts.badgeType === "current") badgeClass += " is-current";
+          else if (opts.badgeType === "recommend") badgeClass += " is-recommend";
+          else badgeClass += " is-placeholder";
+          var badge = '<span class="' + badgeClass + '">' + (opts.badge || "占位") + "</span>";
+
+          var cta = "";
+          if (opts.cta === "buy") {
+            cta =
+              '<!-- [Button: primary medium] -->' +
+              '<a class="kd-button kd-button-primary kd-button-m" href="' + buyUrl + '" target="_blank" rel="noopener noreferrer">立即购买</a>';
+          } else if (opts.cta === "recommend") {
+            cta =
+              '<a class="kd-button kd-button-m benefit-btn-recommend" href="' + buyUrl + '" target="_blank" rel="noopener noreferrer">立即购买</a>';
+          }
+
+          return (
+            '<div class="benefit-plan-head">' +
+              badge +
+              '<div class="benefit-plan-name">' + opts.name + "</div>" +
+              '<div class="benefit-plan-desc">' + opts.desc + "</div>" +
+              '<div class="benefit-plan-price">' + opts.price + "</div>" +
+              '<div class="benefit-plan-cta">' + cta + "</div>" +
+            "</div>"
+          );
+        }
+
+        return (
+          '<!-- [Pattern: benefit-detail] -->' +
+          '<section class="benefit-detail" data-kd-pattern="benefit-detail">' +
+            '<h2 class="benefit-detail-title">权益明细</h2>' +
+            '<div class="benefit-summary">' +
+              '<article class="benefit-summary-card">' +
+                '<div class="benefit-summary-label">权益组成</div>' +
+                '<div class="benefit-summary-body">' +
+                  '<div class="benefit-summary-row">我的套餐：WPS 365 体验版 (2027-06-24到期)' + tipInfoIcon + "</div>" +
+                  '<div class="benefit-summary-row">' +
+                    "我的权益包：截屏管控权益包 (2027-03-25到期)" +
+                    '<!-- [Link: primary] -->' +
+                    '<button class="kd-link kd-link-primary" type="button" data-act="benefitPackMore">更多 &gt;</button>' +
+                  "</div>" +
+                "</div>" +
+              "</article>" +
+              '<article class="benefit-summary-card">' +
+                '<div class="benefit-summary-label">权益来源</div>' +
+                '<div class="benefit-summary-body">' +
+                  '<div class="benefit-summary-row">' +
+                    "企业购买：" +
+                    '<!-- [Link: primary] -->' +
+                    '<button class="kd-link kd-link-primary" type="button" data-act="orderRecord">订单记录 &gt;</button>' +
+                  "</div>" +
+                "</div>" +
+              "</article>" +
+            "</div>" +
+            '<div class="benefit-compare">' +
+              '<table class="benefit-compare-table">' +
+                "<colgroup>" +
+                  '<col class="col-feature">' +
+                  "<col><col><col><col>" +
+                "</colgroup>" +
+                "<thead><tr>" +
+                  "<th>功能</th>" +
+                  "<th>我的权益</th>" +
+                  "<th>" + planHead({
+                    badgeType: "none",
+                    name: "商业协作版",
+                    desc: "尊享30+项权益",
+                    price: "199 元/人/年",
+                    cta: "buy"
+                  }) + "</th>" +
+                  "<th>" + planHead({
+                    badgeType: "none",
+                    name: "商业高级版",
+                    desc: "尊享250+项权益",
+                    price: "399 元/人/年",
+                    cta: "buy"
+                  }) + "</th>" +
+                  "<th>" + planHead({
+                    badge: "推荐",
+                    badgeType: "recommend",
+                    name: "商业旗舰版",
+                    desc: "尊享300+项权益",
+                    price: "599 元/人/年",
+                    cta: "recommend"
+                  }) + "</th>" +
+                "</tr></thead>" +
+                "<tbody>" + body + "</tbody>" +
+              "</table>" +
+            "</div>" +
+          "</section>"
+        );
+      }
+
       function renderBenefits() {
         var tip =
           '<!-- [MessageBanner: info full] -->' +
@@ -2680,29 +3180,37 @@ img, video, canvas, svg { max-width: 100%; }
               '<a class="kd-button kd-button-primary kd-button-m" href="' + upgradeUrl + '" target="_blank" rel="noopener noreferrer">立即升级</a>' +
             "</div>" +
           "</div>";
-        return tip + '<section class="quota-grid" data-kd-pattern="quota-cards">' + quotas.map(function (q) {
-          var status = q.percent >= 90 ? " kd-progress-error" : "";
-          var btns = q.actions.map(function (a) {
-            if (a.href) {
-              return '<a class="kd-button kd-button-secondary kd-button-m" href="' + a.href + '" target="_blank" rel="noopener noreferrer">' + a.label + "</a>";
-            }
-            return '<button class="kd-button kd-button-secondary kd-button-m" type="button" data-act="' + a.act + '" data-sku="' + (a.sku || q.id) + '">' + a.label + "</button>";
-          }).join("");
-          return (
-            '<article class="quota-card">' +
-              '<div class="quota-card-head">' + q.icon + '<div class="quota-card-title">' + q.title + "</div></div>" +
-              '<div class="quota-card-label">' + q.label + "</div>" +
-              '<div class="quota-card-metric">' + q.display + "</div>" +
-              '<div class="quota-card-progress">' +
-                '<!-- [Progress: line ' + q.percent + '%] -->' +
-                '<div class="kd-progress kd-progress-line' + status + '">' +
-                  '<div class="kd-progress-line-outer"><div class="kd-progress-line-inner" style="width:' + q.percent + '%"></div></div>' +
-                "</div>" +
-              "</div>" +
-              '<div class="quota-card-actions">' + btns + "</div>" +
-            "</article>"
-          );
-        }).join("") + "</section>";
+        return (
+          '<div class="benefit-usage">' +
+            tip +
+            '<section class="quota-grid" data-kd-pattern="quota-cards">' +
+              quotas.map(function (q) {
+                var status = q.percent >= 90 ? " kd-progress-error" : "";
+                var btns = q.actions.map(function (a) {
+                  if (a.href) {
+                    return '<a class="kd-button kd-button-secondary kd-button-m" href="' + a.href + '" target="_blank" rel="noopener noreferrer">' + a.label + "</a>";
+                  }
+                  return '<button class="kd-button kd-button-secondary kd-button-m" type="button" data-act="' + a.act + '" data-sku="' + (a.sku || q.id) + '">' + a.label + "</button>";
+                }).join("");
+                return (
+                  '<article class="quota-card">' +
+                    '<div class="quota-card-head">' + q.icon + '<div class="quota-card-title">' + q.title + "</div></div>" +
+                    '<div class="quota-card-label">' + q.label + "</div>" +
+                    '<div class="quota-card-metric">' + q.display + "</div>" +
+                    '<div class="quota-card-progress">' +
+                      '<!-- [Progress: line ' + q.percent + '%] -->' +
+                      '<div class="kd-progress kd-progress-line' + status + '">' +
+                        '<div class="kd-progress-line-outer"><div class="kd-progress-line-inner" style="width:' + q.percent + '%"></div></div>' +
+                      "</div>" +
+                    "</div>" +
+                    '<div class="quota-card-actions">' + btns + "</div>" +
+                  "</article>"
+                );
+              }).join("") +
+            "</section>" +
+          "</div>" +
+          renderBenefitDetail()
+        );
       }
 
       function renderCrumbs(items) {
@@ -2872,6 +3380,8 @@ img, video, canvas, svg { max-width: 100%; }
         if (act === "close") closeModal();
         if (act === "selfPayDetail") openSelfPayDetail();
         if (act === "spaceSource") openSpaceSource();
+        if (act === "benefitPackMore") showMessage("权益包列表示意");
+        if (act === "orderRecord") showMessage("订单记录示意");
       });
 
       document.addEventListener("keydown", function (e) {
