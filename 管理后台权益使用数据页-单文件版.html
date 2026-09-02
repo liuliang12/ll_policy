@@ -1731,13 +1731,18 @@ img, video, canvas, svg { max-width: 100%; }
       padding: 0;
     }
 
+    .page-tip-wrap {
+      max-width: 960px;
+      width: 100%;
+      margin: 0 auto 16px;
+    }
     .page-tip {
       display: flex;
       align-items: center;
       gap: 8px;
       min-width: 0;
       padding: 8px 12px;
-      margin-bottom: 12px;
+      margin-bottom: 0;
       background: var(--kd-color-info-light);
       border: none;
       border-radius: var(--kd-border-radius-large);
@@ -3312,6 +3317,7 @@ img, video, canvas, svg { max-width: 100%; }
             "</div>" +
           "</div>";
         return (
+          '<div class="page-tip-wrap">' + tip + "</div>" +
           '<section class="benefit-panel" data-kd-pattern="quota-cards">' +
             '<header class="benefit-panel-head">' +
               '<span class="benefit-panel-icon" aria-hidden="true">' +
@@ -3322,7 +3328,6 @@ img, video, canvas, svg { max-width: 100%; }
               "</span>" +
               '<h2 class="benefit-panel-title">权益使用概况</h2>' +
             "</header>" +
-            tip +
             '<div class="quota-grid">' +
               quotas.map(function (q) {
                 var status = q.percent >= 90 ? " kd-progress-error" : "";
