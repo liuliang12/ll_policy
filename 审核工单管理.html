@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>审核工单管理</title>
+  <style>
+    :root { font-family: Arial, "PingFang SC", "Microsoft YaHei", sans-serif; color: #262626; background: #f3f4f7; }
+    * { box-sizing: border-box; }
+    body { min-width: 960px; margin: 0; }
+    button { font: inherit; cursor: pointer; }
+    .page { max-width: 1440px; min-height: 100vh; margin: auto; padding: 36px 40px 60px; background: #fff; }
+    .top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+    .top-actions { display: flex; gap: 10px; }
+    h1 { margin: 0; font-size: 26px; }
+    .primary { min-height: 42px; padding: 0 18px; border: 1px solid #7651f6; border-radius: 6px; background: #7651f6; color: #fff; }
+    .primary:hover { background: #6740e9; }
+    .primary:disabled { border-color: #d9d9d9; background: #e9e9e9; color: #999; cursor: not-allowed; }
+    .secondary { min-height: 42px; padding: 0 18px; border: 1px solid #d5d5d5; border-radius: 6px; background: #fff; color: #333; }
+    .secondary:disabled { background: #f5f5f5; color: #aaa; cursor: not-allowed; }
+    .danger-button { min-height: 42px; padding: 0 18px; border: 1px solid #d4380d; border-radius: 6px; background: #d4380d; color: #fff; }
+    .tabs { display: flex; gap: 30px; margin: 0 0 20px; border-bottom: 1px solid #e9e9e9; }
+    .tabs button { padding: 0 2px 14px; border: 0; border-bottom: 2px solid transparent; background: none; color: #666; font-size: 16px; }
+    .tabs button.active { border-bottom-color: #7651f6; color: #7651f6; font-weight: 600; }
+    .tab-count.full { color: #d4380d; }
+    .tab-panel-head { display: flex; justify-content: flex-end; margin: -4px 0 14px; }
+    .tab-panel-head[hidden] { display: none; }
+    .table-wrap { overflow-x: auto; border: 1px solid #e8e8e8; border-radius: 6px; }
+    table { width: 100%; min-width: 1240px; border-collapse: collapse; table-layout: fixed; }
+    th, td { padding: 17px 18px; border-bottom: 1px solid #eee; text-align: left; font-size: 15px; }
+    th { background: #fafafa; font-weight: 600; white-space: nowrap; }
+    tr:last-child td { border-bottom: 0; }
+    .order-id { display: block; margin-top: 5px; color: #999; font-size: 13px; }
+    .status { display: inline-block; padding: 4px 9px; border-radius: 4px; font-size: 13px; }
+    .status.draft { background: #f3efff; color: #7651f6; }
+    .status.reviewing { background: #e8f3ff; color: #1677d2; }
+    .status.incomplete { background: #fff3e6; color: #d46b08; }
+    .status.completed { background: #e9f7ee; color: #389e0d; }
+    .actions { white-space: nowrap; }
+    .actions .link + .link { margin-left: 16px; }
+    .link { padding: 0; border: 0; background: none; color: #7651f6; font-size: 14px; }
+    .link:hover { text-decoration: underline; }
+    .link.danger { color: #d4380d; }
+    .link:disabled { color: #bbb; cursor: not-allowed; }
+    .empty { padding: 55px; color: #999; text-align: center; }
+    dialog { width: min(800px, calc(100vw - 48px)); max-height: 90vh; padding: 0; border: 0; border-radius: 8px; box-shadow: 0 18px 55px #0003; }
+    #delete-dialog { width: min(440px, calc(100vw - 48px)); }
+    #detail { position: fixed; inset: 0 0 0 auto; width: min(560px, 100vw); height: 100vh; max-height: none; margin: 0; border-radius: 0; box-shadow: -12px 0 35px #0002; }
+    #detail::backdrop { background: #0006; }
+    #detail .dialog-shell { display: flex; flex-direction: column; height: 100%; }
+    #detail .dialog-head { flex: none; }
+    #detail .dialog-body { flex: 1; max-height: none; overflow-y: auto; }
+    #detail .dialog-foot { flex: none; }
+    dialog::backdrop { background: #0007; }
+    .dialog-head, .dialog-foot { display: flex; align-items: center; justify-content: space-between; padding: 19px 24px; border-bottom: 1px solid #eee; }
+    .dialog-head h2 { margin: 0; font-size: 21px; }
+    .dialog-head button { border: 0; background: none; color: #888; font-size: 26px; }
+    .dialog-body { max-height: calc(90vh - 150px); overflow-y: auto; padding: 22px 24px; }
+    .dialog-foot { justify-content: flex-end; gap: 12px; border-top: 1px solid #eee; border-bottom: 0; }
+    .detail-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 20px; margin-bottom: 24px; }
+    .detail-meta span { color: #888; }
+    h3 { margin: 0 0 12px; font-size: 17px; }
+    .item-row { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding: 13px 0; border-top: 1px solid #eee; }
+    .item-row small { display: block; margin-top: 4px; color: #999; }
+    .failed { margin-left: 8px; color: #d4380d; font-size: 13px; }
+    .review-result { display: inline-block; margin-top: 8px; padding: 3px 8px; border-radius: 4px; font-size: 13px; }
+    .review-result.passed { background: #e9f7ee; color: #389e0d; }
+    .review-result.rejected { background: #fff1f0; color: #cf1322; }
+    .review-result.cancelled { background: #f2f2f2; color: #777; }
+    .demo-example { margin: 18px 0 0; color: #999; font-size: 13px; }
+    .demo-example button { padding: 0; border: 0; background: none; color: #8b7ac9; font-size: 13px; text-decoration: underline; text-underline-offset: 3px; }
+    .demo-example button:hover { color: #7651f6; }
+    #select-order-dialog { width: min(680px, calc(100vw - 40px)); }
+    #edit-order-dialog { width: min(960px, calc(100vw - 40px)); max-height: calc(100vh - 28px); }
+    #edit-order-dialog .dialog-body { max-height: calc(100vh - 190px); }
+    .review-field { margin-bottom: 22px; }
+    .review-field label { display: block; margin-bottom: 9px; font-size: 15px; font-weight: 600; }
+    .review-field label b { color: #d9363e; }
+    .review-field input, .review-field select { width: 100%; height: 44px; padding: 0 13px; border: 1px solid #d7d7d7; border-radius: 6px; background: #fff; color: #262626; outline: none; }
+    .review-field input:focus, .review-field select:focus { border-color: #7651f6; box-shadow: 0 0 0 2px #7651f61a; }
+    #order-platform { width: 220px; }
+    .review-note { margin: 0 0 10px; color: #777; font-size: 14px; }
+    .review-error { margin-bottom: 18px; padding: 14px 16px; border: 1px solid #ffb3ae; border-radius: 6px; background: #fff2f1; color: #bd2730; }
+    .review-error[hidden] { display: none; }
+    .review-error strong { display: block; margin-bottom: 7px; }
+    .review-error p { margin: 6px 0; }
+    .review-picker { max-height: 235px; overflow-y: auto; margin-top: 5px; border: 1px solid #e5e5e5; border-radius: 6px; box-shadow: 0 8px 22px #0002; }
+    .review-picker[hidden] { display: none; }
+    .review-picker button { display: flex; justify-content: space-between; align-items: center; gap: 12px; width: 100%; padding: 11px 13px; border: 0; border-bottom: 1px solid #eee; background: #fff; text-align: left; }
+    .review-picker button:hover:not(:disabled) { background: #f7f3ff; }
+    .review-picker button:disabled { color: #aaa; cursor: not-allowed; }
+    .review-picker small, .review-picker em { display: block; margin-top: 3px; color: #999; font-size: 12px; font-style: normal; }
+    .review-picker .picker-group { padding: 7px 12px; background: #f7f7fa; color: #777; font-size: 13px; }
+    .order-option { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: 10px; padding: 15px; border: 1px solid #e5e5e5; border-radius: 6px; background: #fff; text-align: left; }
+    .order-option:hover:not(:disabled) { border-color: #7651f6; background: #faf8ff; }
+    .order-option:disabled { color: #aaa; cursor: not-allowed; }
+    .order-option strong, .order-option small { display: block; }
+    .order-option small { margin-top: 5px; color: #888; }
+    .order-option em { color: #7651f6; font-style: normal; }
+    .selected-head { margin: 22px 0 9px; color: #888; font-size: 14px; }
+    .selected-table { overflow-x: auto; border: 1px solid #ececec; border-radius: 6px; }
+    .selected-table table { min-width: 700px; }
+    .selected-table th, .selected-table td { padding: 12px; font-size: 14px; }
+    .selected-table small { display: block; margin-top: 3px; color: #999; }
+    .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); padding: 10px 16px; border-radius: 5px; background: #292929; color: #fff; }
+    .toast[hidden] { display: none; }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="top"><h1>审核工单管理</h1><button class="primary" id="start-review" type="button">发起审核</button></div>
+    <div class="tabs" id="tabs" role="tablist" aria-label="工单状态"></div>
+    <div class="tab-panel-head" id="draft-panel-head" hidden><button class="primary" id="create-draft" type="button">创建草稿</button></div>
+    <div class="table-wrap"><table><colgroup><col style="width:16%"><col style="width:8%"><col style="width:9%"><col style="width:9%"><col style="width:8%"><col style="width:13%"><col style="width:9%"><col style="width:14%"><col style="width:14%"></colgroup><thead><tr><th>工单</th><th>状态</th><th>审核平台</th><th>审核项目</th><th>创建人</th><th>创建时间</th><th>最近更新人</th><th>最近更新时间</th><th>操作</th></tr></thead><tbody id="rows"></tbody></table></div>
+    <p class="demo-example">页面示意：<button id="open-invalid" type="button">查看两条异常提示</button></p>
+  </main>
+  <dialog id="select-order-dialog" aria-labelledby="select-order-title"><div class="dialog-head"><h2 id="select-order-title">选择审核工单</h2><button id="select-order-x" type="button" aria-label="关闭">×</button></div><div class="dialog-body"><p class="review-note">选择草稿工单，或新建工单后添加审核项目。</p><div id="new-order-option"></div><h3 style="margin:22px 0 10px">草稿工单</h3><div id="draft-order-options"></div></div><div class="dialog-foot"><button class="secondary" id="select-order-cancel" type="button">取消</button></div></dialog>
+  <dialog id="edit-order-dialog" aria-labelledby="edit-order-title"><div class="dialog-head"><h2 id="edit-order-title">提交审核工单</h2><button id="edit-order-x" type="button" aria-label="关闭">×</button></div><div class="dialog-body"><div class="review-error" id="review-errors" role="alert" hidden></div><div class="review-field"><label for="order-name">工单名称 <b>*</b></label><input id="order-name" maxlength="60" placeholder="请输入工单名称"></div><div class="review-field"><p class="review-note">下方添加的项目将与所选平台的最新版本一起审核。</p><label for="order-platform" style="position:absolute;clip:rect(0,0,0,0)">审核平台</label><select id="order-platform"><option>iOS</option><option>macOS</option><option>Apple tvOS</option><option>visionOS</option></select></div><div class="review-field"><label for="review-search">添加审核项目</label><input id="review-search" placeholder="支持按商品或订阅群组名称/ID搜索" autocomplete="off"><div class="review-picker" id="review-picker" hidden></div></div><div class="selected-head" id="selected-count">共 0 条</div><div class="selected-table"><table><thead><tr><th style="width:43%">审核项目</th><th style="width:23%">创建时间</th><th style="width:17%">创建人</th><th style="width:10%">类型</th><th style="width:7%">操作</th></tr></thead><tbody id="selected-items"></tbody></table></div></div><div class="dialog-foot"><button class="secondary" id="edit-order-cancel" type="button">取消</button><button class="primary" id="save-draft" type="button">保存草稿</button><button class="primary" id="submit-order" type="button" disabled>提交</button></div></dialog>
+  <dialog id="detail"><div class="dialog-shell"><div class="dialog-head"><h2 id="detail-title">工单详情</h2><button id="detail-x" type="button" aria-label="关闭">×</button></div><div class="dialog-body"><div class="detail-meta" id="detail-meta"></div><h3>审核项目</h3><div id="detail-items"></div></div><div class="dialog-foot"><button class="primary" id="detail-close" type="button">关闭</button></div></div></dialog>
+  <dialog id="delete-dialog" aria-labelledby="delete-title"><div class="dialog-head"><h2 id="delete-title">删除草稿工单</h2><button id="delete-x" type="button" aria-label="关闭">×</button></div><div class="dialog-body">确定删除「<strong id="delete-name"></strong>」吗？删除后无法恢复。</div><div class="dialog-foot"><button class="secondary" id="delete-cancel" type="button">取消</button><button class="danger-button" id="delete-confirm" type="button">删除</button></div></dialog>
+  <div class="toast" id="toast" role="status" hidden></div>
+  <script>
+    const key = 'subscription-review-orders-demo';
+    const currentUser = '黄雅妮';
+    const statusNames = { draft: '草稿', reviewing: '审核中', incomplete: '未完成', completed: '已完成' };
+    const itemNames = { 'g-1': '会员基础订阅群组', 'p-1': '连续包月会员', 'g-2': '高级订阅群组', 'p-2': '高级会员月卡', 'g-3': '新上架订阅群组', 'p-3': '新上架包年会员' };
+    const initialOrders = [
+      { id: 'WO-20261103-001', name: '会员订阅审核工单', status: 'draft', platform: 'iOS', items: ['g-1', 'p-1'], createdBy: '黄雅妮', created: '2026-11-03 09:30', updatedBy: '黄雅妮', updated: '2026-11-03 09:30' },
+      { id: 'WO-20261102-002', name: '高级会员审核工单', status: 'reviewing', platform: 'macOS', items: ['g-2', 'p-2'], createdBy: '庄秀', created: '2026-11-02 15:18', updatedBy: '庄秀', updated: '2026-11-03 10:05' },
+      { id: 'WO-20261101-003', name: '订阅组补充审核工单', status: 'incomplete', platform: 'Apple tvOS', items: ['g-3', 'p-3'], failedItems: ['p-3'], createdBy: '蓝丽萍', created: '2026-11-01 14:20', updatedBy: '蓝丽萍', updated: '2026-11-02 18:06' },
+      { id: 'WO-20261030-004', name: '基础会员审核工单', status: 'completed', platform: 'visionOS', items: ['g-1', 'p-1'], createdBy: '黄雅妮', created: '2026-10-30 11:26', updatedBy: '黄雅妮', updated: '2026-11-01 16:40' }
+    ];
+    function readOrders() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(key));
+        if (Array.isArray(saved)) {
+          let changed = false;
+          saved.forEach(order => {
+            if (!order.name || /^审核工单\s+\d{4}[/-]/.test(order.name)) { order.name = '订阅审核工单'; changed = true; }
+            if (order.status === 'aborted') {
+              order.status = 'completed';
+              order.stopped = true;
+              changed = true;
+            }
+            if (order.status === 'incomplete' && (order.items || []).length && !(order.items || []).some(id => (order.failedItems || []).includes(id) || (order.rejectedItems || []).includes(id))) {
+              order.failedItems = [order.items[order.items.length - 1]];
+              changed = true;
+            }
+            if (order.status === 'incomplete' && !(order.items || []).length) {
+              order.status = 'completed';
+              changed = true;
+            }
+          });
+          if (!localStorage.getItem(key + '-incomplete-example-initialized')) {
+            if (!saved.some(order => order.status === 'incomplete')) {
+              const example = structuredClone(initialOrders[2]);
+              if (saved.some(order => order.id === example.id)) example.id = 'WO-20261104-005';
+              saved.push(example);
+              changed = true;
+            }
+            localStorage.setItem(key + '-incomplete-example-initialized', '1');
+          }
+          if (changed) localStorage.setItem(key, JSON.stringify(saved));
+          return saved;
+        }
+      }
+      catch (_) {}
+      localStorage.setItem(key, JSON.stringify(initialOrders));
+      localStorage.setItem(key + '-incomplete-example-initialized', '1');
+      return structuredClone(initialOrders);
+    }
+    function writeOrders(orders) { localStorage.setItem(key, JSON.stringify(orders)); }
+    function node(tag, className, value) { const element = document.createElement(tag); if (className) element.className = className; if (value != null) element.textContent = value; return element; }
+    let activeTab = 'draft'; let detailId = null; let pendingDeleteId = null; let toastTimer;
+    function say(message) { const toast = document.getElementById('toast'); toast.textContent = message; toast.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.hidden = true, 2800); }
+    function now() { return new Date().toLocaleString('zh-CN', { hour12: false }); }
+    const reviewPlans = [
+      { id: 'g-1', entityId: 'group-1', type: 'group', entityName: '会员基础订阅群组', approved: true, created: '2026-11-02 11:15:11', creator: '黄雅妮', snapshotStatus: 'pending' },
+      { id: 'p-1', entityId: 'product-1', type: 'product', entityName: '连续包月会员', groupId: 'group-1', screenshots: ['monthly-review.png'], created: '2026-11-02 11:25:38', creator: '黄雅妮', snapshotStatus: 'pending' },
+      { id: 'g-2', entityId: 'group-2', type: 'group', entityName: '高级订阅群组', approved: false, created: '2026-11-02 12:05:10', creator: '庄秀', snapshotStatus: 'pending' },
+      { id: 'p-2', entityId: 'product-2', type: 'product', entityName: '高级会员月卡', groupId: 'group-2', screenshots: ['premium-review.png'], created: '2026-11-02 12:18:42', creator: '庄秀', snapshotStatus: 'pending' },
+      { id: 'g-3', entityId: 'group-3', type: 'group', entityName: '新上架订阅群组', approved: false, created: '2026-11-02 13:02:21', creator: '蓝丽萍', snapshotStatus: 'pending' },
+      { id: 'p-3', entityId: 'product-3', type: 'product', entityName: '新上架包年会员', groupId: 'group-3', screenshots: [], created: '2026-11-02 13:10:16', creator: '蓝丽萍', snapshotStatus: 'pending' }
+    ];
+    let pendingProject = null;
+    let editingOrder = null;
+    let exampleMode = false;
+    let draftOnlyMode = false;
+    const reviewSelected = new Set();
+    function candidates() {
+      const items = [...reviewPlans];
+      readOrders().forEach(order => Object.values(order.itemDetails || {}).forEach(item => {
+        if (item && !items.some(existing => existing.id === item.id)) items.push(item);
+      }));
+      if (pendingProject && !items.some(item => item.id === pendingProject.id)) items.push(pendingProject);
+      return items.filter(item => item.snapshotStatus === 'pending');
+    }
+    function reviewErrors() {
+      const items = candidates().filter(item => reviewSelected.has(item.id));
+      const errors = [];
+      if (!items.length) errors.push('请至少添加一条待审核的商品或订阅组。');
+      const groups = new Set(items.filter(item => item.type === 'group').map(item => item.entityId));
+      items.filter(item => item.type === 'product').forEach(item => {
+        const group = candidates().find(group => group.type === 'group' && group.entityId === item.groupId);
+        if (group && !group.approved && !groups.has(group.entityId)) errors.push('商品「' + item.entityName + '」所属订阅组「' + group.entityName + '」未通过审核，请将订阅组一起提交');
+      });
+      items.filter(item => item.type === 'group' && !item.approved).forEach(group => {
+        if (!items.some(item => item.type === 'product' && item.groupId === group.entityId)) errors.push('「' + group.entityName + '」是新订阅组，必须随该群组的续期商品一起提交，至少添加一件商品');
+      });
+      return errors;
+    }
+    function showReviewErrors(lines) {
+      const box = document.getElementById('review-errors'); box.replaceChildren();
+      if (lines.length) {
+        box.append(node('strong', '', '无法提交审核'));
+        lines.forEach(line => box.append(node('p', '', '• ' + line)));
+      }
+      box.hidden = !lines.length;
+    }
+    function updateSubmitButton() {
+      const ready = Boolean(document.getElementById('order-name').value.trim()) && Boolean(document.getElementById('order-platform').value)
+        && reviewErrors().length === 0 && readOrders().filter(order => order.status === 'reviewing').length < 2 && !exampleMode;
+      document.getElementById('submit-order').disabled = !ready;
+    }
+    function renderSelectedItems() {
+      const body = document.getElementById('selected-items'); body.replaceChildren();
+      document.getElementById('selected-count').textContent = '共 ' + reviewSelected.size + ' 条';
+      if (!reviewSelected.size) {
+        const tr = node('tr'), td = node('td', 'empty', '暂无审核项目，请从上方添加审核项目'); td.colSpan = 5; tr.append(td); body.append(tr);
+      }
+      candidates().filter(item => reviewSelected.has(item.id)).forEach(item => {
+        const tr = node('tr'), identity = node('td');
+        identity.append(node('strong', '', item.entityName), node('small', '', item.entityId));
+        const action = node('td'), remove = node('button', 'link', '移除'); remove.type = 'button';
+        remove.addEventListener('click', () => { reviewSelected.delete(item.id); showReviewErrors([]); renderSelectedItems(); renderReviewPicker(); });
+        action.append(remove);
+        tr.append(identity, node('td', '', item.created || '—'), node('td', '', item.creator || '—'), node('td', '', item.type === 'group' ? '订阅组' : '商品'), action);
+        body.append(tr);
+      });
+      updateSubmitButton();
+    }
+    function renderReviewPicker() {
+      const picker = document.getElementById('review-picker'); picker.replaceChildren();
+      const query = document.getElementById('review-search').value.trim().toLowerCase();
+      let count = 0;
+      for (const type of ['group', 'product']) {
+        const matches = candidates().filter(item => item.type === type && !reviewSelected.has(item.id) && (item.entityName.toLowerCase().includes(query) || item.entityId.toLowerCase().includes(query)));
+        if (!matches.length) continue;
+        picker.append(node('div', 'picker-group', type === 'group' ? '订阅组' : '商品'));
+        matches.forEach(item => {
+          const button = node('button'); button.type = 'button';
+          const info = node('span'); info.append(node('strong', '', item.entityName), node('small', '', item.entityId));
+          button.append(info, node('small', '', item.created || ''));
+          if (item.type === 'product' && !item.screenshots?.length) { button.disabled = true; button.title = '请先上传审核截图'; }
+          else button.addEventListener('click', () => { reviewSelected.add(item.id); document.getElementById('review-search').value = ''; picker.hidden = true; showReviewErrors([]); renderSelectedItems(); });
+          picker.append(button); count++;
+        });
+      }
+      if (!count) picker.append(node('div', 'empty', query ? '没有匹配的待审核项目' : '没有可添加的待审核项目'));
+    }
+    function openEditor(order, initialId, isExample = false, draftOnly = false) {
+      editingOrder = order; exampleMode = isExample; draftOnlyMode = draftOnly; reviewSelected.clear();
+      (order.items || []).forEach(id => reviewSelected.add(id));
+      if (initialId) reviewSelected.add(initialId);
+      document.getElementById('order-name').value = order.name || '';
+      document.getElementById('order-platform').value = order.platform || 'iOS';
+      document.getElementById('review-search').value = '';
+      document.getElementById('review-picker').hidden = true;
+      document.getElementById('save-draft').disabled = isExample;
+      document.getElementById('save-draft').hidden = isExample;
+      document.getElementById('submit-order').hidden = draftOnly || isExample;
+      document.getElementById('edit-order-title').textContent = isExample ? '异常提示示意' : draftOnly ? '创建草稿' : '提交审核工单';
+      showReviewErrors([]);
+      renderSelectedItems();
+      document.getElementById('edit-order-dialog').showModal();
+      if (!order.name) document.getElementById('order-name').focus();
+    }
+    function createDraft(draftOnly = false) {
+      if (readOrders().filter(order => order.status === 'draft').length >= 5) return say('草稿工单已达 5 个');
+      document.getElementById('select-order-dialog').close();
+      const timestamp = now();
+      openEditor({ id: 'WO-' + Date.now(), name: '', status: 'draft', platform: 'iOS', items: [], createdBy: currentUser, created: timestamp, updatedBy: currentUser, updated: timestamp }, pendingProject?.id, false, draftOnly);
+    }
+    function openSelector() {
+      const drafts = readOrders().filter(order => order.status === 'draft');
+      const createBox = document.getElementById('new-order-option'); createBox.replaceChildren();
+      const create = node('button', 'order-option'); create.type = 'button'; create.disabled = drafts.length >= 5;
+      const createText = node('span'); createText.append(node('strong', '', '新建审核工单'), node('small', '', drafts.length >= 5 ? '草稿工单已达 5 个，请选择已有工单' : '创建草稿后添加审核项目'));
+      create.append(createText, node('em', '', drafts.length + '/5')); create.addEventListener('click', () => createDraft()); createBox.append(create);
+      const box = document.getElementById('draft-order-options'); box.replaceChildren();
+      if (!drafts.length) box.append(node('div', 'empty', '暂无草稿工单'));
+      drafts.forEach(order => {
+        const button = node('button', 'order-option'); button.type = 'button';
+        const info = node('span');
+        info.append(node('strong', '', order.name), node('small', '', '最近更新：' + (order.updatedBy || '未记录') + ' · ' + (order.updated || '未记录')), node('small', '', (order.platform || 'iOS') + ' · ' + (order.items || []).length + ' 个审核项目'));
+        button.append(info, node('em', '', '选择工单'));
+        button.addEventListener('click', () => { document.getElementById('select-order-dialog').close(); openEditor(order, pendingProject?.id); });
+        box.append(button);
+      });
+      document.getElementById('select-order-dialog').showModal();
+    }
+    function openReviewPopup(params) {
+      pendingProject = params.entityId && params.name && ['group', 'product'].includes(params.type)
+        ? { id: 'external-' + params.entityId, entityId: params.entityId, entityName: params.name, type: params.type, approved: true, groupId: params.type === 'product' ? 'group-1' : undefined, screenshots: ['ready'], created: now(), creator: currentUser, snapshotStatus: 'pending' }
+        : null;
+      if (params.example) {
+        openEditor({ id: 'example-only', name: '异常提示示意', status: 'draft', platform: 'iOS', items: ['p-2', 'g-3'] }, null, true);
+        showReviewErrors(reviewErrors());
+      } else if (params.order) {
+        const order = readOrders().find(item => item.id === params.order && item.status === 'draft');
+        if (order) openEditor(order, pendingProject?.id);
+        else say('草稿工单不存在或状态已变化');
+      } else if (params.create) createDraft(true);
+      else openSelector();
+    }
+    function openDetail(id) {
+      const order = readOrders().find(item => item.id === id); if (!order) return;
+      detailId = id; document.getElementById('detail-title').textContent = order.name || '审核工单详情';
+      const meta = document.getElementById('detail-meta'); meta.replaceChildren();
+      [['工单 ID', order.id], ['状态', statusNames[order.status]], ['审核平台', order.platform || 'iOS'], ...(order.stopped ? [['审核结果', '已中止审核']] : []), ['创建人', order.createdBy || '未记录'], ['创建时间', order.created], ['最近更新人', order.updatedBy || '未记录'], ['最近更新时间', order.updated]].forEach(([label, value]) => {
+        const line = node('div'); line.append(node('span', '', label + '：'), document.createTextNode(value || '—')); meta.append(line);
+      });
+      const box = document.getElementById('detail-items'); box.replaceChildren();
+      if (!(order.items || []).length) box.append(node('div', 'empty', '暂无审核项目'));
+      (order.items || []).forEach(itemId => {
+        const line = node('div', 'item-row'); const info = node('div');
+        info.append(node('strong', '', order.itemDetails?.[itemId]?.entityName || itemNames[itemId] || itemId), node('small', '', order.itemDetails?.[itemId]?.entityId || itemId));
+        const failed = (order.failedItems || []).includes(itemId) || (order.rejectedItems || []).includes(itemId);
+        if (order.status === 'completed' || order.status === 'incomplete') {
+          const result = order.status === 'completed' ? (order.stopped ? 'cancelled' : 'passed') : (failed ? 'rejected' : 'passed');
+          info.append(node('span', 'review-result ' + result, { passed: '审核通过', rejected: '审核被拒', cancelled: '取消审核' }[result]));
+        }
+        line.append(info);
+        if (order.status === 'incomplete' && failed) {
+          const remove = node('button', 'link danger', '移除'); remove.type = 'button';
+          remove.addEventListener('click', () => {
+            const orders = readOrders(); const target = orders.find(item => item.id === id);
+            target.items = target.items.filter(value => value !== itemId);
+            target.failedItems = (target.failedItems || []).filter(value => value !== itemId);
+            target.rejectedItems = (target.rejectedItems || []).filter(value => value !== itemId);
+            if (target.itemDetails) delete target.itemDetails[itemId];
+            if (!target.items.some(id => target.failedItems.includes(id) || target.rejectedItems.includes(id))) {
+              target.status = 'completed';
+            }
+            target.updatedBy = currentUser;
+            target.updated = now(); writeOrders(orders); openDetail(id); render(); say('已移除审核未通过的项目');
+          }); line.append(remove);
+        }
+        box.append(line);
+      });
+      const dialog = document.getElementById('detail'); if (!dialog.open) dialog.showModal();
+    }
+    function render() {
+      const orders = readOrders();
+      const reviewing = orders.filter(order => order.status === 'reviewing').length;
+      const drafts = orders.filter(order => order.status === 'draft').length;
+      const start = document.getElementById('start-review'); start.disabled = reviewing >= 2; start.title = reviewing >= 2 ? '审核中工单已达 2 个' : '';
+      const create = document.getElementById('create-draft'); create.disabled = drafts >= 5; create.title = drafts >= 5 ? '草稿工单已达 5 个' : '';
+      document.getElementById('draft-panel-head').hidden = activeTab !== 'draft';
+      const tabs = document.getElementById('tabs'); tabs.replaceChildren();
+      [['draft', '草稿'], ['reviewing', '审核中'], ['incomplete', '未完成'], ['completed', '已完成']].forEach(([status, title]) => {
+        const count = orders.filter(order => order.status === status).length;
+        const limit = status === 'draft' ? 5 : status === 'reviewing' ? 2 : null;
+        const button = node('button', activeTab === status ? 'active' : '', title + ' ');
+        button.append(node('span', 'tab-count' + (limit && count >= limit ? ' full' : ''), '(' + count + (limit ? '/' + limit : '') + ')'));
+        button.type = 'button'; button.setAttribute('role', 'tab'); button.setAttribute('aria-selected', String(activeTab === status));
+        button.addEventListener('click', () => { activeTab = status; render(); }); tabs.append(button);
+      });
+      const body = document.getElementById('rows'); body.replaceChildren();
+      const visible = orders.filter(order => order.status === activeTab);
+      if (!visible.length) { const tr = node('tr'); const td = node('td', 'empty', '暂无工单'); td.colSpan = 9; tr.append(td); body.append(tr); return; }
+      visible.forEach(order => {
+        const tr = node('tr'); const identity = node('td'); identity.append(node('strong', '', order.name || '订阅审核工单'), node('small', 'order-id', order.id));
+        const status = node('td'); status.append(node('span', 'status ' + order.status, statusNames[order.status]));
+        const actions = node('td', 'actions');
+        const view = node('button', 'link', '查看'); view.type = 'button'; view.addEventListener('click', () => openDetail(order.id)); actions.append(view);
+        if (order.status === 'draft') {
+          const edit = node('button', 'link', '编辑'); edit.type = 'button';
+          edit.addEventListener('click', () => openReviewPopup({ order: order.id })); actions.append(edit);
+          const submit = node('button', 'link', '提审'); submit.type = 'button'; submit.disabled = reviewing >= 2;
+          submit.title = submit.disabled ? '审核中工单已达 2 个' : '';
+          submit.addEventListener('click', () => openReviewPopup({ order: order.id })); actions.append(submit);
+          const remove = node('button', 'link danger', '删除'); remove.type = 'button';
+          remove.addEventListener('click', () => {
+            pendingDeleteId = order.id;
+            document.getElementById('delete-name').textContent = order.name || '审核工单';
+            document.getElementById('delete-dialog').showModal();
+          }); actions.append(remove);
+        }
+        if (order.status === 'reviewing') {
+          const abort = node('button', 'link danger', '中止审核'); abort.type = 'button';
+          abort.addEventListener('click', () => { const all = readOrders(); const target = all.find(item => item.id === order.id); target.status = 'completed'; target.stopped = true; target.updatedBy = currentUser; target.updated = now(); writeOrders(all); render(); say('审核已中止'); }); actions.append(abort);
+        }
+        tr.append(identity, status, node('td', '', order.platform || 'iOS'), node('td', '', String((order.items || []).length)), node('td', '', order.createdBy || '未记录'), node('td', '', order.created || '—'), node('td', '', order.updatedBy || '未记录'), node('td', '', order.updated || '—'), actions);
+        body.append(tr);
+      });
+    }
+    document.getElementById('start-review').addEventListener('click', () => openReviewPopup({ select: '1' }));
+    document.getElementById('create-draft').addEventListener('click', () => openReviewPopup({ create: '1' }));
+    document.getElementById('open-invalid').addEventListener('click', () => openReviewPopup({ example: '1' }));
+    const selectDialog = document.getElementById('select-order-dialog');
+    const editDialog = document.getElementById('edit-order-dialog');
+    document.getElementById('select-order-x').addEventListener('click', () => selectDialog.close());
+    document.getElementById('select-order-cancel').addEventListener('click', () => selectDialog.close());
+    document.getElementById('edit-order-x').addEventListener('click', () => editDialog.close());
+    document.getElementById('edit-order-cancel').addEventListener('click', () => editDialog.close());
+    editDialog.addEventListener('close', () => {
+      editingOrder = null; pendingProject = null; exampleMode = false; draftOnlyMode = false;
+      reviewSelected.clear();
+      document.getElementById('review-picker').hidden = true;
+      showReviewErrors([]);
+    });
+    document.getElementById('order-name').addEventListener('input', updateSubmitButton);
+    document.getElementById('order-platform').addEventListener('change', updateSubmitButton);
+    const reviewSearch = document.getElementById('review-search');
+    reviewSearch.addEventListener('focus', () => { renderReviewPicker(); document.getElementById('review-picker').hidden = false; });
+    reviewSearch.addEventListener('input', () => { renderReviewPicker(); document.getElementById('review-picker').hidden = false; });
+    document.addEventListener('click', event => {
+      if (!event.target.closest('#review-search, #review-picker')) document.getElementById('review-picker').hidden = true;
+    });
+    function persistReviewOrder(submit) {
+      if (!editingOrder || exampleMode) return;
+      const name = document.getElementById('order-name').value.trim();
+      if (!name) { document.getElementById('order-name').focus(); return say('请填写工单名称'); }
+      const platform = document.getElementById('order-platform').value;
+      if (!platform) return say('请选择审核平台');
+      const orders = readOrders();
+      const existing = orders.find(order => order.id === editingOrder.id);
+      if (existing && existing.status !== 'draft') return say('工单状态已变化，请刷新后重试');
+      if (!existing && orders.filter(order => order.status === 'draft').length >= 5) return say('草稿工单已达 5 个');
+      if (submit) {
+        const errors = reviewErrors();
+        if (errors.length) { showReviewErrors(errors); return; }
+        if (orders.filter(order => order.status === 'reviewing').length >= 2) return say('审核中工单已达 2 个');
+      }
+      const itemDetails = { ...(existing?.itemDetails || {}) };
+      candidates().filter(item => reviewSelected.has(item.id)).forEach(item => { itemDetails[item.id] = item; });
+      Object.keys(itemDetails).forEach(id => { if (!reviewSelected.has(id)) delete itemDetails[id]; });
+      const timestamp = now();
+      const updated = {
+        ...(existing || editingOrder), name, platform, status: submit ? 'reviewing' : 'draft',
+        items: [...reviewSelected], itemDetails, updatedBy: currentUser, updated: timestamp
+      };
+      if (existing) orders[orders.indexOf(existing)] = updated;
+      else orders.unshift(updated);
+      writeOrders(orders);
+      editDialog.close();
+      activeTab = submit ? 'reviewing' : 'draft';
+      render();
+      say(submit ? '审核工单已提交' : '草稿已保存');
+    }
+    document.getElementById('save-draft').addEventListener('click', () => persistReviewOrder(false));
+    document.getElementById('submit-order').addEventListener('click', () => persistReviewOrder(true));
+    document.getElementById('detail-x').addEventListener('click', () => document.getElementById('detail').close());
+    document.getElementById('detail-close').addEventListener('click', () => document.getElementById('detail').close());
+    const deleteDialog = document.getElementById('delete-dialog');
+    document.getElementById('delete-x').addEventListener('click', () => deleteDialog.close());
+    document.getElementById('delete-cancel').addEventListener('click', () => deleteDialog.close());
+    deleteDialog.addEventListener('close', () => { pendingDeleteId = null; });
+    document.getElementById('delete-confirm').addEventListener('click', () => {
+      const orders = readOrders();
+      const target = orders.find(order => order.id === pendingDeleteId);
+      if (!target || target.status !== 'draft') { deleteDialog.close(); render(); return say('工单状态已变化，无法删除'); }
+      writeOrders(orders.filter(order => order.id !== pendingDeleteId));
+      deleteDialog.close(); render(); say('草稿工单已删除');
+    });
+    render();
+    const routeParams = new URLSearchParams(location.search);
+    if (routeParams.get('select') === '1') {
+      openReviewPopup({
+        select: '1',
+        ...(routeParams.get('type') ? { type: routeParams.get('type') } : {}),
+        ...(routeParams.get('entityId') ? { entityId: routeParams.get('entityId') } : {}),
+        ...(routeParams.get('name') ? { name: routeParams.get('name') } : {})
+      });
+      history.replaceState(null, '', location.pathname);
+    }
+  </script>
+</body>
+</html>
