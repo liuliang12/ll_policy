@@ -413,9 +413,14 @@
     document.getElementById('order-name').addEventListener('input', updateSubmitButton);
     document.getElementById('order-platform').addEventListener('change', updateSubmitButton);
     const reviewSearch = document.getElementById('review-search');
-    reviewSearch.addEventListener('focus', () => { renderReviewPicker(); document.getElementById('review-picker').hidden = false; });
-    reviewSearch.addEventListener('input', () => { renderReviewPicker(); document.getElementById('review-picker').hidden = false; });
-    document.addEventListener('click', event => {
+    function showReviewPicker() {
+      renderReviewPicker();
+      document.getElementById('review-picker').hidden = false;
+    }
+    reviewSearch.addEventListener('focus', showReviewPicker);
+    reviewSearch.addEventListener('click', showReviewPicker);
+    reviewSearch.addEventListener('input', showReviewPicker);
+    document.addEventListener('pointerdown', event => {
       if (!event.target.closest('#review-search, #review-picker')) document.getElementById('review-picker').hidden = true;
     });
     function persistReviewOrder(submit) {
