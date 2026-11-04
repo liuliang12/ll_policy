@@ -33,9 +33,6 @@
     .field-note { display: block; padding-top: 6px; color: #999; font-size: 14px; }
     .section-head { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin: 0 0 20px; }
     .section-head .section-title { flex: 1; margin: 0; }
-    .mode { display: inline-flex; flex: none; border: 1px solid #d9d9d9; border-radius: 7px; padding: 3px; background: #f8f8f8; }
-    .mode button { min-width: 118px; height: 36px; padding: 0 12px; border: 0; border-radius: 5px; background: transparent; color: #666; font-size: 15px; white-space: nowrap; }
-    .mode button.active { background: #7651f6; color: #fff; }
     .template-row { display: flex; align-items: center; gap: 12px; width: min(100%, 790px); margin: 0 auto 22px; }
     .template-row[hidden] { display: none; }
     .template-row label { flex: none; font-size: 17px; }
@@ -82,7 +79,7 @@
     .future-meta input[type=date] { width: 100%; height: 48px; padding: 0 14px; border: 1px solid #d6d6d6; border-radius: 6px; background: #fff; color: #262626; font-size: 17px; }
     .future-meta input[type=date]:focus { outline: none; border-color: #7651f6; box-shadow: 0 0 0 2px #7651f61c; }
     .scope-options { display: flex; flex-wrap: wrap; gap: 14px 24px; min-height: 48px; align-items: center; }
-    .scope-options label { display: inline-flex; align-items: center; gap: 8px; padding: 0; font-size: 16px; text-align: left; white-space: normal; cursor: pointer; }
+    .scope-options label { display: inline-flex; align-items: center; gap: 8px; padding: 0; color: #999; font-size: 16px; text-align: left; white-space: normal; cursor: not-allowed; }
     .scope-options input { accent-color: #7651f6; width: 17px; height: 17px; }
     .field-error { display: block; min-height: 19px; padding-top: 5px; color: #d4380d; font-size: 13px; }
     .future-meta input.invalid { border-color: #d4380d; }
@@ -132,7 +129,6 @@
       .field label { padding: 0; text-align: left; font-size: 15px; }
       .field select, .price-input, .search, .template-select { height: 43px; font-size: 15px; }
       .section-head { align-items: stretch; flex-direction: column; }
-      .mode { align-self: flex-start; }
       .template-row { flex-wrap: wrap; margin-top: 22px; }
       .template-row label { width: 100%; }
       .outline { height: 43px; font-size: 14px; }
@@ -187,7 +183,7 @@
     const futurePlans = [];
     const templateKey = 'product-price-templates-demo';
     const dataKey = 'product-prices-demo';
-    let mode = 'tier';
+    const mode = 'tier';
     let activeInput = null;
     let toastTimer;
     const menu = document.getElementById('tier-menu');
@@ -218,8 +214,6 @@
       input.setAttribute('aria-label', (key === 'original' ? '商品原价' : '实际价格') + ' ' + code);
       input.readOnly = mode === 'tier';
       input.addEventListener('click', () => openMenu(input, code, model, key));
-      input.addEventListener('input', () => { if (mode === 'custom') { model[key] = input.value; saveDraft(); } });
-      input.addEventListener('blur', () => { if (mode === 'custom' && input.value && /^\d+(\.\d{0,2})?$/.test(input.value)) { model[key] = format(input.value); input.value = model[key]; saveDraft(); } });
       wrap.append(input); return wrap;
     }
     function renderDefaults(plan, root, index) {
@@ -251,12 +245,6 @@
         action.append(convert); tr.append(action); tbody.append(tr);
       });
     }
-    function setMode(next) {
-      mode = next; closeMenu();
-      document.querySelectorAll('.mode button').forEach(button => { const selected = button.dataset.mode === next; button.classList.toggle('active', selected); button.setAttribute('aria-pressed', String(selected)); });
-      document.querySelectorAll('.template-row').forEach(row => row.hidden = next !== 'custom');
-      renderAll(); saveDraft();
-    }
     function saveDraft() { localStorage.setItem(dataKey, JSON.stringify({ mode, baseCurrency: currentPlan.baseCurrency, defaultPrices: currentPlan.defaults, regions: currentPlan.regions, currentPlan, futurePlans })); }
     function makePlan() {
       return { date: '', scope: 'new', baseCurrency: currentPlan.baseCurrency, defaults: structuredClone(currentPlan.defaults), regions: structuredClone(currentPlan.regions), search: '' };
@@ -266,12 +254,12 @@
       root.className = future ? 'plan-panel' : '';
       if (dialogEditor) root.className = '';
       root.innerHTML = future && !dialogEditor
-        ? '<div class="plan-panel-head"><div><h2>未来价格计划</h2><p>配置开始生效日期及适用订阅用户范围</p></div><button type="button" class="remove-plan">删除计划</button></div><div class="future-meta"><div class="field"><label><span class="required">*</span>价格开始生效日期：</label><div><input type="date" class="plan-date"><span class="field-error date-error"></span></div></div><div class="field"><label><span class="required">*</span>价格生效范围：</label><div class="scope-options"><label><input type="radio" name="scope-' + index + '" value="new"><span>仅对新订阅用户生效</span></label><label><input type="radio" name="scope-' + index + '" value="all"><span>对新老订阅用户都生效</span></label></div></div></div>'
+        ? '<div class="plan-panel-head"><div><h2>未来价格计划</h2><p>配置开始生效日期及适用订阅用户范围</p></div><button type="button" class="remove-plan">删除计划</button></div><div class="future-meta"><div class="field"><label><span class="required">*</span>价格开始生效日期：</label><div><input type="date" class="plan-date"><span class="field-error date-error"></span></div></div><div class="field"><label><span class="required">*</span>价格生效范围：</label><div class="scope-options"><label><input type="radio" name="scope-' + index + '" value="new" checked disabled><span>仅对新订阅用户生效</span></label><label><input type="radio" name="scope-' + index + '" value="all" disabled><span>对新老订阅用户都生效</span></label></div></div></div>'
         : future && dialogEditor
-          ? '<div class="future-meta"><div class="field"><label><span class="required">*</span>价格开始生效日期：</label><div><input type="date" class="plan-date"><span class="field-error date-error"></span></div></div><div class="field"><label><span class="required">*</span>价格生效范围：</label><div class="scope-options"><label><input type="radio" name="scope-' + index + '" value="new"><span>仅对新订阅用户生效</span></label><label><input type="radio" name="scope-' + index + '" value="all"><span>对新老订阅用户都生效</span></label></div></div></div>'
+          ? '<div class="future-meta"><div class="field"><label><span class="required">*</span>价格开始生效日期：</label><div><input type="date" class="plan-date"><span class="field-error date-error"></span></div></div><div class="field"><label><span class="required">*</span>价格生效范围：</label><div class="scope-options"><label><input type="radio" name="scope-' + index + '" value="new" checked disabled><span>仅对新订阅用户生效</span></label><label><input type="radio" name="scope-' + index + '" value="all" disabled><span>对新老订阅用户都生效</span></label></div></div></div>'
         : '';
       const config = document.createElement('div');
-      config.innerHTML = '<div class="section-head"><h2 class="section-title">预付默认价格</h2><div class="mode" role="group"><button type="button" data-mode="tier">按档位定价</button><button type="button" data-mode="custom">自定义定价</button></div></div><div class="default-fields"><div class="field"><label><span class="required">*</span>货币符号：</label><select class="base-currency"><option value="CNY">人民币 (¥)</option><option value="USD">美元 ($)</option><option value="TWD">新台币 (NT$)</option><option value="HKD">港币 (HK$)</option><option value="JPY">日元 (¥)</option><option value="EUR">欧元 (€)</option></select></div><div class="field"><label>商品原价：</label><div class="default-original-wrap"></div></div><div class="field"><label><span class="required">*</span>实际价格：</label><div><div class="default-actual-wrap"></div><span class="field-note">未设置地区价格时，使用默认价格。</span></div></div></div><div class="section-head"><h2 class="section-title">商品价格</h2><div class="mode" role="group"><button type="button" data-mode="tier">按档位定价</button><button type="button" data-mode="custom">自定义定价</button></div></div><div class="template-row"><label>选择价格模板：</label><select class="template-select"><option value="">选择一个价格模板</option></select><button class="outline save-template" type="button">保存商品价格模板</button></div><input class="search" type="search" placeholder="搜索国家或地区" aria-label="搜索国家或地区"><div class="table-scroll"><table><colgroup><col style="width:21%"><col style="width:12%"><col style="width:11%"><col style="width:22%"><col style="width:22%"><col style="width:12%"></colgroup><thead><tr><th>地区</th><th>货币代码</th><th>货币符号</th><th>商品原价</th><th>实际价格</th><th>操作</th></tr></thead><tbody class="prices"></tbody></table></div>';
+      config.innerHTML = '<div class="section-head"><h2 class="section-title">预付默认价格</h2></div><div class="default-fields"><div class="field"><label><span class="required">*</span>货币符号：</label><select class="base-currency"><option value="CNY">人民币 (¥)</option><option value="USD">美元 ($)</option><option value="TWD">新台币 (NT$)</option><option value="HKD">港币 (HK$)</option><option value="JPY">日元 (¥)</option><option value="EUR">欧元 (€)</option></select></div><div class="field"><label>商品原价：</label><div class="default-original-wrap"></div></div><div class="field"><label><span class="required">*</span>实际价格：</label><div><div class="default-actual-wrap"></div><span class="field-note">未设置地区价格时，使用默认价格。</span></div></div></div><div class="section-head"><h2 class="section-title">商品价格</h2></div><div class="template-row"><label>选择价格模板：</label><select class="template-select"><option value="">选择一个价格模板</option></select><button class="outline save-template" type="button">保存商品价格模板</button></div><input class="search" type="search" placeholder="搜索国家或地区" aria-label="搜索国家或地区"><div class="table-scroll"><table><colgroup><col style="width:21%"><col style="width:12%"><col style="width:11%"><col style="width:22%"><col style="width:22%"><col style="width:12%"></colgroup><thead><tr><th>地区</th><th>货币代码</th><th>货币符号</th><th>商品原价</th><th>实际价格</th><th>操作</th></tr></thead><tbody class="prices"></tbody></table></div>';
       root.append(config);
       if (dialogEditor) {
         const table = root.querySelector('.table-scroll table');
@@ -281,19 +269,14 @@
         table.querySelector('thead tr').insertBefore(heading, table.querySelector('thead th:last-child'));
       }
       const currency = root.querySelector('.base-currency'); currency.value = plan.baseCurrency;
-      root.querySelectorAll('.mode button').forEach(button => {
-        const selected = button.dataset.mode === mode; button.classList.toggle('active', selected); button.setAttribute('aria-pressed', String(selected));
-        button.addEventListener('click', () => setMode(button.dataset.mode));
-      });
       if (future) {
+        plan.scope = 'new';
         root.querySelector('.plan-date').value = plan.date || '';
-        root.querySelectorAll('input[name="scope-' + index + '"]').forEach(input => input.checked = input.value === plan.scope);
         root.querySelector('.plan-date').addEventListener('change', event => {
           const duplicate = event.target.value && futurePlans.some(item => item !== plan && item.date === event.target.value);
           if (duplicate) { event.target.classList.add('invalid'); root.querySelector('.date-error').textContent = '同一日期只允许有一条价格计划'; plan.date = ''; return say('未来价格计划的开始日期不能重复'); }
           plan.date = event.target.value; event.target.classList.remove('invalid'); root.querySelector('.date-error').textContent = ''; saveDraft();
         });
-        root.querySelectorAll('input[name="scope-' + index + '"]').forEach(input => input.addEventListener('change', () => { plan.scope = input.value; saveDraft(); }));
         const removeButton = root.querySelector('.remove-plan');
         if (removeButton) removeButton.addEventListener('click', () => { futurePlans.splice(futurePlans.indexOf(plan), 1); renderAll(); saveDraft(); });
       }
@@ -420,12 +403,11 @@
     try {
       const saved = JSON.parse(localStorage.getItem(dataKey));
       if (saved) {
-        mode = saved.mode === 'custom' ? 'custom' : 'tier';
         const current = saved.currentPlan || { baseCurrency: saved.baseCurrency, defaults: saved.defaultPrices, regions: saved.regions };
         if (current.baseCurrency in currencies) currentPlan.baseCurrency = current.baseCurrency;
         Object.assign(currentPlan.defaults, current.defaults || {});
         (current.regions || []).forEach(item => { const row = currentPlan.regions.find(region => region.name === item.name); if (row) Object.assign(row, { original: item.original || '', actual: item.actual || '' }); });
-        (saved.futurePlans || []).forEach(item => { if (item && Array.isArray(item.regions) && item.defaults) futurePlans.push(item); });
+        (saved.futurePlans || []).forEach(item => { if (item && Array.isArray(item.regions) && item.defaults) futurePlans.push({ ...item, scope: 'new' }); });
       }
     } catch (_) { /* Ignore outdated local draft. */ }
     renderAll();
