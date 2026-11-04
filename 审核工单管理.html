@@ -44,7 +44,7 @@
     .link:disabled { color: #bbb; cursor: not-allowed; }
     .empty { padding: 55px; color: #999; text-align: center; }
     dialog { width: min(800px, calc(100vw - 48px)); max-height: 90vh; padding: 0; border: 0; border-radius: 8px; box-shadow: 0 18px 55px #0003; }
-    #delete-dialog { width: min(440px, calc(100vw - 48px)); }
+    #delete-dialog, #abort-dialog { width: min(440px, calc(100vw - 48px)); }
     #detail { position: fixed; inset: 0 0 0 auto; width: min(560px, 100vw); height: 100vh; max-height: none; margin: 0; border-radius: 0; box-shadow: -12px 0 35px #0002; }
     #detail::backdrop { background: #0006; }
     #detail .dialog-shell { display: flex; flex-direction: column; height: 100%; }
@@ -89,6 +89,7 @@
     .review-picker button { display: flex; justify-content: space-between; align-items: center; gap: 12px; width: 100%; padding: 11px 13px; border: 0; border-bottom: 1px solid #eee; background: #fff; text-align: left; }
     .review-picker button:hover:not(:disabled) { background: #f7f3ff; }
     .review-picker button:disabled { color: #aaa; cursor: not-allowed; }
+    .review-picker .picker-warning { color: #d4380d; }
     .review-picker small, .review-picker em { display: block; margin-top: 3px; color: #999; font-size: 12px; font-style: normal; }
     .review-picker .picker-group { padding: 7px 12px; background: #f7f7fa; color: #777; font-size: 13px; }
     .order-option { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: 10px; padding: 15px; border: 1px solid #e5e5e5; border-radius: 6px; background: #fff; text-align: left; }
@@ -115,15 +116,16 @@
     <p class="demo-example">页面示意：<button id="open-invalid" type="button">查看两条异常提示</button></p>
   </main>
   <dialog id="select-order-dialog" aria-labelledby="select-order-title"><div class="dialog-head"><h2 id="select-order-title">选择审核工单</h2><button id="select-order-x" type="button" aria-label="关闭">×</button></div><div class="dialog-body"><p class="review-note">选择草稿工单，或新建工单后添加审核项目。</p><div id="new-order-option"></div><h3 style="margin:22px 0 10px">草稿工单</h3><div id="draft-order-options"></div></div><div class="dialog-foot"><button class="secondary" id="select-order-cancel" type="button">取消</button></div></dialog>
-  <dialog id="edit-order-dialog" aria-labelledby="edit-order-title"><div class="dialog-head"><h2 id="edit-order-title">提交审核工单</h2><button id="edit-order-x" type="button" aria-label="关闭">×</button></div><div class="dialog-body"><div class="review-error" id="review-errors" role="alert" hidden></div><div class="review-field"><label for="order-name">工单名称 <b>*</b></label><input id="order-name" maxlength="60" placeholder="请输入工单名称"></div><div class="review-field"><p class="review-note">下方添加的项目将与所选平台的最新版本一起审核。</p><label for="order-platform" style="position:absolute;clip:rect(0,0,0,0)">审核平台</label><select id="order-platform"><option>iOS</option><option>macOS</option><option>Apple tvOS</option><option>visionOS</option></select></div><div class="review-field"><label for="review-search">添加审核项目</label><input id="review-search" placeholder="支持按商品或订阅群组名称/ID搜索" autocomplete="off"><div class="review-picker" id="review-picker" hidden></div></div><div class="selected-head" id="selected-count">共 0 条</div><div class="selected-table"><table><thead><tr><th style="width:43%">审核项目</th><th style="width:23%">创建时间</th><th style="width:17%">创建人</th><th style="width:10%">类型</th><th style="width:7%">操作</th></tr></thead><tbody id="selected-items"></tbody></table></div></div><div class="dialog-foot"><button class="secondary" id="edit-order-cancel" type="button">取消</button><button class="primary" id="save-draft" type="button">保存草稿</button><button class="primary" id="submit-order" type="button" disabled>提交</button></div></dialog>
+  <dialog id="edit-order-dialog" aria-labelledby="edit-order-title"><div class="dialog-head"><h2 id="edit-order-title">提交审核工单</h2><button id="edit-order-x" type="button" aria-label="关闭">×</button></div><div class="dialog-body"><div class="review-error" id="review-errors" role="alert" hidden></div><div class="review-field"><label for="order-name">工单名称 <b>*</b></label><input id="order-name" maxlength="60" placeholder="请输入工单名称"></div><div class="review-field"><p class="review-note">下方添加的项目将与所选平台的最新版本一起审核。</p><label for="order-platform" style="position:absolute;clip:rect(0,0,0,0)">审核平台</label><select id="order-platform"><option>iOS</option><option>macOS</option><option>Apple tvOS</option><option>visionOS</option></select></div><div class="review-field"><label for="review-search">添加审核项目</label><input id="review-search" placeholder="支持按商品名称/ID搜索" autocomplete="off"><div class="review-picker" id="review-picker" hidden></div></div><div class="selected-head" id="selected-count">共 0 条</div><div class="selected-table"><table><thead><tr><th style="width:43%">审核项目</th><th style="width:23%">创建时间</th><th style="width:17%">创建人</th><th style="width:10%">类型</th><th style="width:7%">操作</th></tr></thead><tbody id="selected-items"></tbody></table></div></div><div class="dialog-foot"><button class="secondary" id="edit-order-cancel" type="button">取消</button><button class="primary" id="save-draft" type="button">保存草稿</button><button class="primary" id="submit-order" type="button" disabled>提交</button></div></dialog>
   <dialog id="detail"><div class="dialog-shell"><div class="dialog-head"><h2 id="detail-title">工单详情</h2><button id="detail-x" type="button" aria-label="关闭">×</button></div><div class="dialog-body"><div class="detail-meta" id="detail-meta"></div><h3>审核项目</h3><div id="detail-items"></div></div><div class="dialog-foot"><button class="primary" id="detail-close" type="button">关闭</button></div></div></dialog>
   <dialog id="delete-dialog" aria-labelledby="delete-title"><div class="dialog-head"><h2 id="delete-title">删除草稿工单</h2><button id="delete-x" type="button" aria-label="关闭">×</button></div><div class="dialog-body">确定删除「<strong id="delete-name"></strong>」吗？删除后无法恢复。</div><div class="dialog-foot"><button class="secondary" id="delete-cancel" type="button">取消</button><button class="danger-button" id="delete-confirm" type="button">删除</button></div></dialog>
+  <dialog id="abort-dialog" aria-labelledby="abort-title"><div class="dialog-head"><h2 id="abort-title">中止审核</h2><button id="abort-x" type="button" aria-label="关闭">×</button></div><div class="dialog-body">确定中止「<strong id="abort-name"></strong>」的审核吗？中止后工单将移至已完成。</div><div class="dialog-foot"><button class="secondary" id="abort-cancel" type="button">取消</button><button class="danger-button" id="abort-confirm" type="button">中止审核</button></div></dialog>
   <div class="toast" id="toast" role="status" hidden></div>
   <script>
     const key = 'subscription-review-orders-demo';
     const currentUser = '黄雅妮';
     const statusNames = { draft: '草稿', reviewing: '审核中', incomplete: '未完成', completed: '已完成' };
-    const itemNames = { 'g-1': '会员基础订阅群组', 'p-1': '连续包月会员', 'g-2': '高级订阅群组', 'p-2': '高级会员月卡', 'g-3': '新上架订阅群组', 'p-3': '新上架包年会员' };
+    const itemNames = { 'g-1': '会员基础订阅群组', 'p-1': '连续包月会员', 'g-2': '高级订阅群组', 'p-2': '高级会员月卡', 'g-3': '新上架订阅群组', 'p-3': '新上架包年会员', 'p-4': '会员季度卡' };
     const initialOrders = [
       { id: 'WO-20261103-001', name: '会员订阅审核工单', status: 'draft', platform: 'iOS', items: ['g-1', 'p-1'], createdBy: '黄雅妮', created: '2026-11-03 09:30', updatedBy: '黄雅妮', updated: '2026-11-03 09:30' },
       { id: 'WO-20261102-002', name: '高级会员审核工单', status: 'reviewing', platform: 'macOS', items: ['g-2', 'p-2'], createdBy: '庄秀', created: '2026-11-02 15:18', updatedBy: '庄秀', updated: '2026-11-03 10:05' },
@@ -171,7 +173,7 @@
     }
     function writeOrders(orders) { localStorage.setItem(key, JSON.stringify(orders)); }
     function node(tag, className, value) { const element = document.createElement(tag); if (className) element.className = className; if (value != null) element.textContent = value; return element; }
-    let activeTab = 'draft'; let detailId = null; let pendingDeleteId = null; let toastTimer;
+    let activeTab = 'draft'; let detailId = null; let pendingDeleteId = null; let pendingAbortId = null; let toastTimer;
     function say(message) { const toast = document.getElementById('toast'); toast.textContent = message; toast.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.hidden = true, 2800); }
     function now() { return new Date().toLocaleString('zh-CN', { hour12: false }); }
     const reviewPlans = [
@@ -180,7 +182,8 @@
       { id: 'g-2', entityId: 'group-2', type: 'group', entityName: '高级订阅群组', approved: false, created: '2026-11-02 12:05:10', creator: '庄秀', snapshotStatus: 'pending' },
       { id: 'p-2', entityId: 'product-2', type: 'product', entityName: '高级会员月卡', groupId: 'group-2', screenshots: ['premium-review.png'], created: '2026-11-02 12:18:42', creator: '庄秀', snapshotStatus: 'pending' },
       { id: 'g-3', entityId: 'group-3', type: 'group', entityName: '新上架订阅群组', approved: false, created: '2026-11-02 13:02:21', creator: '蓝丽萍', snapshotStatus: 'pending' },
-      { id: 'p-3', entityId: 'product-3', type: 'product', entityName: '新上架包年会员', groupId: 'group-3', screenshots: [], created: '2026-11-02 13:10:16', creator: '蓝丽萍', snapshotStatus: 'pending' }
+      { id: 'p-3', entityId: 'product-3', type: 'product', entityName: '新上架包年会员', groupId: 'group-3', screenshots: [], created: '2026-11-02 13:10:16', creator: '蓝丽萍', snapshotStatus: 'rejected' },
+      { id: 'p-4', entityId: 'product-4', type: 'product', entityName: '会员季度卡', groupId: 'group-1', screenshots: ['quarterly-review.png'], created: '2026-11-03 09:18:25', creator: '黄雅妮', snapshotStatus: 'rejected' }
     ];
     let pendingProject = null;
     let editingOrder = null;
@@ -193,17 +196,27 @@
         if (item && !items.some(existing => existing.id === item.id)) items.push(item);
       }));
       if (pendingProject && !items.some(item => item.id === pendingProject.id)) items.push(pendingProject);
-      return items.filter(item => item.snapshotStatus === 'pending');
+      return items.filter(item => ['pending', 'rejected'].includes(item.snapshotStatus));
     }
-    function reviewErrors() {
-      const items = candidates().filter(item => reviewSelected.has(item.id));
+    function selectedItems() { return candidates().filter(item => reviewSelected.has(item.id)); }
+    function occupiedOrders(item) {
+      return readOrders().filter(order => order.id !== editingOrder?.id && ['reviewing', 'incomplete'].includes(order.status)
+        && (order.items || []).some(id => id === item.id || order.itemDetails?.[id]?.entityId === item.entityId));
+    }
+    function reviewErrors(items = selectedItems()) {
       const errors = [];
       if (!items.length) errors.push('请至少添加一条待审核的商品或订阅组。');
-      const groups = new Set(items.filter(item => item.type === 'group').map(item => item.entityId));
-      items.filter(item => item.type === 'product').forEach(item => {
-        const group = candidates().find(group => group.type === 'group' && group.entityId === item.groupId);
-        if (group && !group.approved && !groups.has(group.entityId)) errors.push('商品「' + item.entityName + '」所属订阅组「' + group.entityName + '」未通过审核，请将订阅组一起提交');
+      const occupied = new Map();
+      items.forEach(item => occupiedOrders(item).forEach(order => {
+        const entry = occupied.get(order.id) || { order, products: [], groups: [] };
+        (item.type === 'product' ? entry.products : entry.groups).push(item.entityName);
+        occupied.set(order.id, entry);
+      }));
+      occupied.forEach(({ order, products, groups }) => {
+        const names = [...products.map(name => '商品「' + name + '」'), ...groups.map(name => '订阅组「' + name + '」')].join('、');
+        errors.push('提审失败，' + names + '被' + (order.status === 'reviewing' ? '审核中' : '未完成') + '工单「' + order.name + '」占用，请先处理相关工单，再发起提审');
       });
+      items.filter(item => item.type === 'product' && !item.screenshots?.length).forEach(item => errors.push('商品「' + item.entityName + '」未上传审核截图，请先上传审核截图'));
       items.filter(item => item.type === 'group' && !item.approved).forEach(group => {
         if (!items.some(item => item.type === 'product' && item.groupId === group.entityId)) errors.push('「' + group.entityName + '」是新订阅组，必须随该群组的续期商品一起提交，至少添加一件商品');
       });
@@ -219,7 +232,7 @@
     }
     function updateSubmitButton() {
       const ready = Boolean(document.getElementById('order-name').value.trim()) && Boolean(document.getElementById('order-platform').value)
-        && reviewErrors().length === 0 && readOrders().filter(order => order.status === 'reviewing').length < 2 && !exampleMode;
+        && reviewSelected.size > 0 && readOrders().filter(order => order.status === 'reviewing').length < 2 && !exampleMode;
       document.getElementById('submit-order').disabled = !ready;
     }
     function renderSelectedItems() {
@@ -243,20 +256,22 @@
       const picker = document.getElementById('review-picker'); picker.replaceChildren();
       const query = document.getElementById('review-search').value.trim().toLowerCase();
       let count = 0;
-      for (const type of ['group', 'product']) {
-        const matches = candidates().filter(item => item.type === type && !reviewSelected.has(item.id) && (item.entityName.toLowerCase().includes(query) || item.entityId.toLowerCase().includes(query)));
-        if (!matches.length) continue;
-        picker.append(node('div', 'picker-group', type === 'group' ? '订阅组' : '商品'));
-        matches.forEach(item => {
-          const button = node('button'); button.type = 'button';
-          const info = node('span'); info.append(node('strong', '', item.entityName), node('small', '', item.entityId));
-          button.append(info, node('small', '', item.created || ''));
-          if (item.type === 'product' && !item.screenshots?.length) { button.disabled = true; button.title = '请先上传审核截图'; }
-          else button.addEventListener('click', () => { reviewSelected.add(item.id); document.getElementById('review-search').value = ''; picker.hidden = true; showReviewErrors([]); renderSelectedItems(); });
-          picker.append(button); count++;
-        });
-      }
-      if (!count) picker.append(node('div', 'empty', query ? '没有匹配的待审核项目' : '没有可添加的待审核项目'));
+      const matches = candidates().filter(item => item.type === 'product' && !reviewSelected.has(item.id) && (item.entityName.toLowerCase().includes(query) || item.entityId.toLowerCase().includes(query)));
+      matches.forEach(item => {
+        const button = node('button'); button.type = 'button';
+        const info = node('span'); info.append(node('strong', '', item.entityName), node('small', '', item.entityId));
+        const meta = node('span');
+        meta.append(node('small', '', item.created || '—'), node('small', '', item.creator || '—'));
+        if (!item.screenshots?.length) {
+          button.disabled = true; button.title = '请先上传审核截图';
+          meta.append(node('small', 'picker-warning', '请先上传审核截图'));
+        }
+        button.append(info, meta);
+        if (button.disabled) { picker.append(button); count++; return; }
+        button.addEventListener('click', () => { reviewSelected.add(item.id); document.getElementById('review-search').value = ''; picker.hidden = true; showReviewErrors([]); renderSelectedItems(); });
+        picker.append(button); count++;
+      });
+      if (!count) picker.append(node('div', 'empty', query ? '没有匹配的待审核商品' : '没有可添加的待审核商品'));
     }
     function openEditor(order, initialId, isExample = false, draftOnly = false) {
       editingOrder = order; exampleMode = isExample; draftOnlyMode = draftOnly; reviewSelected.clear();
@@ -268,15 +283,14 @@
       document.getElementById('review-picker').hidden = true;
       document.getElementById('save-draft').disabled = isExample;
       document.getElementById('save-draft').hidden = isExample;
-      document.getElementById('submit-order').hidden = draftOnly || isExample;
-      document.getElementById('edit-order-title').textContent = isExample ? '异常提示示意' : draftOnly ? '创建草稿' : '提交审核工单';
+      document.getElementById('submit-order').hidden = draftOnly;
+      document.getElementById('edit-order-title').textContent = draftOnly ? (readOrders().some(item => item.id === order.id) ? '编辑草稿' : '创建草稿') : '提交审核工单';
       showReviewErrors([]);
       renderSelectedItems();
       document.getElementById('edit-order-dialog').showModal();
       if (!order.name) document.getElementById('order-name').focus();
     }
     function createDraft(draftOnly = false) {
-      if (readOrders().filter(order => order.status === 'draft').length >= 5) return say('草稿工单已达 5 个');
       document.getElementById('select-order-dialog').close();
       const timestamp = now();
       openEditor({ id: 'WO-' + Date.now(), name: '', status: 'draft', platform: 'iOS', items: [], createdBy: currentUser, created: timestamp, updatedBy: currentUser, updated: timestamp }, pendingProject?.id, false, draftOnly);
@@ -284,9 +298,9 @@
     function openSelector() {
       const drafts = readOrders().filter(order => order.status === 'draft');
       const createBox = document.getElementById('new-order-option'); createBox.replaceChildren();
-      const create = node('button', 'order-option'); create.type = 'button'; create.disabled = drafts.length >= 5;
-      const createText = node('span'); createText.append(node('strong', '', '新建审核工单'), node('small', '', drafts.length >= 5 ? '草稿工单已达 5 个，请选择已有工单' : '创建草稿后添加审核项目'));
-      create.append(createText, node('em', '', drafts.length + '/5')); create.addEventListener('click', () => createDraft()); createBox.append(create);
+      const create = node('button', 'order-option'); create.type = 'button';
+      const createText = node('span'); createText.append(node('strong', '', '新建审核工单'), node('small', '', '创建工单并添加审核项目'));
+      create.append(createText); create.addEventListener('click', () => createDraft()); createBox.append(create);
       const box = document.getElementById('draft-order-options'); box.replaceChildren();
       if (!drafts.length) box.append(node('div', 'empty', '暂无草稿工单'));
       drafts.forEach(order => {
@@ -300,15 +314,19 @@
       document.getElementById('select-order-dialog').showModal();
     }
     function openReviewPopup(params) {
+      const knownProject = reviewPlans.find(item => item.entityId === params.entityId && item.type === params.type);
       pendingProject = params.entityId && params.name && ['group', 'product'].includes(params.type)
-        ? { id: 'external-' + params.entityId, entityId: params.entityId, entityName: params.name, type: params.type, approved: true, groupId: params.type === 'product' ? 'group-1' : undefined, screenshots: ['ready'], created: now(), creator: currentUser, snapshotStatus: 'pending' }
+        ? knownProject || { id: 'external-' + params.entityId, entityId: params.entityId, entityName: params.name, type: params.type, approved: true, screenshots: params.type === 'product' ? ['ready'] : undefined, created: now(), creator: currentUser, snapshotStatus: 'pending' }
         : null;
       if (params.example) {
         openEditor({ id: 'example-only', name: '异常提示示意', status: 'draft', platform: 'iOS', items: ['p-2', 'g-3'] }, null, true);
-        showReviewErrors(reviewErrors());
+        showReviewErrors([
+          '商品「高级风钻VIP」被审核中工单占用，当前无法提交，请稍后再试',
+          '订阅组「SVIP群组」被工单「群组审核」占用，请将订阅组从该工单移除后再重新提交'
+        ]);
       } else if (params.order) {
         const order = readOrders().find(item => item.id === params.order && item.status === 'draft');
-        if (order) openEditor(order, pendingProject?.id);
+        if (order) openEditor(order, pendingProject?.id, false, Boolean(params.edit));
         else say('草稿工单不存在或状态已变化');
       } else if (params.create) createDraft(true);
       else openSelector();
@@ -353,14 +371,12 @@
     function render() {
       const orders = readOrders();
       const reviewing = orders.filter(order => order.status === 'reviewing').length;
-      const drafts = orders.filter(order => order.status === 'draft').length;
       const start = document.getElementById('start-review'); start.disabled = reviewing >= 2; start.title = reviewing >= 2 ? '审核中工单已达 2 个' : '';
-      const create = document.getElementById('create-draft'); create.disabled = drafts >= 5; create.title = drafts >= 5 ? '草稿工单已达 5 个' : '';
       document.getElementById('draft-panel-head').hidden = activeTab !== 'draft';
       const tabs = document.getElementById('tabs'); tabs.replaceChildren();
       [['draft', '草稿'], ['reviewing', '审核中'], ['incomplete', '未完成'], ['completed', '已完成']].forEach(([status, title]) => {
         const count = orders.filter(order => order.status === status).length;
-        const limit = status === 'draft' ? 5 : status === 'reviewing' ? 2 : null;
+        const limit = status === 'reviewing' ? 2 : null;
         const button = node('button', activeTab === status ? 'active' : '', title + ' ');
         button.append(node('span', 'tab-count' + (limit && count >= limit ? ' full' : ''), '(' + count + (limit ? '/' + limit : '') + ')'));
         button.type = 'button'; button.setAttribute('role', 'tab'); button.setAttribute('aria-selected', String(activeTab === status));
@@ -376,7 +392,7 @@
         const view = node('button', 'link', '查看'); view.type = 'button'; view.addEventListener('click', () => openDetail(order.id)); actions.append(view);
         if (order.status === 'draft') {
           const edit = node('button', 'link', '编辑'); edit.type = 'button';
-          edit.addEventListener('click', () => openReviewPopup({ order: order.id })); actions.append(edit);
+          edit.addEventListener('click', () => openReviewPopup({ order: order.id, edit: true })); actions.append(edit);
           const submit = node('button', 'link', '提审'); submit.type = 'button'; submit.disabled = reviewing >= 2;
           submit.title = submit.disabled ? '审核中工单已达 2 个' : '';
           submit.addEventListener('click', () => openReviewPopup({ order: order.id })); actions.append(submit);
@@ -389,7 +405,7 @@
         }
         if (order.status === 'reviewing') {
           const abort = node('button', 'link danger', '中止审核'); abort.type = 'button';
-          abort.addEventListener('click', () => { const all = readOrders(); const target = all.find(item => item.id === order.id); target.status = 'completed'; target.stopped = true; target.updatedBy = currentUser; target.updated = now(); writeOrders(all); render(); say('审核已中止'); }); actions.append(abort);
+          abort.addEventListener('click', () => { pendingAbortId = order.id; document.getElementById('abort-name').textContent = order.name; document.getElementById('abort-dialog').showModal(); }); actions.append(abort);
         }
         tr.append(identity, status, node('td', '', order.platform || 'iOS'), node('td', '', String((order.items || []).length)), node('td', '', order.createdBy || '未记录'), node('td', '', order.created || '—'), node('td', '', order.updatedBy || '未记录'), node('td', '', order.updated || '—'), actions);
         body.append(tr);
@@ -405,6 +421,7 @@
     document.getElementById('edit-order-x').addEventListener('click', () => editDialog.close());
     document.getElementById('edit-order-cancel').addEventListener('click', () => editDialog.close());
     editDialog.addEventListener('close', () => {
+      if (editDialog.open) return;
       editingOrder = null; pendingProject = null; exampleMode = false; draftOnlyMode = false;
       reviewSelected.clear();
       document.getElementById('review-picker').hidden = true;
@@ -432,11 +449,19 @@
       const orders = readOrders();
       const existing = orders.find(order => order.id === editingOrder.id);
       if (existing && existing.status !== 'draft') return say('工单状态已变化，请刷新后重试');
-      if (!existing && orders.filter(order => order.status === 'draft').length >= 5) return say('草稿工单已达 5 个');
       if (submit) {
+        const addedGroups = [];
+        selectedItems().filter(item => item.type === 'product').forEach(product => {
+          const group = candidates().find(item => item.type === 'group' && item.entityId === product.groupId);
+          if (group && !group.approved && !reviewSelected.has(group.id)) {
+            reviewSelected.add(group.id);
+            addedGroups.push(group.entityName);
+          }
+        });
+        if (addedGroups.length) renderSelectedItems();
         const errors = reviewErrors();
-        if (errors.length) { showReviewErrors(errors); return; }
-        if (orders.filter(order => order.status === 'reviewing').length >= 2) return say('审核中工单已达 2 个');
+        if (errors.length) { showReviewErrors(errors); return say('提审失败，请查看异常提示'); }
+        if (orders.filter(order => order.status === 'reviewing').length >= 2) return say('提审失败，审核中工单已达 2 个');
       }
       const itemDetails = { ...(existing?.itemDetails || {}) };
       candidates().filter(item => reviewSelected.has(item.id)).forEach(item => { itemDetails[item.id] = item; });
@@ -468,6 +493,17 @@
       if (!target || target.status !== 'draft') { deleteDialog.close(); render(); return say('工单状态已变化，无法删除'); }
       writeOrders(orders.filter(order => order.id !== pendingDeleteId));
       deleteDialog.close(); render(); say('草稿工单已删除');
+    });
+    const abortDialog = document.getElementById('abort-dialog');
+    document.getElementById('abort-x').addEventListener('click', () => abortDialog.close());
+    document.getElementById('abort-cancel').addEventListener('click', () => abortDialog.close());
+    abortDialog.addEventListener('close', () => { pendingAbortId = null; });
+    document.getElementById('abort-confirm').addEventListener('click', () => {
+      const orders = readOrders();
+      const target = orders.find(order => order.id === pendingAbortId);
+      if (!target || target.status !== 'reviewing') { abortDialog.close(); render(); return say('操作失败，工单状态已变化'); }
+      target.status = 'completed'; target.stopped = true; target.updatedBy = currentUser; target.updated = now();
+      writeOrders(orders); abortDialog.close(); render(); say('审核已中止');
     });
     render();
     const routeParams = new URLSearchParams(location.search);
