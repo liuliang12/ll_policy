@@ -44,7 +44,6 @@
     .link:disabled { color: #bbb; cursor: not-allowed; }
     .empty { padding: 55px; color: #999; text-align: center; }
     dialog { width: min(800px, calc(100vw - 48px)); max-height: 90vh; padding: 0; border: 0; border-radius: 8px; box-shadow: 0 18px 55px #0003; }
-    #delete-dialog { width: min(440px, calc(100vw - 48px)); }
     #detail { position: fixed; inset: 0 0 0 auto; width: min(560px, 100vw); height: 100vh; max-height: none; margin: 0; border-radius: 0; box-shadow: -12px 0 35px #0002; }
     #detail::backdrop { background: #0006; }
     #detail .dialog-shell { display: flex; flex-direction: column; height: 100%; }
@@ -66,7 +65,6 @@
     .review-result { display: inline-block; margin-top: 8px; padding: 3px 8px; border-radius: 4px; font-size: 13px; }
     .review-result.passed { background: #e9f7ee; color: #389e0d; }
     .review-result.rejected { background: #fff1f0; color: #cf1322; }
-    .review-result.cancelled { background: #f2f2f2; color: #777; }
     .demo-example { margin: 18px 0 0; color: #999; font-size: 13px; }
     .demo-example button { padding: 0; border: 0; background: none; color: #8b7ac9; font-size: 13px; text-decoration: underline; text-underline-offset: 3px; }
     .demo-example button:hover { color: #7651f6; }
@@ -118,7 +116,6 @@
   <dialog id="select-order-dialog" aria-labelledby="select-order-title"><div class="dialog-head"><h2 id="select-order-title">选择审核工单</h2><button id="select-order-x" type="button" aria-label="关闭">×</button></div><div class="dialog-body"><p class="review-note">选择草稿工单，或新建工单后添加审核项目。</p><div id="new-order-option"></div><h3 style="margin:22px 0 10px">草稿工单</h3><div id="draft-order-options"></div></div><div class="dialog-foot"><button class="secondary" id="select-order-cancel" type="button">取消</button></div></dialog>
   <dialog id="edit-order-dialog" aria-labelledby="edit-order-title"><div class="dialog-head"><h2 id="edit-order-title">提交审核工单</h2><button id="edit-order-x" type="button" aria-label="关闭">×</button></div><div class="dialog-body"><div class="review-error" id="review-errors" role="alert" hidden></div><div class="review-field"><label for="order-name">工单名称 <b>*</b></label><input id="order-name" maxlength="60" placeholder="请输入工单名称"></div><div class="review-field"><p class="review-note">下方添加的项目将与所选平台的最新版本一起审核。</p><label for="order-platform" style="position:absolute;clip:rect(0,0,0,0)">审核平台</label><select id="order-platform"><option>iOS</option><option>macOS</option><option>Apple tvOS</option><option>visionOS</option></select></div><div class="review-field"><label for="review-search">添加审核项目</label><input id="review-search" placeholder="支持按商品名称/ID搜索" autocomplete="off"><div class="review-picker" id="review-picker" hidden></div></div><div class="selected-head" id="selected-count">共 0 条</div><div class="selected-table"><table><thead><tr><th style="width:43%">审核项目</th><th style="width:23%">创建时间</th><th style="width:17%">创建人</th><th style="width:10%">类型</th><th style="width:7%">操作</th></tr></thead><tbody id="selected-items"></tbody></table></div></div><div class="dialog-foot"><button class="secondary" id="save-draft" type="button">保存草稿</button><button class="primary" id="submit-order" type="button" disabled>提交</button></div></dialog>
   <dialog id="detail"><div class="dialog-shell"><div class="dialog-head"><h2 id="detail-title">工单详情</h2><button id="detail-x" type="button" aria-label="关闭">×</button></div><div class="dialog-body"><div class="detail-meta" id="detail-meta"></div><h3>审核项目</h3><div id="detail-items"></div></div><div class="dialog-foot"><button class="primary" id="detail-close" type="button">关闭</button></div></div></dialog>
-  <dialog id="delete-dialog" aria-labelledby="delete-title"><div class="dialog-head"><h2 id="delete-title">删除草稿工单</h2><button id="delete-x" type="button" aria-label="关闭">×</button></div><div class="dialog-body">确定删除「<strong id="delete-name"></strong>」吗？删除后无法恢复。</div><div class="dialog-foot"><button class="secondary" id="delete-cancel" type="button">取消</button><button class="danger-button" id="delete-confirm" type="button">删除</button></div></dialog>
   <div class="toast" id="toast" role="status" hidden></div>
   <script>
     const key = 'subscription-review-orders-demo';
@@ -172,7 +169,7 @@
     }
     function writeOrders(orders) { localStorage.setItem(key, JSON.stringify(orders)); }
     function node(tag, className, value) { const element = document.createElement(tag); if (className) element.className = className; if (value != null) element.textContent = value; return element; }
-    let activeTab = 'draft'; let detailId = null; let pendingDeleteId = null; let toastTimer;
+    let activeTab = 'draft'; let detailId = null; let toastTimer;
     function say(message) { const toast = document.getElementById('toast'); toast.textContent = message; toast.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.hidden = true, 2800); }
     function now() { return new Date().toLocaleString('zh-CN', { hour12: false }); }
     const reviewPlans = [
@@ -334,7 +331,7 @@
       const order = readOrders().find(item => item.id === id); if (!order) return;
       detailId = id; document.getElementById('detail-title').textContent = order.name || '审核工单详情';
       const meta = document.getElementById('detail-meta'); meta.replaceChildren();
-      [['工单 ID', order.id], ['状态', statusNames[order.status]], ['审核平台', order.platform || 'iOS'], ...(order.stopped ? [['审核结果', '已中止审核']] : []), ['创建人', order.createdBy || '未记录'], ['创建时间', order.created], ['最近更新人', order.updatedBy || '未记录'], ['最近更新时间', order.updated]].forEach(([label, value]) => {
+      [['工单 ID', order.id], ['状态', statusNames[order.status]], ['审核平台', order.platform || 'iOS'], ['创建人', order.createdBy || '未记录'], ['创建时间', order.created], ['最近更新人', order.updatedBy || '未记录'], ['最近更新时间', order.updated]].forEach(([label, value]) => {
         const line = node('div'); line.append(node('span', '', label + '：'), document.createTextNode(value || '—')); meta.append(line);
       });
       const box = document.getElementById('detail-items'); box.replaceChildren();
@@ -344,8 +341,8 @@
         info.append(node('strong', '', order.itemDetails?.[itemId]?.entityName || itemNames[itemId] || itemId), node('small', '', order.itemDetails?.[itemId]?.entityId || itemId));
         const failed = (order.failedItems || []).includes(itemId) || (order.rejectedItems || []).includes(itemId);
         if (order.status === 'completed' || order.status === 'incomplete') {
-          const result = order.status === 'completed' ? (order.stopped ? 'cancelled' : 'passed') : (failed ? 'rejected' : 'passed');
-          info.append(node('span', 'review-result ' + result, { passed: '审核通过', rejected: '审核被拒', cancelled: '取消审核' }[result]));
+          const result = order.status === 'completed' ? 'passed' : (failed ? 'rejected' : 'passed');
+          info.append(node('span', 'review-result ' + result, result === 'rejected' ? '审核被拒' : '审核通过'));
         }
         line.append(info);
         if (order.status === 'incomplete' && failed) {
@@ -395,12 +392,6 @@
           const submit = node('button', 'link', '提审'); submit.type = 'button'; submit.disabled = reviewing >= 2;
           submit.title = submit.disabled ? '审核中工单已达 2 个' : '';
           submit.addEventListener('click', () => openReviewPopup({ order: order.id })); actions.append(submit);
-          const remove = node('button', 'link danger', '删除'); remove.type = 'button';
-          remove.addEventListener('click', () => {
-            pendingDeleteId = order.id;
-            document.getElementById('delete-name').textContent = order.name || '审核工单';
-            document.getElementById('delete-dialog').showModal();
-          }); actions.append(remove);
         }
         tr.append(identity, status, node('td', '', order.platform || 'iOS'), node('td', '', String((order.items || []).length)), node('td', '', order.createdBy || '未记录'), node('td', '', order.created || '—'), node('td', '', order.updatedBy || '未记录'), node('td', '', order.updated || '—'), actions);
         body.append(tr);
@@ -477,17 +468,6 @@
     document.getElementById('submit-order').addEventListener('click', () => persistReviewOrder(true));
     document.getElementById('detail-x').addEventListener('click', () => document.getElementById('detail').close());
     document.getElementById('detail-close').addEventListener('click', () => document.getElementById('detail').close());
-    const deleteDialog = document.getElementById('delete-dialog');
-    document.getElementById('delete-x').addEventListener('click', () => deleteDialog.close());
-    document.getElementById('delete-cancel').addEventListener('click', () => deleteDialog.close());
-    deleteDialog.addEventListener('close', () => { pendingDeleteId = null; });
-    document.getElementById('delete-confirm').addEventListener('click', () => {
-      const orders = readOrders();
-      const target = orders.find(order => order.id === pendingDeleteId);
-      if (!target || target.status !== 'draft') { deleteDialog.close(); render(); return say('工单状态已变化，无法删除'); }
-      writeOrders(orders.filter(order => order.id !== pendingDeleteId));
-      deleteDialog.close(); render(); say('草稿工单已删除');
-    });
     render();
     const routeParams = new URLSearchParams(location.search);
     if (routeParams.get('select') === '1') {
