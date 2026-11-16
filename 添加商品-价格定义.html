@@ -179,7 +179,7 @@
       { name: '德国', code: 'EUR', original: '2.99', actual: '1.99' }
     ];
     const defaultPrices = { CNY: { original: '15.00', actual: '12.00' } };
-    const currentPlan = { baseCurrency: 'CNY', defaults: defaultPrices, regions, search: '' };
+    const currentPlan = { defaultRegion: '', baseCurrency: 'CNY', defaults: defaultPrices, regions, search: '' };
     const futurePlans = [];
     const templateKey = 'product-price-templates-demo';
     const dataKey = 'product-prices-demo';
@@ -247,7 +247,7 @@
     }
     function saveDraft() { localStorage.setItem(dataKey, JSON.stringify({ mode, baseCurrency: currentPlan.baseCurrency, defaultPrices: currentPlan.defaults, regions: currentPlan.regions, currentPlan, futurePlans })); }
     function makePlan() {
-      return { date: '', scope: 'new', baseCurrency: currentPlan.baseCurrency, defaults: structuredClone(currentPlan.defaults), regions: structuredClone(currentPlan.regions), search: '' };
+      return { date: '', scope: 'new', defaultRegion: currentPlan.defaultRegion, baseCurrency: currentPlan.baseCurrency, defaults: structuredClone(currentPlan.defaults), regions: structuredClone(currentPlan.regions), search: '' };
     }
     function renderPlan(root, plan, index, future) {
       const dialogEditor = root.id === 'future-editor';
@@ -259,7 +259,7 @@
           ? '<div class="future-meta"><div class="field"><label><span class="required">*</span>价格开始生效日期：</label><div><input type="date" class="plan-date"><span class="field-error date-error"></span></div></div><div class="field"><label><span class="required">*</span>价格生效范围：</label><div class="scope-options"><label><input type="radio" name="scope-' + index + '" value="new" checked disabled><span>仅对新订阅用户生效</span></label><label><input type="radio" name="scope-' + index + '" value="all" disabled><span>对新老订阅用户都生效</span></label></div></div></div>'
         : '';
       const config = document.createElement('div');
-      config.innerHTML = '<div class="section-head"><h2 class="section-title">预付默认价格</h2></div><div class="default-fields"><div class="field"><label><span class="required">*</span>货币符号：</label><select class="base-currency"><option value="CNY">人民币 (¥)</option><option value="USD">美元 ($)</option><option value="TWD">新台币 (NT$)</option><option value="HKD">港币 (HK$)</option><option value="JPY">日元 (¥)</option><option value="EUR">欧元 (€)</option></select></div><div class="field"><label>商品原价：</label><div class="default-original-wrap"></div></div><div class="field"><label><span class="required">*</span>实际价格：</label><div><div class="default-actual-wrap"></div><span class="field-note">未设置地区价格时，使用默认价格。</span></div></div></div><div class="section-head"><h2 class="section-title">商品价格</h2></div><div class="template-row"><label>选择价格模板：</label><select class="template-select"><option value="">选择一个价格模板</option></select><button class="outline save-template" type="button">保存商品价格模板</button></div><input class="search" type="search" placeholder="搜索国家或地区" aria-label="搜索国家或地区"><div class="table-scroll"><table><colgroup><col style="width:21%"><col style="width:12%"><col style="width:11%"><col style="width:22%"><col style="width:22%"><col style="width:12%"></colgroup><thead><tr><th>地区</th><th>货币代码</th><th>货币符号</th><th>商品原价</th><th>实际价格</th><th>操作</th></tr></thead><tbody class="prices"></tbody></table></div>';
+      config.innerHTML = '<div class="section-head"><h2 class="section-title">预付默认价格</h2></div><div class="default-fields"><div class="field"><label for="default-region-' + index + '"><span class="required">*</span>地区：</label><select class="default-region" id="default-region-' + index + '" required><option value="">请选择地区</option></select></div><div class="field"><label><span class="required">*</span>货币符号：</label><select class="base-currency"><option value="CNY">人民币 (¥)</option><option value="USD">美元 ($)</option><option value="TWD">新台币 (NT$)</option><option value="HKD">港币 (HK$)</option><option value="JPY">日元 (¥)</option><option value="EUR">欧元 (€)</option></select></div><div class="field"><label>商品原价：</label><div class="default-original-wrap"></div></div><div class="field"><label><span class="required">*</span>实际价格：</label><div><div class="default-actual-wrap"></div><span class="field-note">未设置地区价格时，使用默认价格。</span></div></div></div><div class="section-head"><h2 class="section-title">商品价格</h2></div><div class="template-row"><label>选择价格模板：</label><select class="template-select"><option value="">选择一个价格模板</option></select><button class="outline save-template" type="button">保存商品价格模板</button></div><input class="search" type="search" placeholder="搜索国家或地区" aria-label="搜索国家或地区"><div class="table-scroll"><table><colgroup><col style="width:21%"><col style="width:12%"><col style="width:11%"><col style="width:22%"><col style="width:22%"><col style="width:12%"></colgroup><thead><tr><th>地区</th><th>货币代码</th><th>货币符号</th><th>商品原价</th><th>实际价格</th><th>操作</th></tr></thead><tbody class="prices"></tbody></table></div>';
       root.append(config);
       if (dialogEditor) {
         const table = root.querySelector('.table-scroll table');
@@ -268,6 +268,16 @@
         const heading = document.createElement('th'); heading.textContent = '当前实际价格';
         table.querySelector('thead tr').insertBefore(heading, table.querySelector('thead th:last-child'));
       }
+      const regionSelect = root.querySelector('.default-region');
+      plan.regions.forEach(region => regionSelect.add(new Option(region.name, region.name)));
+      regionSelect.value = plan.defaultRegion || '';
+      const refreshPlan = () => dialogEditor ? renderPlan(root, plan, index, future) : renderAll();
+      regionSelect.addEventListener('change', () => {
+        plan.defaultRegion = regionSelect.value;
+        const region = plan.regions.find(item => item.name === plan.defaultRegion);
+        if (region) plan.baseCurrency = region.code;
+        refreshPlan(); saveDraft();
+      });
       const currency = root.querySelector('.base-currency'); currency.value = plan.baseCurrency;
       if (future) {
         plan.scope = 'new';
@@ -290,7 +300,11 @@
         renderAll(); saveDraft(); say('已应用价格模板');
       });
       root.querySelector('.save-template').addEventListener('click', () => { activePlan = plan; document.getElementById('template-name').value = ''; document.getElementById('template-dialog').showModal(); });
-      currency.addEventListener('change', () => { plan.baseCurrency = currency.value; renderAll(); saveDraft(); });
+      currency.addEventListener('change', () => {
+        plan.baseCurrency = currency.value;
+        if (plan.regions.find(item => item.name === plan.defaultRegion)?.code !== plan.baseCurrency) plan.defaultRegion = '';
+        refreshPlan(); saveDraft();
+      });
       const search = root.querySelector('.search'); search.value = plan.search || '';
       search.addEventListener('input', () => { plan.search = search.value; renderRows(plan, root.querySelector('.prices'), search); });
       renderDefaults(plan, root, index); renderRows(plan, root.querySelector('.prices'), search);
@@ -329,6 +343,7 @@
       addDetail(meta, '价格生效范围：', plan.scope === 'all' ? '对新老订阅用户都生效' : '仅对新订阅用户生效');
       const defaults = content.querySelector('.default-detail');
       const base = plan.defaults[plan.baseCurrency] || {};
+      addDetail(defaults, '地区：', plan.defaultRegion || '未设置');
       addDetail(defaults, '货币符号：', plan.baseCurrency + ' (' + currencies[plan.baseCurrency].symbol + ')');
       addDetail(defaults, '商品原价：', base.original || '未设置');
       addDetail(defaults, '实际价格：', base.actual || '未设置');
@@ -378,6 +393,7 @@
     document.getElementById('previous').addEventListener('click', () => { location.href = './添加商品-审核信息.html'; });
     function validPlan(plan) {
       const valid = value => /^\d+(\.\d{1,2})?$/.test(value) && Number(value) > 0;
+      if (!plan.regions.some(region => region.name === plan.defaultRegion && region.code === plan.baseCurrency)) return '请选择默认价格对应的地区';
       const base = plan.defaults[plan.baseCurrency];
       if (!base || !valid(base.actual)) return '请填写有效的默认实际价格';
       if (base.original && !valid(base.original)) return '请填写有效的默认商品原价';
@@ -405,6 +421,7 @@
       if (saved) {
         const current = saved.currentPlan || { baseCurrency: saved.baseCurrency, defaults: saved.defaultPrices, regions: saved.regions };
         if (current.baseCurrency in currencies) currentPlan.baseCurrency = current.baseCurrency;
+        currentPlan.defaultRegion = current.defaultRegion || '';
         Object.assign(currentPlan.defaults, current.defaults || {});
         (current.regions || []).forEach(item => { const row = currentPlan.regions.find(region => region.name === item.name); if (row) Object.assign(row, { original: item.original || '', actual: item.actual || '' }); });
         (saved.futurePlans || []).forEach(item => { if (item && Array.isArray(item.regions) && item.defaults) futurePlans.push({ ...item, scope: 'new' }); });
