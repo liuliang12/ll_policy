@@ -150,8 +150,7 @@
         <div class="plan-panel-head"><div><h2 id="current-title">当前价格</h2><p>当前生效的商品价格配置</p></div></div>
         <div id="current-plan"></div>
       </section>
-      <div class="future-heading"><h2>未来价格计划</h2><button class="primary" id="add-future" type="button">＋ 添加未来价格计划</button></div>
-      <div class="future-list" id="future-list"></div>
+      <div class="future-list" id="future-list" style="display:none"></div>
     </div>
     <footer class="footer"><button class="outline step" id="previous" type="button">上一步，填写商品信息</button><button class="primary step" id="next" type="button">下一步，设置商品状态</button></footer>
   </main>
@@ -245,7 +244,7 @@
         action.append(convert); tr.append(action); tbody.append(tr);
       });
     }
-    function saveDraft() { localStorage.setItem(dataKey, JSON.stringify({ mode, baseCurrency: currentPlan.baseCurrency, defaultPrices: currentPlan.defaults, regions: currentPlan.regions, currentPlan, futurePlans })); }
+    function saveDraft() { let previousPlans = []; try { previousPlans = JSON.parse(localStorage.getItem(dataKey))?.futurePlans || []; } catch (_) {} localStorage.setItem(dataKey, JSON.stringify({ mode, baseCurrency: currentPlan.baseCurrency, defaultPrices: currentPlan.defaults, regions: currentPlan.regions, currentPlan, futurePlans: previousPlans })); }
     function makePlan() {
       return { date: '', scope: 'new', defaultRegion: currentPlan.defaultRegion, baseCurrency: currentPlan.baseCurrency, defaults: structuredClone(currentPlan.defaults), regions: structuredClone(currentPlan.regions), search: '' };
     }
@@ -290,13 +289,14 @@
         const removeButton = root.querySelector('.remove-plan');
         if (removeButton) removeButton.addEventListener('click', () => { futurePlans.splice(futurePlans.indexOf(plan), 1); renderAll(); saveDraft(); });
       }
-      root.querySelector('.template-row').hidden = mode !== 'custom';
       const select = root.querySelector('.template-select');
       Object.keys(templates()).forEach(name => select.add(new Option(name, name)));
+      select.value = plan.templateName || '';
       select.addEventListener('change', event => {
         const saved = templates()[event.target.value]; if (!saved) return;
-        Object.entries(saved.defaults).forEach(([code, values]) => plan.defaults[code] = { ...values });
-        saved.regions.forEach(item => { const row = plan.regions.find(region => region.name === item.name); if (row) Object.assign(row, { original: item.original, actual: item.actual }); });
+        Object.entries(saved.defaults || {}).forEach(([code, values]) => plan.defaults[code] = { ...values });
+        (saved.regions || []).forEach(item => { const row = plan.regions.find(region => region.name === item.name); if (row) Object.assign(row, { original: item.original, actual: item.actual }); });
+        plan.templateName = event.target.value;
         renderAll(); saveDraft(); say('已应用价格模板');
       });
       root.querySelector('.save-template').addEventListener('click', () => { activePlan = plan; document.getElementById('template-name').value = ''; document.getElementById('template-dialog').showModal(); });
@@ -367,10 +367,6 @@
       document.getElementById('future-dialog-title').textContent = futurePlans.includes(plan) ? '编辑未来价格计划' : '添加未来价格计划';
       document.getElementById('future-dialog').showModal();
     }
-    document.getElementById('add-future').addEventListener('click', () => {
-      if (futurePlans.some(plan => !plan.date)) return say('请先填写已有未来价格计划的开始日期');
-      openFutureDialog(makePlan());
-    });
     document.addEventListener('pointerdown', event => { if (!menu.contains(event.target) && event.target !== activeInput) closeMenu(); });
     document.addEventListener('keydown', event => { if (event.key === 'Escape') closeMenu(); });
     window.addEventListener('scroll', closeMenu, true);
@@ -388,7 +384,7 @@
       if (!futurePlans.includes(plan)) futurePlans.push(plan);
       document.getElementById('future-dialog').close(); editingPlan = null; renderAll(); saveDraft();
     });
-    document.getElementById('template-confirm').addEventListener('click', () => { const name = document.getElementById('template-name').value.trim(); if (!name) return say('请输入模板名称'); const data = templates(); data[name] = { defaults: structuredClone(activePlan.defaults), regions: activePlan.regions.map(row => ({ name: row.name, original: row.original, actual: row.actual })) }; localStorage.setItem(templateKey, JSON.stringify(data)); document.getElementById('template-dialog').close(); say('模板已保存'); });
+    document.getElementById('template-confirm').addEventListener('click', () => { const name = document.getElementById('template-name').value.trim(); if (!name) return say('请输入模板名称'); const data = templates(); data[name] = { defaults: structuredClone(activePlan.defaults), regions: activePlan.regions.map(row => ({ name: row.name, original: row.original, actual: row.actual })) }; localStorage.setItem(templateKey, JSON.stringify(data)); activePlan.templateName = name; document.getElementById('template-dialog').close(); renderAll(); saveDraft(); say('模板已保存'); });
     document.getElementById('back').addEventListener('click', () => { location.href = './个人会员商品列表.html'; });
     document.getElementById('previous').addEventListener('click', () => { location.href = './添加商品-审核信息.html'; });
     function validPlan(plan) {
@@ -403,16 +399,6 @@
     document.getElementById('next').addEventListener('click', () => {
       const currentError = validPlan(currentPlan);
       if (currentError) return say('当前价格：' + currentError);
-      const seenDates = new Set();
-      for (let index = 0; index < futurePlans.length; index++) {
-        const plan = futurePlans[index];
-        if (!plan.date) return say('未来价格计划请补充价格开始生效日期');
-        if (seenDates.has(plan.date)) return say('未来价格计划的开始日期不能重复');
-        seenDates.add(plan.date);
-        if (!plan.scope) return say('请选择价格生效范围');
-        const futureError = validPlan(plan);
-        if (futureError) return say('未来价格计划 ' + plan.date + '：' + futureError);
-      }
       saveDraft(); say('价格信息已保存');
     });
 
@@ -422,9 +408,9 @@
         const current = saved.currentPlan || { baseCurrency: saved.baseCurrency, defaults: saved.defaultPrices, regions: saved.regions };
         if (current.baseCurrency in currencies) currentPlan.baseCurrency = current.baseCurrency;
         currentPlan.defaultRegion = current.defaultRegion || '';
+        currentPlan.templateName = current.templateName || '';
         Object.assign(currentPlan.defaults, current.defaults || {});
         (current.regions || []).forEach(item => { const row = currentPlan.regions.find(region => region.name === item.name); if (row) Object.assign(row, { original: item.original || '', actual: item.actual || '' }); });
-        (saved.futurePlans || []).forEach(item => { if (item && Array.isArray(item.regions) && item.defaults) futurePlans.push({ ...item, scope: 'new' }); });
       }
     } catch (_) { /* Ignore outdated local draft. */ }
     renderAll();
