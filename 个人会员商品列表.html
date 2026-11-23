@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>个人会员商品</title>
+  <style>
+    :root { font-family: Arial, "PingFang SC", "Microsoft YaHei", sans-serif; color: #242424; background: #f2f3f5; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 18px 14px; }
+    button, select, input { font: inherit; }
+    button { cursor: pointer; }
+    .panel { min-height: calc(100vh - 36px); padding: 32px 48px 28px; border-radius: 10px; background: #fff; }
+    .toolbar { display: flex; align-items: center; gap: 15px; margin-bottom: 30px; }
+    h1 { margin: 0; font-size: 26px; font-weight: 650; white-space: nowrap; }
+    select { height: 48px; padding: 0 38px 0 15px; border: 1px solid #d4d4d4; border-radius: 7px; background: #fff; color: #333; font-size: 17px; }
+    .tools { display: flex; align-items: center; gap: 16px; margin-left: auto; }
+    .add { min-width: 142px; height: 52px; border: 0; border-radius: 9px; background: #7651f6; color: #fff; font-size: 19px; white-space: nowrap; }
+    .add:hover { background: #6842e8; }
+    .tool { display: inline-grid; place-items: center; width: 38px; height: 42px; padding: 0; border: 0; background: transparent; color: #292929; }
+    .tool:hover { color: #7651f6; }
+    .tool svg { width: 25px; height: 25px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .table-wrap { width: 100%; overflow-x: auto; border: 1px solid #eaeaea; border-radius: 8px; }
+    table { width: 100%; min-width: 1450px; border-collapse: collapse; table-layout: fixed; }
+    th, td { border-right: 1px solid #eaeaea; border-bottom: 1px solid #eaeaea; text-align: left; vertical-align: middle; }
+    th:last-child, td:last-child { border-right: 0; }
+    tbody tr:last-child td { border-bottom: 0; }
+    th { height: 75px; padding: 12px 16px; background: #fafafa; font-size: 18px; font-weight: 600; }
+    td { height: 210px; padding: 22px 16px; font-size: 17px; }
+    tbody tr:hover { background: #fcfcff; }
+    .product p, .times p { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 0 0 13px; line-height: 1.45; }
+    .product p:last-child, .times p:last-child { margin-bottom: 0; }
+    .product-icon { display: inline-grid; place-items: center; width: 36px; height: 36px; margin-bottom: 14px; border: 1.5px solid #7651f6; border-radius: 50%; color: #7651f6; font-size: 21px; line-height: 1; }
+    .copy { display: inline-grid; place-items: center; width: 21px; height: 24px; padding: 0; border: 0; background: transparent; color: #7651f6; }
+    .copy svg { width: 18px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.7; }
+    .badge { display: inline-flex; align-items: center; min-height: 28px; padding: 2px 8px; border: 1px solid; border-radius: 5px; font-size: 15px; line-height: 1.2; white-space: nowrap; }
+    .green { border-color: #a1e27e; background: #f1ffe9; color: #32a51a; }
+    .red { border-color: #ffaea7; background: #fff1f0; color: #ed4c47; }
+    .blue { border-color: #91caff; background: #eaf5ff; color: #1677d2; }
+    .orange { border-color: #ffd591; background: #fff7e6; color: #d48806; }
+    .status-line { display: flex; align-items: center; gap: 9px; min-height: 39px; white-space: nowrap; }
+    .status-line + .status-line { margin-top: 10px; }
+    .status-label { width: 80px; flex: none; color: #555; }
+    .snapshot-link { padding: 0; border: 0; background: transparent; color: #7651f6; font-size: inherit; text-align: left; }
+    .snapshot-link:hover { text-decoration: underline; }
+    .status-action, .row-action { padding: 2px 0; border: 0; background: transparent; color: #7651f6; white-space: nowrap; }
+    .status-action { font-size: 15px; }
+    .status-action:hover, .row-action:hover { color: #5733d0; text-decoration: underline; }
+    .info { position: relative; display: inline-grid; place-items: center; width: 21px; height: 21px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: #7651f6; font-size: 19px; font-weight: 600; line-height: 1; }
+    .info:hover::after, .info:focus-visible::after { content: attr(data-tip); position: absolute; z-index: 5; top: -12px; left: 27px; width: max-content; max-width: 260px; padding: 9px 11px; border-radius: 5px; background: #303030; color: #fff; font-size: 13px; font-weight: 400; line-height: 1.5; white-space: normal; text-align: left; box-shadow: 0 4px 16px #0003; }
+    .times { white-space: normal; }
+    .user { display: inline-flex; align-items: center; min-height: 29px; padding: 2px 8px; border: 1px solid #8fc9ff; border-radius: 5px; background: #eaf6ff; color: #0766d7; font-size: 14px; }
+    .user.updated { border-color: #a6e67f; background: #f1ffe8; color: #35a316; }
+    .row-actions { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+    .row-action { font-size: 17px; }
+    .more-wrap { position: relative; }
+    .more-menu { position: absolute; z-index: 4; top: 28px; right: 0; width: 110px; padding: 5px; border: 1px solid #e8e8e8; border-radius: 5px; background: #fff; box-shadow: 0 6px 20px #0002; }
+    .more-menu[hidden] { display: none; }
+    .more-menu button { width: 100%; padding: 8px; border: 0; background: #fff; color: #7651f6; text-align: left; font-size: 14px; }
+    .more-menu button:hover { background: #f5f1ff; }
+    .footer { display: flex; justify-content: flex-end; align-items: center; gap: 10px; padding: 20px 0 0; font-size: 15px; }
+    .page { min-width: 30px; height: 30px; padding: 0 5px; border: 1px solid transparent; border-radius: 5px; background: #fff; color: #333; }
+    .page.active { border-color: #7651f6; color: #7651f6; }
+    dialog { width: min(500px, calc(100vw - 32px)); padding: 25px; border: 0; border-radius: 8px; box-shadow: 0 15px 50px #0003; }
+    dialog::backdrop { background: #0006; }
+    dialog h2 { margin: 0 0 18px; font-size: 21px; }
+    dialog p { margin: 9px 0; line-height: 1.6; }
+    dialog label { display: block; margin: 12px 0 6px; }
+    dialog input { width: 100%; height: 42px; padding: 0 11px; border: 1px solid #d5d5d5; border-radius: 5px; }
+    .snapshot { display: grid; grid-template-columns: 105px minmax(0, 1fr); gap: 14px 12px; margin: 0; font-size: 15px; line-height: 1.5; }
+    .snapshot dt { color: #777; }
+    .snapshot dd { min-width: 0; margin: 0; overflow-wrap: anywhere; }
+    .dialog-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
+    .dialog-actions button { min-width: 75px; height: 38px; border: 1px solid #d5d5d5; border-radius: 5px; background: #fff; }
+    .dialog-actions .primary { border-color: #7651f6; background: #7651f6; color: #fff; }
+    .toast { position: fixed; z-index: 9; left: 50%; bottom: 25px; transform: translateX(-50%); padding: 10px 16px; border-radius: 5px; background: #292929; color: #fff; font-size: 14px; box-shadow: 0 5px 18px #0003; }
+    .toast[hidden] { display: none; }
+    .drawer-backdrop { position: fixed; z-index: 10; inset: 0; background: #0006; }
+    .drawer-backdrop[hidden], .plan-drawer[hidden], .drawer-view[hidden] { display: none; }
+    .plan-drawer { position: fixed; z-index: 11; top: 0; right: 0; bottom: 0; width: min(1380px, 85vw); display: flex; flex-direction: column; background: #fff; box-shadow: -8px 0 30px #0002; }
+    .drawer-head { display: flex; align-items: center; gap: 12px; padding: 22px 28px; border-bottom: 1px solid #eee; }
+    .drawer-head h2 { flex: 1; margin: 0; font-size: 22px; }
+    .drawer-head button, .drawer-back { border: 0; background: transparent; color: #7651f6; font-size: 16px; }
+    .drawer-head .drawer-close { color: #666; font-size: 28px; line-height: 1; }
+    .drawer-body { flex: 1; min-height: 0; overflow-y: auto; padding: 24px 28px; }
+    .drawer-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+    .drawer-toolbar h3, .plan-section h3 { margin: 0; font-size: 18px; }
+    .drawer-primary { min-height: 40px; padding: 0 16px; border: 1px solid #7651f6; border-radius: 6px; background: #7651f6; color: #fff; white-space: nowrap; }
+    .drawer-secondary { min-height: 40px; padding: 0 16px; border: 1px solid #d5d5d5; border-radius: 6px; background: #fff; color: #333; }
+    .drawer-empty { padding: 48px 16px; border: 1px dashed #ddd; border-radius: 8px; color: #888; text-align: center; }
+    .plan-drawer table { min-width: 0; table-layout: auto; }
+    .plan-drawer th { height: auto; padding: 12px; font-size: 14px; }
+    .plan-drawer td { height: auto !important; padding: 13px 12px; font-size: 14px; }
+    .plan-drawer .table-wrap { overflow-x: auto; }
+    .plan-links { display: flex; gap: 12px; flex-wrap: wrap; }
+    .plan-links button { padding: 0; border: 0; background: transparent; color: #7651f6; }
+    .plan-links .danger { color: #d4380d; }
+    .plan-section { margin: 0 0 26px; }
+    .plan-section h3 { margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+    .plan-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .plan-field { display: grid; gap: 7px; min-width: 0; font-size: 14px; }
+    .plan-field label { color: #555; }
+    .plan-field input, .plan-field select { width: 100%; height: 42px; padding: 0 10px; border: 1px solid #d5d5d5; border-radius: 5px; background: #fff; font-size: 15px; }
+    .plan-field input:focus, .plan-field select:focus { outline: 2px solid #7651f633; border-color: #7651f6; }
+    .plan-field .hint { color: #999; font-size: 12px; }
+    .plan-scope-field { grid-column: 1 / -1; display: flex; align-items: center; gap: 32px; min-height: 48px; }
+    .plan-scope-title { flex: none; color: #222; font-size: 16px; }
+    .plan-scope-options { display: flex; align-items: center; flex-wrap: wrap; gap: 30px; }
+    .plan-scope-options label { display: inline-flex; align-items: center; gap: 10px; color: #999; font-size: 16px; white-space: nowrap; cursor: not-allowed; }
+    .plan-scope-options input { width: 18px; height: 18px; margin: 0; accent-color: #bfbfbf; cursor: not-allowed; }
+    .plan-price-table { overflow-x: auto; border: 1px solid #eee; border-radius: 6px; }
+    .plan-template-row { display: flex; align-items: center; gap: 12px; margin: 0 0 18px; }
+    .plan-template-row[hidden] { display: none; }
+    .plan-template-row label { flex: none; font-size: 16px; }
+    .plan-template-row select { flex: 1; min-width: 0; height: 42px; padding: 0 12px; border: 1px solid #d5d5d5; border-radius: 6px; background: #fff; font-size: 15px; }
+    .plan-template-row select:has(option[value=""]:checked) { color: #aaa; }
+    .plan-template-row button { flex: none; }
+    .plan-price-table table { min-width: 850px; }
+    .plan-price-table input { width: 100%; min-width: 82px; height: 36px; padding: 0 7px; border: 1px solid #d5d5d5; border-radius: 5px; }
+    .plan-convert { padding: 0; border: 0; background: transparent; color: #7651f6; font-size: 14px; white-space: nowrap; }
+    .plan-convert:hover { text-decoration: underline; }
+    .plan-foot { display: flex; justify-content: flex-end; gap: 10px; padding: 16px 28px; border-top: 1px solid #eee; }
+    .plan-foot[hidden] { display: none; }
+    @media (max-width: 800px) { .plan-drawer { width: 100vw; } }
+    @media (max-width: 600px) { .drawer-head, .drawer-body, .plan-foot { padding-left: 16px; padding-right: 16px; } .plan-fields { grid-template-columns: 1fr; } .plan-scope-field { align-items: flex-start; flex-direction: column; gap: 12px; } .plan-scope-options { gap: 12px 24px; } .plan-template-row { align-items: stretch; flex-wrap: wrap; } .plan-template-row label { width: 100%; } }
+    @media (max-width: 800px) { body { padding: 0; } .panel { min-height: 100vh; padding: 18px 14px; border-radius: 0; } .toolbar { flex-wrap: wrap; gap: 9px; } h1 { font-size: 21px; } select { height: 40px; font-size: 14px; } .tools { width: 100%; justify-content: flex-end; } .add { height: 42px; min-width: 105px; font-size: 15px; } }
+  </style>
+</head>
+<body>
+  <main class="panel">
+    <div class="toolbar">
+      <h1>个人会员商品</h1>
+      <select id="sort-field" aria-label="排序字段"><option value="created">按创建时间</option><option value="updated">按更新时间</option><option value="name">按商品名称</option></select>
+      <select id="sort-order" aria-label="排序顺序"><option value="desc">最近</option><option value="asc">最早</option></select>
+      <div class="tools">
+        <button class="add" id="add" type="button">添加商品</button>
+        <button class="tool" id="refresh" type="button" title="刷新" aria-label="刷新"><svg viewBox="0 0 24 24"><path d="M20 7v5h-5"/><path d="M20 12a8 8 0 1 0-2.4 5.7"/></svg></button>
+        <button class="tool" id="density" type="button" title="切换行高" aria-label="切换行高"><svg viewBox="0 0 24 24"><path d="M4 3h16M4 21h16M12 6v12m-3-3 3 3 3-3m-6-6 3-3 3 3"/></svg></button>
+        <button class="tool" id="settings" type="button" title="显示设置" aria-label="显示设置"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="m19.3 15 .1.1 1.2 1.1-1.5 2.6-1.6-.5a8 8 0 0 1-2.3 1.3l-.4 1.7h-3l-.4-1.7a8 8 0 0 1-2.3-1.3l-1.6.5L6 16.2l1.2-1.1a8 8 0 0 1 0-2.6L6 11.4l1.5-2.6 1.6.5a8 8 0 0 1 2.3-1.3l.4-1.7h3l.4 1.7a8 8 0 0 1 2.3 1.3l1.6-.5 1.5 2.6-1.2 1.1a8 8 0 0 1-.1 2.5Z" transform="translate(-1.3 -1.8)"/></svg></button>
+        <button class="tool" id="fullscreen" type="button" title="全屏" aria-label="全屏"><svg viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg></button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <colgroup><col style="width:25%"><col style="width:8%"><col style="width:8%"><col style="width:22%"><col style="width:24%"><col style="width:13%"></colgroup>
+        <thead><tr><th>商品信息</th><th>优惠信息</th><th>商品状态</th><th>三方状态</th><th>操作信息</th><th>操作</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <div class="footer"><span id="count"></span><button class="page active" type="button" aria-label="第 1 页">1</button></div>
+  </main>
+  <dialog id="dialog"><h2 id="dialog-title"></h2><div id="dialog-content"></div><div class="dialog-actions"><button id="dialog-cancel" type="button">取消</button><button class="primary" id="dialog-confirm" type="button">确定</button></div></dialog>
+  <div class="drawer-backdrop" id="drawer-backdrop" hidden></div>
+  <aside class="plan-drawer" id="plan-drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title" hidden>
+    <div class="drawer-head"><button class="drawer-back" id="drawer-back" type="button" hidden>‹ 返回列表</button><h2 id="drawer-title">未来价格计划</h2><button class="drawer-close" id="drawer-close" type="button" aria-label="关闭抽屉">×</button></div>
+    <div class="drawer-body"><div class="drawer-view" id="plan-list-view"><div class="drawer-toolbar"><h3>未来价格计划列表</h3><button class="drawer-primary" id="plan-add" type="button">＋ 添加未来价格计划</button></div><div id="plan-list"></div></div><div class="drawer-view" id="plan-form-view" hidden></div></div>
+    <div class="plan-foot" id="plan-foot" hidden><button class="drawer-secondary" id="plan-cancel" type="button">取消</button><button class="drawer-primary" id="plan-save" type="button">保存计划</button></div>
+  </aside>
+  <div class="toast" id="toast" role="status" hidden></div>
+  <script>
+    const products = [
+      { id: '7522858918813650875', name: '测试推介优惠1', channel: 'IAB 支付（苹果）', thirdId: 'com.meitu.paydemo.sub.tj1', created: '2026-11-02 11:15:34', updated: '2026-11-02 11:15:38', listed: '2026-11-02 11:15:38', creator: '黄雅妮', editor: '黄雅妮', thirdStatus: 'effective' },
+      { id: '7522858223129349956', name: '包月-无优惠', channel: 'IAB 支付（苹果）', thirdId: 'com.meitu.paydemo.sub.month', created: '2026-11-02 11:12:48', updated: '2026-11-02 11:12:52', listed: '2026-11-02 11:12:52', creator: '蓝丽萍', editor: '蓝丽萍', thirdStatus: 'syncFailed' },
+      { id: '7522857116612023001', name: '连续包年', channel: 'IAB 支付（苹果）', thirdId: 'com.meitu.paydemo.sub.year', created: '2026-11-02 10:46:13', updated: '2026-11-02 10:46:13', listed: '2026-11-02 10:46:13', creator: '黄雅妮', editor: '黄雅妮', thirdStatus: 'pendingReview' },
+      { id: '7522856100903031002', name: '季度会员', channel: 'IAB 支付（苹果）', thirdId: 'com.meitu.paydemo.sub.quarter', created: '2026-11-02 10:25:06', updated: '2026-11-02 10:28:30', listed: '2026-11-02 10:28:30', creator: '庄秀', editor: '庄秀', thirdStatus: 'syncing', reviewInfo: '' },
+      { id: '7522855100903031003', name: '高级会员月卡', channel: 'IAB 支付（苹果）', thirdId: 'com.meitu.paydemo.sub.pro', created: '2026-11-02 09:42:18', updated: '2026-11-02 09:43:00', listed: '2026-11-02 09:43:00', creator: '蓝丽萍', editor: '蓝丽萍', thirdStatus: 'reviewing' },
+      { id: '7522854100903031004', name: '家庭会员', channel: 'IAB 支付（苹果）', thirdId: 'com.meitu.paydemo.sub.family', created: '2026-11-01 18:18:25', updated: '2026-11-02 08:02:15', listed: '2026-11-02 08:02:15', creator: '庄秀', editor: '庄秀', thirdStatus: 'rejected' }
+    ];
+    const statusMap = {
+      syncing: ['同步中', 'blue'], syncFailed: ['同步失败', 'red'],
+      pendingReview: ['待提交审核', 'orange'], reviewing: ['审核中', 'blue'],
+      rejected: ['审核被拒', 'red'], effective: ['已生效', 'green'],
+      effectiveSyncing: ['已生效 · 同步中', 'blue'], effectiveSyncFailed: ['已生效 · 同步失败', 'red']
+    };
+    const tbody = document.getElementById('rows');
+    const dialog = document.getElementById('dialog');
+    const toast = document.getElementById('toast');
+    let onConfirm = null;
+    let toastTimer;
+    let compact = false;
+    function el(tag, className, value) { const node = document.createElement(tag); if (className) node.className = className; if (value != null) node.textContent = value; return node; }
+    function say(message) { toast.textContent = message; toast.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.hidden = true, 2500); }
+    function openDialog(title, content, confirmLabel, callback, cancelLabel = '取消') {
+      document.getElementById('dialog-title').textContent = title;
+      const body = document.getElementById('dialog-content'); body.replaceChildren();
+      if (typeof content === 'string') body.append(el('p', '', content)); else body.append(content);
+      document.getElementById('dialog-cancel').textContent = cancelLabel;
+      document.getElementById('dialog-confirm').textContent = confirmLabel;
+      onConfirm = callback; dialog.showModal();
+    }
+    function copyButton(value) {
+      const button = el('button', 'copy'); button.type = 'button'; button.title = '复制'; button.setAttribute('aria-label', '复制' + value);
+      button.innerHTML = '<svg viewBox="0 0 20 22"><path d="M6 5h10v15H6zM3 16H2V2h11v2"/></svg>';
+      button.addEventListener('click', async () => { try { await navigator.clipboard.writeText(value); say('已复制'); } catch (_) { say('复制失败，请检查浏览器权限'); } });
+      return button;
+    }
+    function badge(state) { const [label, color] = statusMap[state]; return el('span', 'badge ' + color, label); }
+    function planSnapshot(row) {
+      if (!row.snapshot) row.snapshot = { name: row.name, productId: row.id, thirdId: row.thirdId, channel: row.channel, reviewInfo: row.reviewInfo || '', updated: row.updated, editor: row.editor };
+      return row.snapshot;
+    }
+    function showPlanSnapshot(row) {
+      const snapshot = planSnapshot(row);
+      const details = el('dl', 'snapshot');
+      const fields = [
+        ['商品名称', snapshot.name], ['商品 ID', snapshot.productId], ['三方 ID', snapshot.thirdId || '同步后生成'],
+        ['支付渠道', snapshot.channel], ['审核信息', snapshot.reviewInfo || '未填写'],
+        ['更新时间', snapshot.updated], ['更新人', snapshot.editor]
+      ];
+      fields.forEach(([label, value]) => details.append(el('dt', '', label), el('dd', '', value)));
+      openDialog('最新编辑计划快照', details, '关闭', () => dialog.close());
+    }
+    function tip(message, row) {
+      const button = el('button', 'info', 'ⓘ'); button.type = 'button'; button.dataset.tip = message; button.setAttribute('aria-label', message);
+      button.addEventListener('click', () => openDialog('状态说明', message, '知道了', () => dialog.close())); return button;
+    }
+    function statusLine(state, row) {
+      const line = el('div', 'status-line');
+      line.append(badge(state));
+      if (state === 'syncFailed' || state === 'effectiveSyncFailed') {
+        const retry = el('button', 'status-action', '重试'); retry.type = 'button';
+        retry.addEventListener('click', () => { row.thirdStatus = state === 'syncFailed' ? 'syncing' : 'effectiveSyncing'; render(); say('重新同步已发起'); }); line.append(retry);
+      } else if (state === 'pendingReview') {
+        const submit = el('button', 'status-action', '去提审'); submit.type = 'button';
+        submit.addEventListener('click', () => { location.href = './审核工单管理.html?' + new URLSearchParams({ select: '1', type: 'product', entityId: row.id, name: row.name }); }); line.append(submit);
+      } else if (state === 'rejected') {
+        line.append(tip('请前往苹果后台查看具体拒审原因', row));
+        const edit = el('button', 'status-action', '编辑'); edit.type = 'button'; edit.addEventListener('click', () => editProduct(row)); line.append(edit);
+      }
+      return line;
+    }
+    function editProduct(row) {
+      if (row.channel.includes('苹果') && row.thirdId) {
+        const notice = el('div');
+        const message = el('p', '', '应用已开启苹果后台自动同步，编辑前将按苹果后台商品内容（三方商品 ID：' + row.thirdId + '）覆盖当前历史商品，覆盖后可继续编辑。');
+        const scope = el('p', '', '请确认是否执行覆盖？');
+        notice.append(message, scope);
+        openDialog('商品覆盖确认', notice, '确认覆盖', () => {
+          dialog.close();
+          openEditProduct(row);
+        }, '取消编辑');
+        return;
+      }
+      openEditProduct(row);
+    }
+    function openEditProduct(row) {
+      const form = el('div'); const label = el('label', '', '商品名称'); const input = el('input'); input.value = row.name; input.setAttribute('aria-label', '商品名称');
+      form.append(label, input);
+      let reviewInput;
+      if (row.thirdStatus === 'rejected') {
+        form.append(el('label', '', '审核信息'));
+        reviewInput = el('input'); reviewInput.value = row.reviewInfo || ''; reviewInput.placeholder = '请输入审核信息'; reviewInput.setAttribute('aria-label', '审核信息'); form.append(reviewInput);
+      }
+      openDialog('编辑商品', form, '保存', () => {
+        if (!input.value.trim()) return say('请输入商品名称');
+        row.name = input.value.trim();
+        if (reviewInput) { row.reviewInfo = reviewInput.value.trim(); if (row.reviewInfo) row.thirdStatus = 'pendingReview'; }
+        row.updated = new Date().toLocaleString('sv-SE').replace('T', ' ');
+        row.snapshot = { name: row.name, productId: row.id, thirdId: row.thirdId, channel: row.channel, reviewInfo: row.reviewInfo || '', updated: row.updated, editor: row.editor };
+        dialog.close(); render(); say('保存成功');
+      });
+    }
+    function rowButton(label, handler) { const button = el('button', 'row-action', label); button.type = 'button'; button.addEventListener('click', handler); return button; }
+    const priceRegions = [
+      { name: '中国大陆', code: 'CNY', symbol: '¥', original: '15.00', actual: '12.00' }, { name: '中国台湾', code: 'TWD', symbol: 'NT$', original: '70.00', actual: '56.00' },
+      { name: '中国香港', code: 'HKD', symbol: 'HK$', original: '18.00', actual: '14.00' }, { name: '中国澳门', code: 'USD', symbol: '$', original: '2.17', actual: '1.74' },
+      { name: '美国', code: 'USD', symbol: '$', original: '2.99', actual: '1.99' }, { name: '日本', code: 'JPY', symbol: '¥', original: '300.00', actual: '200.00' },
+      { name: '德国', code: 'EUR', symbol: '€', original: '2.99', actual: '1.99' }
+    ];
+    const drawer = document.getElementById('plan-drawer');
+    const backdrop = document.getElementById('drawer-backdrop');
+    const priceTemplateKey = 'product-price-templates-demo';
+    let planProduct = null;
+    let planDraft = null;
+    let editingIndex = -1;
+    let previousFocus = null;
+    function plansKey(row) { return 'future-price-plans-demo-' + row.id; }
+    function getPlans(row) { try { const value = JSON.parse(localStorage.getItem(plansKey(row))); return Array.isArray(value) ? value : []; } catch (_) { return []; } }
+    function currentPrices() {
+      try {
+        const saved = JSON.parse(localStorage.getItem('product-prices-demo'));
+        return saved?.currentPlan || null;
+      } catch (_) { return null; }
+    }
+    function priceTemplates() { try { return JSON.parse(localStorage.getItem(priceTemplateKey)) || {}; } catch (_) { return {}; } }
+    function newPlan() {
+      const current = currentPrices();
+      const regions = priceRegions.map(region => {
+        const saved = current?.regions?.find(item => item.name === region.name);
+        return { name: region.name, code: region.code, symbol: region.symbol, original: saved?.original || region.original, actual: saved?.actual || region.actual, currentActual: saved?.actual || region.actual };
+      });
+      return { date: '', scope: 'new', regions };
+    }
+    function closePlanDrawer() { drawer.hidden = true; backdrop.hidden = true; planProduct = null; planDraft = null; document.body.style.overflow = ''; previousFocus?.focus(); }
+    function showPlanList() {
+      planDraft = null;
+      document.getElementById('drawer-title').textContent = '未来价格计划';
+      document.getElementById('drawer-back').hidden = true;
+      document.getElementById('plan-list-view').hidden = false;
+      document.getElementById('plan-form-view').hidden = true;
+      document.getElementById('plan-foot').hidden = true;
+      const root = document.getElementById('plan-list'); root.replaceChildren();
+      const plans = getPlans(planProduct);
+      if (!plans.length) { root.append(el('div', 'drawer-empty', '暂无未来价格计划')); return; }
+      const wrap = el('div', 'table-wrap'); const table = el('table');
+      table.innerHTML = '<thead><tr><th>生效日期</th><th>地区数量</th><th>生效范围</th><th>操作</th></tr></thead><tbody></tbody>';
+      const body = table.querySelector('tbody');
+      plans.forEach((plan, index) => {
+        const tr = el('tr');
+        tr.append(el('td', '', plan.date), el('td', '', plan.regions.length + ' 个地区'), el('td', '', '仅对新订阅用户生效'));
+        const action = el('td'); const links = el('div', 'plan-links');
+        links.append(rowButton('查看详情', () => showPlanForm(index, true)), rowButton('编辑', () => showPlanForm(index, false)));
+        const remove = rowButton('删除', () => openDialog('删除未来价格计划', '确定删除 ' + plan.date + ' 生效的价格计划吗？', '删除', () => { const next = getPlans(planProduct); next.splice(index, 1); localStorage.setItem(plansKey(planProduct), JSON.stringify(next)); dialog.close(); showPlanList(); say('已删除价格计划'); }));
+        remove.classList.add('danger'); links.append(remove); action.append(links); tr.append(action); body.append(tr);
+      });
+      wrap.append(table); root.append(wrap);
+    }
+    function openPlanDrawer(row) {
+      previousFocus = document.activeElement; planProduct = row;
+      drawer.hidden = false; backdrop.hidden = false; document.body.style.overflow = 'hidden'; showPlanList(); document.getElementById('plan-add').focus();
+    }
+    function showPlanForm(index, readOnly) {
+      const plans = getPlans(planProduct); editingIndex = index;
+      planDraft = index < 0 ? newPlan() : structuredClone(plans[index]);
+      document.getElementById('drawer-title').textContent = readOnly ? '未来价格计划详情' : index < 0 ? '添加未来价格计划' : '编辑未来价格计划';
+      document.getElementById('drawer-back').hidden = false;
+      document.getElementById('plan-list-view').hidden = true;
+      document.getElementById('plan-form-view').hidden = false;
+      document.getElementById('plan-foot').hidden = readOnly;
+      const form = document.getElementById('plan-form-view');
+      form.innerHTML = '<section class="plan-section"><h3>生效设置</h3><div class="plan-fields"><div class="plan-field"><label for="plan-date">价格开始生效日期 <span style="color:#d4380d">*</span></label><input id="plan-date" type="date"></div><div class="plan-scope-field" role="group" aria-label="价格生效范围"><span class="plan-scope-title"><span style="color:#d4380d">*</span> 价格生效范围：</span><div class="plan-scope-options"><label><input type="radio" name="plan-scope" value="new" checked disabled>仅对新订阅用户生效</label><label><input type="radio" name="plan-scope" value="all" disabled>对新老订阅用户都生效</label></div></div></div></section><section class="plan-section"><h3>商品价格</h3><div class="plan-template-row"><label for="plan-template">选择价格模板：</label><select id="plan-template"><option value="">选择一个价格模板</option></select><button class="drawer-secondary" id="plan-template-save" type="button">保存商品价格模板</button></div><div class="plan-price-table"><table><thead><tr><th>地区</th><th>货币代码</th><th>货币符号</th><th>商品原价</th><th>实际价格</th><th>当前实际价格</th><th>操作</th></tr></thead><tbody id="plan-regions"></tbody></table></div></section>';
+      const date = form.querySelector('#plan-date'); date.value = planDraft.date || ''; date.disabled = readOnly;
+      const body = form.querySelector('#plan-regions');
+      planDraft.regions.forEach((item, rowIndex) => {
+        const tr = el('tr'); tr.append(el('td', '', item.name), el('td', '', item.code), el('td', '', item.symbol));
+        for (const field of ['original', 'actual']) { const td = el('td'); const input = el('input'); input.type = 'number'; input.min = '0.01'; input.step = '0.01'; input.value = item[field] || ''; input.disabled = readOnly; input.dataset.row = rowIndex; input.dataset.field = field; input.setAttribute('aria-label', item.name + (field === 'original' ? '商品原价' : '实际价格')); td.append(input); tr.append(td); }
+        tr.append(el('td', '', item.currentActual || priceRegions[rowIndex]?.actual || '未设置'));
+        const operation = el('td');
+        if (!readOnly) {
+          const convert = el('button', 'plan-convert', '按全球汇率转化'); convert.type = 'button';
+          convert.title = item.name === '中国大陆' ? '中国大陆为汇率基准，转化后价格保持不变' : '按示例汇率将中国大陆价格换算为当前地区价格';
+          convert.addEventListener('click', () => {
+            const base = [...body.querySelectorAll('tr')].find(row => row.firstElementChild.textContent === '中国大陆');
+            const baseOriginal = base.querySelector('input[data-field="original"]').value.trim();
+            const baseActual = base.querySelector('input[data-field="actual"]').value.trim();
+            if (!validPrice(baseActual) || (baseOriginal && !validPrice(baseOriginal))) return say('请先填写有效的中国大陆价格');
+            const rate = { CNY: 1, TWD: 4.5, HKD: 1.1, USD: 0.14, JPY: 21, EUR: 0.13 }[item.code];
+            tr.querySelector('input[data-field="original"]').value = baseOriginal ? (Number(baseOriginal) * rate).toFixed(2) : '';
+            tr.querySelector('input[data-field="actual"]').value = (Number(baseActual) * rate).toFixed(2);
+            say(item.name === '中国大陆' ? '中国大陆为汇率基准，价格保持不变' : '已按示例汇率转化，请确认地区价格');
+          });
+          operation.append(convert);
+        }
+        tr.append(operation); body.append(tr);
+      });
+      const templateRow = form.querySelector('.plan-template-row'); templateRow.hidden = readOnly;
+      if (!readOnly) {
+        const select = form.querySelector('#plan-template');
+        Object.keys(priceTemplates()).forEach(name => select.add(new Option(name, name)));
+        select.addEventListener('change', () => {
+          const template = priceTemplates()[select.value];
+          if (!template || !Array.isArray(template.regions)) return;
+          template.regions.forEach(item => {
+            const index = planDraft.regions.findIndex(region => region.name === item.name);
+            if (index < 0) return;
+            const row = body.children[index];
+            row.querySelector('input[data-field="original"]').value = item.original || '';
+            row.querySelector('input[data-field="actual"]').value = item.actual || '';
+          });
+          say('已应用价格模板');
+        });
+        form.querySelector('#plan-template-save').addEventListener('click', () => {
+          const rows = collectPlanRegions(form);
+          if (rows.some(item => (item.original && !validPrice(item.original)) || !validPrice(item.actual))) return say('请先填写有效的地区价格');
+          const content = el('div'); const label = el('label', '', '模板名称'); const input = el('input'); input.placeholder = '请输入模板名称'; input.setAttribute('aria-label', '模板名称'); content.append(label, input);
+          openDialog('保存商品价格模板', content, '保存', () => {
+            const name = input.value.trim(); if (!name) return say('请输入模板名称');
+            const templates = priceTemplates();
+            templates[name] = { defaults: structuredClone(currentPrices()?.defaults || {}), regions: rows.map(item => ({ name: item.name, original: item.original, actual: item.actual })) };
+            localStorage.setItem(priceTemplateKey, JSON.stringify(templates));
+            if (![...select.options].some(option => option.value === name)) select.add(new Option(name, name));
+            select.value = name; dialog.close(); say('模板已保存');
+          });
+          input.focus();
+        });
+      }
+      form.closest('.drawer-body').scrollTop = 0; date.focus();
+    }
+    function validPrice(value) { return /^\d+(\.\d{1,2})?$/.test(value) && Number(value) > 0; }
+    function collectPlanRegions(form) {
+      return planDraft.regions.map((item, index) => {
+        const row = form.querySelector('#plan-regions').children[index];
+        return { ...item, original: row.querySelector('input[data-field="original"]').value.trim(), actual: row.querySelector('input[data-field="actual"]').value.trim() };
+      });
+    }
+    function savePlan() {
+      const form = document.getElementById('plan-form-view'); const date = form.querySelector('#plan-date').value;
+      const plans = getPlans(planProduct);
+      if (!date) { say('请选择价格开始生效日期'); form.querySelector('#plan-date').focus(); return; }
+      if (plans.some((item, index) => index !== editingIndex && item.date === date)) { say('同一日期只允许有一条价格计划'); form.querySelector('#plan-date').focus(); return; }
+      const rows = collectPlanRegions(form);
+      if (rows.some(item => (item.original && !validPrice(item.original)) || !validPrice(item.actual))) { say('请为每个地区填写有效的实际价格，并检查商品原价'); return; }
+      planDraft.date = date; planDraft.scope = 'new'; planDraft.regions = rows;
+      delete planDraft.defaultRegion; delete planDraft.baseCurrency; delete planDraft.original; delete planDraft.actual;
+      if (editingIndex < 0) plans.push(planDraft); else plans[editingIndex] = planDraft;
+      localStorage.setItem(plansKey(planProduct), JSON.stringify(plans)); showPlanList(); say('价格计划已保存');
+    }
+    function render() {
+      tbody.replaceChildren();
+      const field = document.getElementById('sort-field').value;
+      const sign = document.getElementById('sort-order').value === 'desc' ? -1 : 1;
+      const sorted = [...products].sort((a, b) => sign * String(a[field]).localeCompare(String(b[field]), 'zh-CN'));
+      sorted.forEach(row => {
+        const tr = el('tr');
+        const product = el('td', 'product'); product.append(el('span', 'product-icon', '▣'));
+        const id = el('p'); id.append(document.createTextNode('商品 ID：' + row.id + ' '), copyButton(row.id)); product.append(id);
+        const name = el('p'); name.append(document.createTextNode('商品名称：' + row.name + ' '), copyButton(row.name)); product.append(name);
+        if (row.thirdId) { const third = el('p'); third.append(document.createTextNode('三方 ID：' + row.thirdId + ' '), copyButton(row.thirdId)); product.append(third); }
+        product.append(el('p', '', '支付渠道：' + row.channel)); tr.append(product);
+        tr.append(el('td', '', '-'));
+        const listed = el('td'); listed.append(el('span', row.isListed === false ? 'badge red' : 'badge green', row.isListed === false ? '已下架' : '已上架')); tr.append(listed);
+        const statuses = el('td');
+        if (row.channel.includes('苹果')) statuses.append(statusLine(row.thirdStatus, row));
+        else statuses.textContent = '--';
+        tr.append(statuses);
+        const times = el('td', 'times');
+        const created = el('p'); created.append(document.createTextNode('创建时间：' + row.created + ' '), el('span', 'user', row.creator));
+        const updated = el('p'); updated.append(document.createTextNode('更新时间：' + row.updated + ' '), el('span', 'user updated', row.editor));
+        times.append(created, updated, el('p', '', '上架时间：' + row.listed)); tr.append(times);
+        const actions = el('td'); const list = el('div', 'row-actions');
+        list.append(rowButton('查看详情', () => openDialog('商品详情', ['商品 ID：' + row.id, '商品名称：' + row.name, '支付渠道：' + row.channel, '三方状态：' + (row.thirdStatus ? statusMap[row.thirdStatus][0] : '--')].map(text => el('p', '', text)).reduce((fragment, p) => { fragment.append(p); return fragment; }, document.createDocumentFragment()), '关闭', () => dialog.close())), rowButton('编辑商品', () => editProduct(row)), rowButton('未来价格计划', () => openPlanDrawer(row)), rowButton('复制商品', () => { const clone = { ...row, id: String(Date.now()), name: row.name + ' - 副本', thirdId: '', created: new Date().toLocaleString('sv-SE'), updated: new Date().toLocaleString('sv-SE'), listed: '', thirdStatus: row.channel.includes('苹果') ? 'syncing' : null, snapshot: null }; products.unshift(clone); render(); say('已复制商品'); }), rowButton('一键同步', () => { if (!row.thirdStatus) return say('当前支付渠道无需同步'); row.thirdStatus = row.thirdStatus.startsWith('effective') ? 'effectiveSyncing' : 'syncing'; render(); say('同步已发起'); }));
+        const moreWrap = el('div', 'more-wrap'); const more = rowButton('更多 ﹀', () => { menu.hidden = !menu.hidden; }); const menu = el('div', 'more-menu'); menu.hidden = true;
+        menu.append(rowButton(row.isListed === false ? '上架商品' : '下架商品', () => { menu.hidden = true; const next = row.isListed === false; openDialog(next ? '上架商品' : '下架商品', '确定' + (next ? '上架' : '下架') + '“' + row.name + '”吗？', '确定', () => { row.isListed = next; dialog.close(); render(); say(next ? '已上架' : '已下架'); }); })); moreWrap.append(more, menu); list.append(moreWrap); actions.append(list); tr.append(actions);
+        tbody.append(tr);
+      });
+      document.getElementById('count').textContent = '第 1-' + products.length + ' 条 / 共 ' + products.length + ' 条';
+      document.querySelectorAll('tbody td').forEach(td => td.style.height = compact ? '175px' : '210px');
+    }
+    document.getElementById('sort-field').addEventListener('change', render);
+    document.getElementById('sort-order').addEventListener('change', render);
+    document.getElementById('add').addEventListener('click', () => { const form = el('div'); const label = el('label', '', '商品名称'); const input = el('input'); input.placeholder = '请输入商品名称'; form.append(label, input); openDialog('添加商品', form, '确定', () => { if (!input.value.trim()) return say('请输入商品名称'); const now = new Date().toLocaleString('sv-SE'); products.unshift({ id: String(Date.now()), name: input.value.trim(), channel: 'IAB 支付（苹果）', thirdId: '', created: now, updated: now, listed: now, creator: '当前用户', editor: '当前用户', thirdStatus: 'syncing' }); dialog.close(); render(); say('添加成功'); }); });
+    document.getElementById('refresh').addEventListener('click', () => { render(); say('已刷新'); });
+    document.getElementById('density').addEventListener('click', () => { compact = !compact; render(); say(compact ? '已切换为紧凑行高' : '已切换为标准行高'); });
+    document.getElementById('settings').addEventListener('click', () => say('当前显示全部列'));
+    document.getElementById('fullscreen').addEventListener('click', () => { if (document.fullscreenElement) document.exitFullscreen(); else document.querySelector('.panel').requestFullscreen(); });
+    document.getElementById('dialog-cancel').addEventListener('click', () => dialog.close());
+    document.getElementById('dialog-confirm').addEventListener('click', () => { if (onConfirm) onConfirm(); });
+    document.getElementById('drawer-close').addEventListener('click', closePlanDrawer);
+    document.getElementById('drawer-backdrop').addEventListener('click', closePlanDrawer);
+    document.getElementById('drawer-back').addEventListener('click', showPlanList);
+    document.getElementById('plan-add').addEventListener('click', () => showPlanForm(-1, false));
+    document.getElementById('plan-cancel').addEventListener('click', showPlanList);
+    document.getElementById('plan-save').addEventListener('click', savePlan);
+    document.addEventListener('keydown', event => { if (event.key === 'Escape' && !drawer.hidden && !dialog.open) { event.preventDefault(); closePlanDrawer(); } });
+    render();
+  </script>
+</body>
+</html>
