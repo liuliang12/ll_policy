@@ -275,7 +275,18 @@
     let editingIndex = -1;
     let previousFocus = null;
     function plansKey(row) { return 'future-price-plans-demo-' + row.id; }
-    function getPlans(row) { try { const value = JSON.parse(localStorage.getItem(plansKey(row))); return Array.isArray(value) ? value : []; } catch (_) { return []; } }
+    function getPlans(row) {
+      try {
+        const saved = localStorage.getItem(plansKey(row));
+        if (saved !== null) { const value = JSON.parse(saved); return Array.isArray(value) ? value : []; }
+        const plans = ['syncing', 'syncFailed', 'syncSuccess'].map((thirdStatus, index) => {
+          const date = new Date(); date.setDate(1); date.setMonth(date.getMonth() + index + 1);
+          return { ...newPlan(), date: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-01`, thirdStatus };
+        });
+        localStorage.setItem(plansKey(row), JSON.stringify(plans));
+        return plans;
+      } catch (_) { return []; }
+    }
     function currentPrices() {
       try {
         const saved = JSON.parse(localStorage.getItem('product-prices-demo'));
@@ -303,11 +314,20 @@
       const plans = getPlans(planProduct);
       if (!plans.length) { root.append(el('div', 'drawer-empty', '暂无未来价格计划')); return; }
       const wrap = el('div', 'table-wrap'); const table = el('table');
-      table.innerHTML = '<thead><tr><th>生效日期</th><th>地区数量</th><th>生效范围</th><th>操作</th></tr></thead><tbody></tbody>';
+      table.innerHTML = '<thead><tr><th>生效日期</th><th>地区数量</th><th>生效范围</th><th>三方状态</th><th>操作</th></tr></thead><tbody></tbody>';
       const body = table.querySelector('tbody');
       plans.forEach((plan, index) => {
         const tr = el('tr');
         tr.append(el('td', '', plan.date), el('td', '', plan.regions.length + ' 个地区'), el('td', '', '仅对新订阅用户生效'));
+        const status = el('td'); const statusLine = el('div', 'status-line');
+        const planStatus = { syncing: ['同步中', 'blue'], syncFailed: ['同步失败', 'red'], syncSuccess: ['同步成功', 'green'] }[plan.thirdStatus || 'syncSuccess'];
+        statusLine.append(el('span', 'badge ' + planStatus[1], planStatus[0]));
+        if (plan.thirdStatus === 'syncFailed') {
+          const retry = el('button', 'status-action', '重试'); retry.type = 'button';
+          retry.addEventListener('click', () => { const next = getPlans(planProduct); next[index].thirdStatus = 'syncing'; localStorage.setItem(plansKey(planProduct), JSON.stringify(next)); showPlanList(); say('重新同步已发起'); });
+          statusLine.append(retry);
+        }
+        status.append(statusLine); tr.append(status);
         const action = el('td'); const links = el('div', 'plan-links');
         links.append(rowButton('查看详情', () => showPlanForm(index, true)), rowButton('编辑', () => showPlanForm(index, false)));
         const remove = rowButton('删除', () => openDialog('删除未来价格计划', '确定删除 ' + plan.date + ' 生效的价格计划吗？', '删除', () => { const next = getPlans(planProduct); next.splice(index, 1); localStorage.setItem(plansKey(planProduct), JSON.stringify(next)); dialog.close(); showPlanList(); say('已删除价格计划'); }));
@@ -401,6 +421,7 @@
       const rows = collectPlanRegions(form);
       if (rows.some(item => (item.original && !validPrice(item.original)) || !validPrice(item.actual))) { say('请为每个地区填写有效的实际价格，并检查商品原价'); return; }
       planDraft.date = date; planDraft.scope = 'new'; planDraft.regions = rows;
+      planDraft.thirdStatus = 'syncing';
       delete planDraft.defaultRegion; delete planDraft.baseCurrency; delete planDraft.original; delete planDraft.actual;
       if (editingIndex < 0) plans.push(planDraft); else plans[editingIndex] = planDraft;
       localStorage.setItem(plansKey(planProduct), JSON.stringify(plans)); showPlanList(); say('价格计划已保存');
